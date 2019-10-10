@@ -11,8 +11,7 @@ import javax.persistence.Persistence;
 @Configuration
 @ComponentScan("group.jpa.ogm.app")
 public class Config {
-    EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("MartDB");
-
+    private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("MartDB");
     @Bean
     public EntityManager entityManager(){
         return entityManagerFactory.createEntityManager();

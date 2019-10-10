@@ -11,6 +11,7 @@ import javax.persistence.EntityTransaction;
 public class CustomerRepositoryImpl implements CustomerRepository {
     @Autowired
     EntityManager entityManager;
+
     public Customer findCustomer(String id) {
         return entityManager.find(Customer.class,id);
     }
