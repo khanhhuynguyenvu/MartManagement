@@ -14,7 +14,7 @@ public class Config {
     EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("MartDB");
 
     @Bean
-    public EntityManager  entityManager(){
+    public EntityManager entityManager(){
         return entityManagerFactory.createEntityManager();
     }
 }
