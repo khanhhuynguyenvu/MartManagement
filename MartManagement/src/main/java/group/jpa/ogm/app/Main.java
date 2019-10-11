@@ -1,14 +1,21 @@
 package group.jpa.ogm.app;
 
 import group.jpa.ogm.app.controller.CustomerController;
-import group.jpa.ogm.app.entities.Customer;
 
 public class Main {
     public static void main(String[] args) {
-        Customer customer = new Customer();
-        customer.setFirstName("Nguyen Vu Khanh Huy");
         CustomerController controller = new CustomerController();
-        controller.addCustomer(customer);
+//        Customer customer = new Customer();
+//        customer.setFirstName("MaiPhuowng");
+//        List<Good> products = new ArrayList<Good>();
+//        Good product_1 = new Good("Candy");
+//        Good product_2 = new Good("Daddy");
+//        products.add(product_1);
+//        products.add(product_2);
+//        customer.setGoods(products);
+//        controller.addProduct(product_1);
+//        controller.addProduct(product_2);
+//        controller.addCustomer(customer);
         System.out.println("Done");
     }
 }

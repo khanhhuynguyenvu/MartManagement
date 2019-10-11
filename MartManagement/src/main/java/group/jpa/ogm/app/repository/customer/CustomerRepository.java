@@ -1,4 +1,4 @@
-package group.jpa.ogm.app.repository;
+package group.jpa.ogm.app.repository.customer;
 
 import group.jpa.ogm.app.entities.Customer;
 
