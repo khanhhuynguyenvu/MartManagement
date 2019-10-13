@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 
-public class Main {
+public class MainServer {
     private static final  int PORT = 9999;
     private static InetAddress inetAddress;
     public static void main(String[] args) throws RemoteException, AlreadyBoundException {

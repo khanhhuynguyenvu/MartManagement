@@ -3,16 +3,17 @@ package group.jpa.ogm.app.entities;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Customer {
+public class Customer implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    @Column(name = "FullName")
+    @Column(name = "Fullname")
     private String fullName;
     @Column(name = "Phone")
     private String phone;
@@ -26,7 +27,7 @@ public class Customer {
     }
 
     public void setFullName(String fullName) {
-        fullName = fullName;
+        this.fullName = fullName;
     }
 
     public String getPhone() {
@@ -57,7 +58,7 @@ public class Customer {
     }
 
     public Customer(String fullName, String phone, String address) {
-        fullName = fullName;
+        this.fullName = fullName;
         this.phone = phone;
         this.address = address;
     }
