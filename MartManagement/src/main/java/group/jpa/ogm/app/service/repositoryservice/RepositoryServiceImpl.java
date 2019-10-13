@@ -5,6 +5,9 @@ import group.jpa.ogm.app.repository.goods.GoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
 @Service
 public class RepositoryServiceImpl implements  RepositoryService {
     @Autowired

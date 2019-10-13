@@ -1,21 +1,26 @@
 package group.jpa.ogm.app;
 
 import group.jpa.ogm.app.controller.CustomerController;
+import group.jpa.ogm.app.controller.CustomerInterface;
+import group.jpa.ogm.app.helper.RegisterRMIHelper;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
 
 public class Main {
-    public static void main(String[] args) {
-        CustomerController controller = new CustomerController();
-//        Customer customer = new Customer();
-//        customer.setFirstName("MaiPhuowng");
-//        List<Good> products = new ArrayList<Good>();
-//        Good product_1 = new Good("Candy");
-//        Good product_2 = new Good("Daddy");
-//        products.add(product_1);
-//        products.add(product_2);
-//        customer.setGoods(products);
-//        controller.addProduct(product_1);
-//        controller.addProduct(product_2);
-//        controller.addCustomer(customer);
-        System.out.println("Done");
+    private static final  int PORT = 9999;
+    private static InetAddress inetAddress;
+    public static void main(String[] args) throws RemoteException, AlreadyBoundException {
+        try {
+            inetAddress = InetAddress.getLocalHost();
+            System.setProperty("java.rmi.server.hostname", "192.168.1.255");
+        } catch (UnknownHostException e) {
+            System.err.println("Can't get information host");
+        }
+        RegisterRMIHelper registerRMIHelper = RegisterRMIHelper.getInstance(PORT);
+        registerRMIHelper.registerObject(CustomerInterface.class.getSimpleName(),new CustomerController());
+        System.out.println("Server started");
     }
 }

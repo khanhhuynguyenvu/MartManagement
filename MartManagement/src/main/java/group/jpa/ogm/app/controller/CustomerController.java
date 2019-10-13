@@ -7,9 +7,15 @@ import group.jpa.ogm.app.service.repositoryservice.RepositoryService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-public class CustomerController {
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class CustomerController extends UnicastRemoteObject implements CustomerInterface {
     private ApplicationContext ctx = new AnnotationConfigApplicationContext(Config.class);
     private RepositoryService repositoryService = ctx.getBean(RepositoryService.class);
+
+    public CustomerController() throws RemoteException {
+    }
 
     public void addCustomer(Customer customer) {
         repositoryService.getCustomerRepository().save(customer);
@@ -23,6 +29,4 @@ public class CustomerController {
         return repositoryService.getCustomerRepository().findCustomer(id);
     }
 
-    public CustomerController() {
-    }
 }
