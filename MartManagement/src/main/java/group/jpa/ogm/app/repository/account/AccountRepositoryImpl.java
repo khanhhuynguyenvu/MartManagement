@@ -20,17 +20,15 @@ public class AccountRepositoryImpl implements AccountRepository {
 		return entityManager.find(Account.class, id);
 	}
 
-	@SuppressWarnings("unchecked")
-	public Account findAcccountByUsername(String username) {
-		EntityTransaction transaction = entityManager.getTransaction();
-		transaction.begin();
-		String squery ="{db.Account.find({})}";
-		Query query = entityManager.createNativeQuery(squery,Account.class);
-		List<Account> acc = (List<Account>)query.getResultList();
-		System.out.println("############# : "+query.getResultList().toString());
-		System.out.println("######## QUERY : "+query.getResultList().size());
-		transaction.commit();
-		return null;
+	public List<Account> findAcccountByUsername(String username) {
+		String squery = "db.account.find({})";
+		Query query = entityManager.createNativeQuery(squery, Account.class);
+		@SuppressWarnings("unchecked")
+		List<Account> acc = query.getResultList();
+		System.out.println("############# : " + query.getResultList().toString());
+		System.out.println("######## QUERY : " + query.getResultList().size());
+		System.out.println("NAME: "+acc.get(0).getUsername());
+		return acc;
 	}
 
 	public void save(Account account) {

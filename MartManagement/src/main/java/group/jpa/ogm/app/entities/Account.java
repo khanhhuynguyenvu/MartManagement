@@ -2,12 +2,14 @@ package group.jpa.ogm.app.entities;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import java.sql.Date;
+import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.*;
 
 @Entity
-public class Account {
+@Table(name = "account")
+public class Account implements Serializable {
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
