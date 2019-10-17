@@ -1,8 +1,7 @@
 package group.jpa.ogm.app.entities;
 
-import java.io.Serializable;
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -10,23 +9,26 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class Customer implements Serializable {
+public class Employee {
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
-	@Column(name = "Fullname")
+	@Column(name = "FullName")
 	private String fullName;
-	@Column(name = "Phone")
-	private String phone;
 	@Column(name = "Address")
 	private String address;
-	@Column(name = "Birthday")
-	private Date birthday;
+	@Column(name = "Birthdate")
+	private Date birthdate;
+	@Column(name = "Gender")
+	private String gender;
+	@OneToOne
+	private Account account;
 	@OneToMany
 	private List<Invoice> invoices = new ArrayList<Invoice>();
 
@@ -38,14 +40,6 @@ public class Customer implements Serializable {
 		this.fullName = fullName;
 	}
 
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
 	public String getAddress() {
 		return address;
 	}
@@ -54,12 +48,28 @@ public class Customer implements Serializable {
 		this.address = address;
 	}
 
-	public Date getBirthday() {
-		return birthday;
+	public Date getBirthdate() {
+		return birthdate;
 	}
 
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
+	public void setBirthdate(Date birthdate) {
+		this.birthdate = birthdate;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 
 	public List<Invoice> getInvoices() {

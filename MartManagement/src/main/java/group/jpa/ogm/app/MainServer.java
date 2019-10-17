@@ -11,11 +11,10 @@ import java.rmi.RemoteException;
 
 public class MainServer {
     private static final  int PORT = 9999;
-    private static InetAddress inetAddress;
     public static void main(String[] args) throws RemoteException, AlreadyBoundException {
         try {
-            inetAddress = InetAddress.getLocalHost();
-            System.setProperty("java.rmi.server.hostname", "192.168.1.255");
+            InetAddress.getLocalHost();
+            System.setProperty("java.rmi.server.hostname", "192.168.1.6");
         } catch (UnknownHostException e) {
             System.err.println("Can't get information host");
         }

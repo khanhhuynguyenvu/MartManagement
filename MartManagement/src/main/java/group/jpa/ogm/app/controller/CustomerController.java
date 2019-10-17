@@ -11,7 +11,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class CustomerController extends UnicastRemoteObject implements CustomerInterface {
-    private ApplicationContext ctx = new AnnotationConfigApplicationContext(Config.class);
+	private static final long serialVersionUID = 1L;
+	private ApplicationContext ctx = new AnnotationConfigApplicationContext(Config.class);
     private RepositoryService repositoryService = ctx.getBean(RepositoryService.class);
 
     public CustomerController() throws RemoteException {
