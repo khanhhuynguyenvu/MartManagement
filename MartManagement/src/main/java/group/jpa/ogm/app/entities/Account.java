@@ -1,14 +1,16 @@
 package group.jpa.ogm.app.entities;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "account")
 public class Account implements Serializable {
 	@Id
 	@GeneratedValue(generator = "uuid")

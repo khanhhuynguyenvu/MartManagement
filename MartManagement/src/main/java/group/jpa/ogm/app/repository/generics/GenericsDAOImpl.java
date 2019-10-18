@@ -1,4 +1,4 @@
-package group.jpa.ogm.app.repository.employee;
+package group.jpa.ogm.app.repository.generics;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -6,35 +6,33 @@ import javax.persistence.EntityTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import group.jpa.ogm.app.entities.Employee;
-
 @Repository
-public class EmployeerRepositoryImpl implements EmployeeRepository {
+public class GenericsDAOImpl<T> implements GenericsDAO<T> {
 	@Autowired
-	EntityManager entityManager;
+	private EntityManager entityManager;
 
-	public void addEmpoyee(Employee employee) {
+	public T findById(String id, Class<T> t) {
+		return entityManager.find(t, id);
+	}
+
+	public void save(T t) {
 		EntityTransaction transaction = entityManager.getTransaction();
 		transaction.begin();
-		entityManager.persist(employee);
+		entityManager.persist(t);
 		transaction.commit();
 	}
 
-	public Employee findEmployee(String id) {
-		return entityManager.find(Employee.class, id);
-	}
-
-	public void deleteEmpoyee(Employee employee) {
+	public void remove(T t) {
 		EntityTransaction transaction = entityManager.getTransaction();
 		transaction.begin();
-		entityManager.remove(employee);
+		entityManager.remove(t);
 		transaction.commit();
 	}
 
-	public void updateEmployee(Employee employee) {
+	public void update(T t) {
 		EntityTransaction transaction = entityManager.getTransaction();
 		transaction.begin();
-		entityManager.merge(employee);
+		entityManager.merge(t);
 		transaction.commit();
 	}
 

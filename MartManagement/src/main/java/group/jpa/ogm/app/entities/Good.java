@@ -1,14 +1,14 @@
 package group.jpa.ogm.app.entities;
 
-import org.hibernate.annotations.GenericGenerator;
+import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import java.io.Serializable;
-import java.util.Date;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class Good implements Serializable{
