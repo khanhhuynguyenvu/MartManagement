@@ -1,24 +1,18 @@
 package group.jpa.ogm.app.repository.generics;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-@Repository
 public class GenericsDAOImpl<T> extends UnicastRemoteObject implements GenericsDAO<T> {
-	protected GenericsDAOImpl() throws RemoteException {
+	protected GenericsDAOImpl(EntityManager entityManager) throws RemoteException {
 		super();
+		this.entityManager = entityManager;
 	}
-
 	private static final long serialVersionUID = -3127853915912269457L;
 	
-	@Autowired
-	private EntityManager entityManager;
+	private final EntityManager entityManager;
 
 	public T findById(String id, Class<T> t) {
 		return entityManager.find(t, id);
