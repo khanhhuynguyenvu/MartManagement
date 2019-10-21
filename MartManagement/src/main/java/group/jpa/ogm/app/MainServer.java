@@ -7,6 +7,8 @@ import java.rmi.RemoteException;
 
 import group.jpa.ogm.app.config.Config;
 import group.jpa.ogm.app.helper.RegisterRMIHelper;
+import group.jpa.ogm.app.repository.customer.CustomerDAO;
+import group.jpa.ogm.app.repository.customer.CustomerDAOImpl;
 import group.jpa.ogm.app.repository.employee.EmployeeDAO;
 import group.jpa.ogm.app.repository.employee.EmployeeDAOImpl;
 import org.springframework.context.ApplicationContext;
@@ -19,7 +21,7 @@ public class MainServer {
     public static void main(String[] args) throws RemoteException, AlreadyBoundException {
         try {
             InetAddress.getLocalHost();
-            System.setProperty("java.rmi.server.hostname", "127.0.0.1");
+            System.setProperty("java.rmi.server.hostname", "172.16.0.155");
         } catch (UnknownHostException e) {
             System.err.println("Can't get information host");
         }
@@ -27,6 +29,7 @@ public class MainServer {
         EntityManager entityManager = ctx.getBean(EntityManager.class);
         RegisterRMIHelper registerRMIHelper = RegisterRMIHelper.getInstance(PORT);
         registerRMIHelper.registerObject(EmployeeDAO.class.getSimpleName(),new EmployeeDAOImpl(entityManager));
+        registerRMIHelper.registerObject(CustomerDAO.class.getSimpleName(),new CustomerDAOImpl(entityManager));
         System.out.println("Server started");
     }
 }
