@@ -10,9 +10,10 @@ public class GenericsDAOImpl<T> extends UnicastRemoteObject implements GenericsD
 		super();
 		this.entityManager = entityManager;
 	}
+
 	private static final long serialVersionUID = -3127853915912269457L;
-	
-	private final EntityManager entityManager;
+
+	public final EntityManager entityManager;
 
 	public T findById(String id, Class<T> t) {
 		return entityManager.find(t, id);

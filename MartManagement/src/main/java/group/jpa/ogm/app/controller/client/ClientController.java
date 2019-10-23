@@ -10,19 +10,23 @@ import group.jpa.ogm.app.repository.account.AccountDAO;
 import group.jpa.ogm.app.repository.employee.EmployeeDAO;
 
 public class ClientController {
-	private static final String HOST = "172.16.0.155";
-	private static final int PORT = 9999;
-	private static Registry registry;
+	private String HOST;
+	private int PORT;
+	private Registry registry;
 
-	public ClientController() throws RemoteException {
-		this.registry = LocateRegistry.getRegistry(HOST, PORT);
+	public ClientController(String hOST, int pORT) throws RemoteException {
+		super();
+		HOST = hOST;
+		PORT = pORT;
+		this.registry = LocateRegistry.getRegistry(hOST, pORT);
 	}
-	
+
 	public AccountDAO getAccountDAO() throws AccessException, RemoteException, NotBoundException {
 		return (AccountDAO) this.registry.lookup(AccountDAO.class.getSimpleName());
 	}
+
 	public EmployeeDAO getEmployeeDAO() throws AccessException, RemoteException, NotBoundException {
 		return (EmployeeDAO) this.registry.lookup(EmployeeDAO.class.getSimpleName());
 	}
-	
+
 }

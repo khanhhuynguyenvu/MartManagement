@@ -33,6 +33,10 @@ public class Employee implements Serializable {
 	@OneToMany
 	private List<Invoice> invoices = new ArrayList<Invoice>();
 
+	public String getId() {
+		return id;
+	}
+
 	public String getFullName() {
 		return fullName;
 	}

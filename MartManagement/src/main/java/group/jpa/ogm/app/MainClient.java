@@ -13,10 +13,13 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class MainClient {
     public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
-    	ClientController callSerivce = new ClientController();
-    	Employee em = new Employee();
-    	em.setFullName("Nhan vien ten Luannnnnnnnnnn");
-    	em.setGender("Male");
-    	callSerivce.getEmployeeDAO().save(em);
+    	ClientController callSerivce = new ClientController("172.16.0.236",9999);
+//    	Employee em = new Employee();
+//    	em.setFullName("Luan");
+//    	em.setGender("Male");
+//    	callSerivce.getEmployeeDAO().save(em);
+    	Employee em = callSerivce.getEmployeeDAO().findByName("Luan");
+    	System.out.println(em.getId()+" "+em.getFullName()+" "+em.getGender());
+    	System.out.println("Done!");
     }
 }
