@@ -2,6 +2,9 @@ package group.jpa.ogm.app.controller;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -15,6 +18,7 @@ public class DAOControllerInterfaceImpl extends UnicastRemoteObject implements D
 	private static final long serialVersionUID = 1L;
 	private ApplicationContext ctx = new AnnotationConfigApplicationContext(Config.class);
 	private ServiceDAO daoService = ctx.getBean(ServiceDAO.class);
+	private EntityManager manager;
 
 	public DAOControllerInterfaceImpl() throws RemoteException {
 	}
@@ -26,4 +30,7 @@ public class DAOControllerInterfaceImpl extends UnicastRemoteObject implements D
 	public EmployeeDAO getEmployeeDAO(){
 		return this.daoService.getEmployeeDAO();
 	}
+
+	
+
 }

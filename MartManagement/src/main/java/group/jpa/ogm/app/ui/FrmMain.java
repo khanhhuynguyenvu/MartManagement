@@ -17,6 +17,7 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -32,13 +33,14 @@ public class FrmMain extends JFrame implements ActionListener {
 	JPasswordField pwfPass;
 	JTextField txtUserName;
 	JButton btnConfirm;
+	
 
 	// frm Main
 	JButton btnLogin, btnLogout, btnAccount, btnEmployeeAD, btnExit;
 	JButton btnOrder, btnStock, btnOrderList, btnCustomer, btnStatistic, btnReceipt;
 
 	public FrmMain() {
-		super("Quáº£n lÃ½ cá»­a hÃ ng");
+		super("Quản lí cửa hàng");
 		setSize(900, 700);
 		setLocationRelativeTo(null);
 		setResizable(false);

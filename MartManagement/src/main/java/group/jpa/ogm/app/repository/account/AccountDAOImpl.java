@@ -1,20 +1,19 @@
 package group.jpa.ogm.app.repository.account;
 
+import java.rmi.RemoteException;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+
 import org.bson.Document;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
 import group.jpa.ogm.app.entities.Account;
-import group.jpa.ogm.app.entities.Employee;
 import group.jpa.ogm.app.repository.generics.GenericsDAOImpl;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
-
-import java.rmi.RemoteException;
-import java.util.List;
 
 @Component
 public class AccountDAOImpl extends GenericsDAOImpl<Account> implements AccountDAO {
