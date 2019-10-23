@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import group.jpa.ogm.app.config.Config;
+import group.jpa.ogm.app.entities.Account;
 import group.jpa.ogm.app.entities.Employee;
 import group.jpa.ogm.app.repository.employee.EmployeeDAO;
 import group.jpa.ogm.app.service.daoservice.ServiceDAO;
@@ -29,8 +30,7 @@ public class DAOControllerInterfaceImpl extends UnicastRemoteObject implements D
 
 	public EmployeeDAO getEmployeeDAO(){
 		return this.daoService.getEmployeeDAO();
-	}
-
+	}	
 	
 
 }

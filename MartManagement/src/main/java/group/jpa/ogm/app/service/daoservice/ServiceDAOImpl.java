@@ -5,6 +5,8 @@ import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import group.jpa.ogm.app.entities.Account;
+import group.jpa.ogm.app.repository.account.AccountDAO;
 import group.jpa.ogm.app.repository.employee.EmployeeDAO;
 
 @Service

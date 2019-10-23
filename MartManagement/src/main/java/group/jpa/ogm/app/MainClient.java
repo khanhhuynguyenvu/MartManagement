@@ -21,18 +21,27 @@ public class MainClient {
 		account1.setUsername("ac1");
 		account1.setPassword("123465");
 		account1.setType(1);
+		
+		Account account2 = new Account();
+
+		account2.setUsername("ac2");
+		account2.setPassword("123465");
+		account2.setType(2);
 
 		Employee em = new Employee();
 		em.setFullName("Luan111");
 		em.setGender("Male");
 		em.setAccount(account1);
 
+		callSerivce.getAccountDAO().save(account2);
+		em.setAccount(account2);
+
 		callSerivce.getAccountDAO().save(account1);
 
 		//callSerivce.getEmployeeDAO().save(em);
 		
 		System.out.println("x: " + callSerivce.getAccountDAO().findByUserName("ac1").getUsername());
-
+		System.out.println("x: " + callSerivce.getAccountDAO().findByUserName("ac2").getUsername());
 		System.out.println("Done!");
 	}
 }
