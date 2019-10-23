@@ -6,20 +6,32 @@ import java.text.ParseException;
 
 import group.jpa.ogm.app.config.Config;
 import group.jpa.ogm.app.controller.client.ClientController;
+import group.jpa.ogm.app.entities.Account;
 import group.jpa.ogm.app.entities.Employee;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class MainClient {
-    public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
-    	ClientController callSerivce = new ClientController("172.16.0.236",9999);
-//    	Employee em = new Employee();
-//    	em.setFullName("Luan");
-//    	em.setGender("Male");
-//    	callSerivce.getEmployeeDAO().save(em);
-    	Employee em = callSerivce.getEmployeeDAO().findByName("Luan");
-    	System.out.println(em.getId()+" "+em.getFullName()+" "+em.getGender());
-    	System.out.println("Done!");
-    }
+	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
+		ClientController callSerivce = new ClientController("172.16.0.164", 9999);
+
+		Account account1 = new Account();
+
+		account1.setUsername("ac1");
+		account1.setPassword("123465");
+
+		Employee em = new Employee();
+		em.setFullName("Luan111");
+		em.setGender("Male");
+		em.setAccount(account1);
+
+		callSerivce.getAccountDAO().save(account1);
+
+		//callSerivce.getEmployeeDAO().save(em);
+		
+		System.out.println("x: " + callSerivce.getAccountDAO().findByUserName("ac1").getUsername());
+
+		System.out.println("Done!");
+	}
 }

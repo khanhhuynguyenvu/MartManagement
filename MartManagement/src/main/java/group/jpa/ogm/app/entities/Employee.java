@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -28,10 +30,14 @@ public class Employee implements Serializable {
 	private Date birthdate;
 	@Column(name = "Gender")
 	private String gender;
-	@OneToOne
+
+	@OneToOne(cascade = {CascadeType.ALL})
+	@JoinColumn(name = "account_id")
 	private Account account;
 	@OneToMany
-	private List<Invoice> invoices = new ArrayList<Invoice>();
+	private List<Invoice> invoices =  new ArrayList<Invoice>();
+	
+	
 
 	public String getId() {
 		return id;

@@ -32,4 +32,19 @@ public class EmployeeDAOImpl extends GenericsDAOImpl<Employee> implements Employ
 		return listEm.get(0);
 	}
 
+	public Employee add(Employee e) throws RemoteException {
+
+		EntityTransaction tr = entityManager.getTransaction();
+		try {
+			tr.begin();
+
+			entityManager.persist(e);
+
+			tr.commit();
+		} catch (Exception e2) {
+			// TODO: handle exception
+		}
+		return e;
+	}
+
 }
