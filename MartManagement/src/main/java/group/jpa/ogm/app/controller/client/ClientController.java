@@ -10,14 +10,10 @@ import group.jpa.ogm.app.repository.account.AccountDAO;
 import group.jpa.ogm.app.repository.employee.EmployeeDAO;
 
 public class ClientController {
-	private String HOST;
-	private int PORT;
 	private Registry registry;
 
 	public ClientController(String hOST, int pORT) throws RemoteException {
 		super();
-		HOST = hOST;
-		PORT = pORT;
 		this.registry = LocateRegistry.getRegistry(hOST, pORT);
 	}
 

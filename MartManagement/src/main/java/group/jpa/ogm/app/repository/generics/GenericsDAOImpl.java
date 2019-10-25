@@ -1,19 +1,20 @@
 package group.jpa.ogm.app.repository.generics;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
+import group.jpa.ogm.app.config.SingletonPersistenceConfig;
+
 public class GenericsDAOImpl<T> extends UnicastRemoteObject implements GenericsDAO<T> {
-	protected GenericsDAOImpl(EntityManager entityManager) throws RemoteException {
+	public GenericsDAOImpl() throws RemoteException {
 		super();
-		this.entityManager = entityManager;
 	}
 
 	private static final long serialVersionUID = -3127853915912269457L;
-
-	public final EntityManager entityManager;
+	protected EntityManager entityManager = SingletonPersistenceConfig.getInstance().getEntityManager();
 
 	public T findById(String id, Class<T> t) {
 		return entityManager.find(t, id);
