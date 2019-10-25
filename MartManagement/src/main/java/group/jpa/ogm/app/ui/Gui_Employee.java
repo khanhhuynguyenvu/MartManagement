@@ -7,13 +7,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -28,7 +31,12 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import group.jpa.ogm.app.controller.client.ClientController;
+import group.jpa.ogm.app.entities.Account;
 import group.jpa.ogm.app.entities.Employee;
+import group.jpa.ogm.app.entities.Good;
+import group.jpa.ogm.app.entities.Invoice;
+import group.jpa.ogm.app.entities.InvoiceDetails;
+import javassist.expr.Instanceof;
 
 /**
  * 
@@ -36,7 +44,7 @@ import group.jpa.ogm.app.entities.Employee;
  *
  */
 
-public class Gui_Employee extends JFrame {
+public class Gui_Employee extends JFrame implements ActionListener, MouseListener {
 	/**
 	 * 
 	 */
@@ -47,7 +55,7 @@ public class Gui_Employee extends JFrame {
 	private JPasswordField txtmkc, txtmkm, txtnlmkm;
 	private JTabbedPane tbpqlcn;
 
-	// NhÃ¢n viÃªn
+	// Employee
 	private JLabel lblId, lblFullName, lblAddress, lblDateOfBirth;
 	private JTextField txtId, txtFullName, txtAddress, txtDateOfBirth;
 
@@ -58,21 +66,28 @@ public class Gui_Employee extends JFrame {
 
 	// Order
 
-	JTextField txtSearch, txtQuantity, txtPrice;
+	JTextField txtSearch, txtProductId, txtQuantity, txtPrice;
 	JLabel lblSearch, lblName, lblQuantity, lblPrice;
 	JButton btnSearch;
-	JComboBox<String> cbbName;
-	JButton btnAdd, btnRemove, btnModify, btnSave, btnIcon, btnLogout, btnin;
+	JButton btnAdd, btnRemove, btnModify, btnSave, btnIcon, btnLogout, btnPrintInvoice;
+
+	JComboBox<String> cbbProductName;
+	DefaultComboBoxModel<String> modelcbbProductName;
+
 	///////////////
 
 	private JTabbedPane tbp;
-	private JTable table;
-	private DefaultTableModel tablemodel;
+	private JTable tableProduct;
+	private DefaultTableModel modelProduct;
 	/*
 	 * private NhanVienNhanBenhDaos nhanVienNhanBenhDaos; private List<BenhNhan>
 	 * dsbn; private List<NhanVien> dsnv;
 	 */
 	private JButton btnHelp;
+
+	//
+
+	static ClientController callSerivce;
 
 	public Gui_Employee() throws RemoteException, NotBoundException {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -82,6 +97,9 @@ public class Gui_Employee extends JFrame {
 		setIconImage(new ImageIcon(getClass()
 				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
+
+		callSerivce = new ClientController("192.168.31.21", 9999);
+
 		Box bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
 		/**
 		 * CÃ¡i nÃ y lÃ  tiÃªu Ä‘ï¿½?
@@ -125,7 +143,14 @@ public class Gui_Employee extends JFrame {
 		Box bqlbn1_ThongTin_Ho = Box.createHorizontalBox();
 		bqlbn1_ThongTin_Ho.add(new JLabel("Tên sản phẩm: "));
 		bqlbn1_ThongTin_Ho.add(Box.createHorizontalStrut(60));
-		bqlbn1_ThongTin_Ho.add(cbbName = new JComboBox<String>());
+		modelcbbProductName = new DefaultComboBoxModel<String>();
+		bqlbn1_ThongTin_Ho.add(cbbProductName = new JComboBox<String>(modelcbbProductName));
+
+		Box bqlbn1_ThongTin_PId = Box.createHorizontalBox();
+		bqlbn1_ThongTin_PId.add(new JLabel("Mã sản phẩm: "));
+		bqlbn1_ThongTin_PId.add(Box.createHorizontalStrut(60));
+		bqlbn1_ThongTin_PId.add(txtProductId = new JTextField());
+
 		// cbbName.setPreferredSize(getPreferredSize());
 
 		Box bqlbn1_ThongTin_Ten = Box.createHorizontalBox();
@@ -144,6 +169,9 @@ public class Gui_Employee extends JFrame {
 		bqlbn1_ThongTin.add(Box.createVerticalStrut(5));
 		bqlbn1_ThongTin.add(bqlbn1_ThongTin_Ho);
 		bqlbn1_ThongTin.add(Box.createVerticalStrut(10));
+		bqlbn1_ThongTin.add(bqlbn1_ThongTin_PId);
+		bqlbn1_ThongTin.add(Box.createVerticalStrut(10));
+
 		bqlbn1_ThongTin.add(bqlbn1_ThongTin_Ten);
 		bqlbn1_ThongTin.add(Box.createVerticalStrut(5));
 		bqlbn1_ThongTin.add(bqlbn1_ThongTin_Sdt);
@@ -169,19 +197,19 @@ public class Gui_Employee extends JFrame {
 				btnRemove = new JButton("Xóa", new ImageIcon(getClass().getResource("../ima/if_Save_1493294.png"))));
 		btnRemove.setMaximumSize(getMaximumSize());
 		bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
-		bqlbn2_ChucNang_1.add(btnin = new JButton("In hóa đơn",
+		bqlbn2_ChucNang_1.add(btnPrintInvoice = new JButton("In hóa đơn",
 				new ImageIcon(getClass().getResource("../ima/if_receipt_3583272.png"))));
-		btnin.setMaximumSize(getMaximumSize());
+		btnPrintInvoice.setMaximumSize(getMaximumSize());
 
 		bqlbn2_ChucNang.add(bqlbn2_ChucNang_1);
 
 		Box bqlbn3_Danhsach = Box.createVerticalBox(); // bqlbn3_Danhsach lÃ  quáº£n lÃ½ cÃ¡i báº£ng danh sÃ¡ch
-		bqlbn3_Danhsach.setBorder(BorderFactory.createTitledBorder("Danh sÃ¡ch sáº£n pháº©m mua"));
+		bqlbn3_Danhsach.setBorder(BorderFactory.createTitledBorder("Danh sách mua"));
 		Box bqlbn3_Danhsach_1 = Box.createHorizontalBox();
 		String[] headers = "Mã sản phẩm; Tên sản phẩm; Số lượng; Giá mỗi sản phẩm; Thành tiền".split(";");
-		tablemodel = new DefaultTableModel(headers, 0);
-		bqlbn3_Danhsach_1.add(new JScrollPane(table = new JTable(tablemodel)));
-		table.setDefaultEditor(Object.class, null);
+		modelProduct = new DefaultTableModel(headers, 0);
+		bqlbn3_Danhsach_1.add(new JScrollPane(tableProduct = new JTable(modelProduct)));
+		// tableProduct.setDefaultEditor(Object.class, null);
 		bqlbn3_Danhsach.add(bqlbn3_Danhsach_1);
 
 		bqlbn.add(bqlbn1);
@@ -302,38 +330,176 @@ public class Gui_Employee extends JFrame {
 		tbp.addTab("Quản lý bán hàng", bqlbn);
 		tbp.setFont(new Font("Times new Roman", Font.PLAIN, 20));
 		tbp.setTabPlacement(JTabbedPane.LEFT);
-		/////////////////////////////////
-		/**
-		 * XÆ°Ì‰ lyï¿½? traÌ£ng thaï¿½?i ban Ä‘Ã¢Ì€u
-		 */
-		/////////////////////////////////
-		/*
-		 * txtmanv.setEditable(false); txttennv.setEditable(false);
-		 * txthonv.setEditable(false); txtngaysinhnv.setEditable(false);
-		 * txtdiachinv.setEditable(false); txtsdtnv.setEditable(false);
-		 */
 
-		// btnLuu.setEnabled(false);
-		table.setDefaultEditor(Object.class, null);
-		table.setEnabled(false);
-
-		// cmbTimbs.setEnabled(false);
-		ClientController callSerivce = new ClientController("172.16.0.164",9999);
-		Employee em = callSerivce.getEmployeeDAO().findByName("Luan");
-		txtId.setText(em.getId());
-		txtFullName.setText(em.getFullName());
-		
 		bt.add(tbp);
 		add(bt);
 		setLocationRelativeTo(null);
 		setVisible(true);
+		LoadAllProductToComboBox();
+
+		btnAdd.addActionListener(this);
+		btnRemove.addActionListener(this);
+		btnPrintInvoice.addActionListener(this);
+
+		cbbProductName.addActionListener(this);
+		tableProduct.addMouseListener(this);
+	}
+
+	public void LoadAllProductToComboBox() throws AccessException, RemoteException, NotBoundException {
+		ArrayList<Good> listGoods = (ArrayList<Good>) callSerivce.getGoodDAO().fillAll();
+
+		System.out.println("size: " + listGoods.size());
+
+		for (int i = 0; i < listGoods.size(); i++) {
+
+			String getName = listGoods.get(i).getName();
+
+			modelcbbProductName.addElement(getName);
+
+		}
+	}
+
+	public void LoadProductByName(String name) throws AccessException, RemoteException, NotBoundException {
+		Good g = callSerivce.getGoodDAO().findByProductName(name);
+
+		if (g != null) {
+			txtProductId.setText(g.getId());
+			txtQuantity.setText(g.getQuantity().toString());
+			txtPrice.setText(g.getPrice().toString());
+		}
+	}
+
+	public void BuyProduct() {
+
+		String name = cbbProductName.getSelectedItem().toString();
+		String id = txtProductId.getText();
+		double price = Double.parseDouble(txtPrice.getText());
+		int quantity = Integer.parseInt(txtQuantity.getText());
+		double total = price * quantity;
+
+		String rowData[] = { id, name, Integer.toString(quantity), Double.toString(price), Double.toString(total)};
+		modelProduct.addRow(rowData);
 
 	}
-	public void hienthithongtin() {
-		
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object obj = e.getSource();
+
+		if (obj.equals(btnAdd)) {
+			BuyProduct();
+		} else if (obj.equals(btnRemove)) {
+			int row = tableProduct.getSelectedRow();
+			if (row >= 0) {
+				modelProduct.removeRow(row);
+			}
+		} else if (obj.equals(btnPrintInvoice)) {
+
+			// 1 insert invoice (Employee) .save
+			// 1 chi tiết HD có 1 hd & nhiều hàng hóa insert Hóa đơn và CTHD & Insert nhiều
+			// Good vào CTHD
+
+			Invoice inVoice = new Invoice();
+			Employee em = new Employee();
+			Account ac = new Account();
+			try {
+				ac = callSerivce.getAccountDAO().findByUserName("demo1");
+
+				System.out.println("account " + ac);
+
+			} catch (RemoteException | NotBoundException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+
+			em.setAccount(ac);
+
+			// iVoice.setEmployee(em);
+
+			inVoice.setInvoiceDate(new Date());
+
+			try {
+				callSerivce.getInvoiceDAO().save(inVoice);
+			} catch (RemoteException | NotBoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			InvoiceDetails inVoiceDetails = new InvoiceDetails();
+
+			List<Good> listGoods = new ArrayList<>();
+
+			for (int i = 0; i < modelProduct.getRowCount(); i++) {
+				String id = modelProduct.getValueAt(i, 0).toString();
+				String name = modelProduct.getValueAt(i, 1).toString();
+				String quantity = (String) modelProduct.getValueAt(i, 2);
+				String price = (String) modelProduct.getValueAt(i, 3);
+
+				Good g = new Good();
+				g.setId(id);
+				g.setName(name);
+				g.setQuantity(Integer.parseInt(quantity));
+				//g.setPrice(Double.parseDouble(price));
+
+				listGoods.add(g);
+				// callSerivce.getInvoiceDetailsDAO().save(t);
+			}
+
+			inVoiceDetails.setInvoice(inVoice);
+			inVoiceDetails.setGoods(listGoods);
+
+			try {
+				callSerivce.getInvoiceDetailsDAO().save(inVoiceDetails);
+			} catch (RemoteException | NotBoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		}
+
+		if (obj.equals(cbbProductName)) {
+
+			String name = cbbProductName.getSelectedItem().toString();
+
+			try {
+				LoadProductByName(name);
+			} catch (RemoteException | NotBoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		int row = tableProduct.getSelectedRow();
+		System.out.println("row: " + row);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
 
 	}
 
-	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
 
 }

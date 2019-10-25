@@ -56,7 +56,7 @@ public class Gui_Manager extends JFrame {
 			lblAccNoActive;
 
 	JButton acc_btnAdd_Acc, acc_btnRemove_Acc, acc_btnModify_Acc, acc_btnSave_Acc, acc_btnSearch_Acc;
-	// Quáº£n lÃ­ nhÃ¢n viÃªn
+	// Quản lý nhân viên
 	private JLabel lblNhanVienID, lblHoNhanVien, lblTenNhanVien, lblSDTNhanVien, lblNSNhanVien, lblDiaChiNhanVien;
 	private JTextField txtNhanVienID, txtHoNhanVien, txtTenNhanVien, txtSDTNhanVien, txtDiaChiNhanVien, txtTimNhanVien;
 //private DatePicker datePicker;

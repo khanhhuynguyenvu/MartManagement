@@ -1,4 +1,4 @@
-package ui;
+package group.jpa.ogm.app.ui;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -21,7 +21,7 @@ public class DynamicTree extends JPanel {
 	public DynamicTree() {
 
 		super(new GridLayout(1, 0));
-		rootNode = new DefaultMutableTreeNode("Kho hàng");
+		rootNode = new DefaultMutableTreeNode("Kho hï¿½ng");
 		treeModel = new DefaultTreeModel(rootNode);
 
 		tree = new JTree(treeModel);

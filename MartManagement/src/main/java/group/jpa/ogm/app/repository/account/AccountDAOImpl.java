@@ -21,6 +21,7 @@ public class AccountDAOImpl extends GenericsDAOImpl<Account> implements AccountD
 		super(entityManager);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Account findByUserName(String userName) throws RemoteException {
 		EntityTransaction tr = entityManager.getTransaction();
 		List<Account> list = null;

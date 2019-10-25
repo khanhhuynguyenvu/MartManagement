@@ -19,6 +19,7 @@ public class Invoice implements Serializable {
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	@Column(name = "invoice_id")
 	private String id;
 	@Column(name = "InvoiceDate")
 	private Date invoiceDate;

@@ -3,45 +3,36 @@ package group.jpa.ogm.app;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import group.jpa.ogm.app.config.Config;
 import group.jpa.ogm.app.controller.client.ClientController;
 import group.jpa.ogm.app.entities.Account;
 import group.jpa.ogm.app.entities.Employee;
+import group.jpa.ogm.app.entities.Good;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
-		ClientController callSerivce = new ClientController("172.16.0.173", 9999);
+		ClientController callSerivce = new ClientController("192.168.31.21", 9999);
 
-		Account account1 = new Account();
+	
 
-		account1.setUsername("ac1");
-		account1.setPassword("123465");
-		account1.setType(1);
+		Good g = new Good();
+		g.setName("Aquafina");	
+		g.setEnterDate(new Date());	//	SimpleDateFormat ft =  new SimpleDateFormat ("E yyyy.MM.dd");	
+		g.setPrice((double) 5000);
+		g.setQuantity(5);
 		
-		Account account2 = new Account();
-
-		account2.setUsername("ac2");
-		account2.setPassword("123465");
-		account2.setType(2);
-
-		Employee em = new Employee();
-		em.setFullName("Luan111");
-		em.setGender("Male");
-		em.setAccount(account1);
-
-		callSerivce.getAccountDAO().save(account2);
-		em.setAccount(account2);
-
-		callSerivce.getAccountDAO().save(account1);
-
-		//callSerivce.getEmployeeDAO().save(em);
+	//	callSerivce.getGoodDAO().save(g);
 		
-		System.out.println("x: " + callSerivce.getAccountDAO().findByUserName("ac1").getUsername());
-		System.out.println("x: " + callSerivce.getAccountDAO().findByUserName("ac2").getUsername());
+		
+		System.out.println("list: " + callSerivce.getGoodDAO().fillAll());
+		
+	
 		System.out.println("Done!");
 	}
 }
