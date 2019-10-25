@@ -3,9 +3,11 @@ package group.jpa.ogm.app.entities;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -17,7 +19,8 @@ public class InvoiceDetails implements Serializable {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid",strategy = "uuid2")
     private String id;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
+	@JoinColumn(name = "Invoice_id")
     private Invoice invoice;
     @OneToMany
     private List<Good> goods;

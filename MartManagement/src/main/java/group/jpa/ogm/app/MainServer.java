@@ -6,10 +6,18 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 
 import group.jpa.ogm.app.helper.RegisterRMIHelper;
+import group.jpa.ogm.app.repository.account.AccountDAO;
+import group.jpa.ogm.app.repository.account.AccountDAOImpl;
 import group.jpa.ogm.app.repository.customer.CustomerDAO;
 import group.jpa.ogm.app.repository.customer.CustomerDAOImpl;
 import group.jpa.ogm.app.repository.employee.EmployeeDAO;
 import group.jpa.ogm.app.repository.employee.EmployeeDAOImpl;
+import group.jpa.ogm.app.repository.goods.GoodDAO;
+import group.jpa.ogm.app.repository.goods.GoodDAOImpl;
+import group.jpa.ogm.app.repository.invoice.InvoiceDAO;
+import group.jpa.ogm.app.repository.invoice.InvoiceDAOImpl;
+import group.jpa.ogm.app.repository.invoiceDetails.InvoiceDetailsDAO;
+import group.jpa.ogm.app.repository.invoiceDetails.InvoiceDetailsDAOImpl;
 
 public class MainServer {
 	private static final int PORT = 9999;
@@ -17,13 +25,19 @@ public class MainServer {
 	public static void main(String[] args) throws RemoteException, AlreadyBoundException {
 		try {
 			InetAddress.getLocalHost();
-			System.setProperty("java.rmi.server.hostname", "192.168.1.7");
+			System.setProperty("java.rmi.server.hostname", "192.168.31.21");
 		} catch (UnknownHostException e) {
 			System.err.println("Can't get information host");
 		}
 		RegisterRMIHelper registerRMIHelper = RegisterRMIHelper.getInstance(PORT);
+
 		registerRMIHelper.registerObject(EmployeeDAO.class.getSimpleName(), new EmployeeDAOImpl());
 		registerRMIHelper.registerObject(CustomerDAO.class.getSimpleName(), new CustomerDAOImpl());
+		registerRMIHelper.registerObject(AccountDAO.class.getSimpleName(), new AccountDAOImpl());
+		registerRMIHelper.registerObject(GoodDAO.class.getSimpleName(), new GoodDAOImpl());
+		registerRMIHelper.registerObject(InvoiceDAO.class.getSimpleName(), new InvoiceDAOImpl());
+		registerRMIHelper.registerObject(InvoiceDetailsDAO.class.getSimpleName(), new InvoiceDetailsDAOImpl());
+
 		System.out.println("Server started");
 	}
 }
