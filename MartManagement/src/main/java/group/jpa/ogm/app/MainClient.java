@@ -12,7 +12,7 @@ import group.jpa.ogm.app.entities.Good;
 
 public class MainClient {
     public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
-    	ClientController callSerivce = new ClientController("172.16.0.101",9999);
+    	ClientController callSerivce = new ClientController("192.168.1.39",9999);
     	
     	Account ac = new Account();
     	ac.setUsername("zz");
@@ -30,14 +30,14 @@ public class MainClient {
     	
     	Good g = new Good();
     	
-    	g.setName("Aqua");
+    	g.setName("Coca cola");
     	g.setQuantity(5);
     	g.setPrice((double) 5000);
     	g.setEnterDate(new Date());
     	
-    	//callSerivce.getGoodDAO().save(g);
+    	callSerivce.getGoodDAO().save(g);
     	
-    	System.out.println("find Good: " + callSerivce.getGoodDAO().findGoodByKey("L"));
+    	System.out.println("find Good: " + callSerivce.getGoodDAO().findByProductKey("L"));
     	
     	System.out.println("Done!");
     	

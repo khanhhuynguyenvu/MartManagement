@@ -20,7 +20,7 @@ public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
 	public GoodDAOImpl() throws RemoteException {
 	}
 
-	public List<Good> fillAll() throws RemoteException {
+	public List<Good> findAll() throws RemoteException {
 		EntityTransaction tr = entityManager.getTransaction();
 		tr.begin();
 
@@ -50,7 +50,7 @@ public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
 		return list.get(0);
 	}
 
-	public List<Good> findGoodByKey(String key) throws RemoteException {
+	public List<Good> findByProductKey(String key) throws RemoteException {
 		EntityTransaction tr = entityManager.getTransaction();
 		tr.begin();
 
