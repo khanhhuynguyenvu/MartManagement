@@ -17,7 +17,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
-		ClientController callSerivce = new ClientController("192.168.31.21", 9999);
+		ClientController callSerivce = new ClientController(" 172.16.0.164", 9999);
 
 	
 

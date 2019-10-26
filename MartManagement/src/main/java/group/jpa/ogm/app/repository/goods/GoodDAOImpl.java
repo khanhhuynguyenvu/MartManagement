@@ -23,7 +23,7 @@ public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
 	}
 
 	@Override
-	public List<Good> fillAll() throws RemoteException {
+	public List<Good> findAll() throws RemoteException {
 		EntityTransaction tr = entityManager.getTransaction();
 		tr.begin();
 
@@ -52,5 +52,32 @@ public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
 		tr.commit();
 
 		return list.get(0);
+	}
+
+	public List<Good> findByProductKey(String key) throws RemoteException {
+		EntityTransaction tr = entityManager.getTransaction();
+		tr.begin();
+
+		// Document filter = new Document("$regex", "/.*" + key + ".*/");
+
+		// Pattern pattern = Pattern.compile("/.*" + key + ".*/");
+		// System.out.println("Ahahaa");
+		Document query = new Document("Name", new Document("$regex", key).append("$options", "i"));
+
+		// System.out.println("a: " + query);
+
+		Gson gson = new Gson();
+		Query q = entityManager.createNativeQuery(gson.toJson(query), Good.class);
+
+		System.out.println(gson.toJson(query));
+
+		@SuppressWarnings("unchecked")
+		List<Good> list = q.getResultList();
+
+		System.out.println("size: " + list.size());
+
+		tr.commit();
+
+		return list;
 	}
 }
