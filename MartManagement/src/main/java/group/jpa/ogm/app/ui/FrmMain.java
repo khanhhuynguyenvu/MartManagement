@@ -1,4 +1,4 @@
-package group.jpa.ogm.app.ui;
+	package group.jpa.ogm.app.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -169,13 +169,22 @@ public class FrmMain extends JFrame implements ActionListener {
 
 		if (obj.equals(btnLogin)) {
 			try {
-				new FrmLogin().setVisible(true);
+				new Gui_Employee().setVisible(true);
 			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (NotBoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		} else if (obj.equals(btnAccount)) {
-			// new FrmAccount().setVisible(true);
+			System.out.println("hello kiet");
+			 try {
+				new Gui_Employee().setVisible(true);
+			} catch (RemoteException | NotBoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		} else if (obj.equals(btnExit)) {
 			System.out.println("asdasda");
 			System.exit(0);
@@ -192,7 +201,7 @@ public class FrmMain extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		} else if (obj.equals(btnStock)) {
-			// new Gui_Employee().setVisible(true);
+			 new Gui_Manager().setVisible(true);
 
 		} else if (obj.equals(btnOrder)) {
 			// new FrmOrder().setVisible(true);
@@ -223,4 +232,6 @@ public class FrmMain extends JFrame implements ActionListener {
 		btnOrder.setEnabled(true);
 		btnStock.setEnabled(true);
 	}
+	
+	
 }
