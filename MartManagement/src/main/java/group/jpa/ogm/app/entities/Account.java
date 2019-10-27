@@ -29,6 +29,15 @@ public class Account implements Serializable {
 	private Date startingDate;
 	@Column(name = "Status")
 	private String status;
+	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getUsername() {
 		return username;

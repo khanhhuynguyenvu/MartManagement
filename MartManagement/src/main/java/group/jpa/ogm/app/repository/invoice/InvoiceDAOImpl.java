@@ -4,11 +4,8 @@ import java.rmi.RemoteException;
 
 import javax.persistence.EntityManager;
 
-
-
 import group.jpa.ogm.app.entities.Invoice;
 import group.jpa.ogm.app.repository.generics.GenericsDAOImpl;
-
 
 public class InvoiceDAOImpl extends GenericsDAOImpl<Invoice> implements InvoiceDAO {
 

@@ -15,8 +15,12 @@ public class MainClient {
     	ClientController callSerivce = new ClientController("192.168.1.39",9999);
     	
     	Account ac = new Account();
-    	ac.setUsername("zz");
+    	ac.setUsername("kiet");
     	ac.setPassword("123");
+    	ac.setStartingDate(new Date());
+    	ac.setStatus("Yes");
+    	
+    //	callSerivce.getAccountDAO().save(ac);
     	
     	Employee em = new Employee();
     	em.setFullName("Ronaldo Nguyen");
@@ -35,9 +39,14 @@ public class MainClient {
     	g.setPrice((double) 5000);
     	g.setEnterDate(new Date());
     	
-    	callSerivce.getGoodDAO().save(g);
+    	Account ac1 = new Account();
+    	ac1.setId("b04e88a4-ed7b-4863-949a-2de428a744cc");
     	
-    	System.out.println("find Good: " + callSerivce.getGoodDAO().findByProductKey("L"));
+    	callSerivce.getAccountDAO().remove(ac1);
+    	
+    //	callSerivce.getGoodDAO().save(g);
+    	
+    //	System.out.println("find Good: " + callSerivce.getGoodDAO().findByProductKey("L"));
     	
     	System.out.println("Done!");
     	
