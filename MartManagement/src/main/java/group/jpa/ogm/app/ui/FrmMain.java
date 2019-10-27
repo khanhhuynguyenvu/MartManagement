@@ -6,24 +6,21 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import group.jpa.ogm.app.entities.Account;
 
 public class FrmMain extends JFrame implements ActionListener {
 
@@ -38,7 +35,7 @@ public class FrmMain extends JFrame implements ActionListener {
 	// frm Main
 	JButton btnLogin, btnLogout, btnAccount, btnEmployeeAD, btnExit;
 	JButton btnOrder, btnStock, btnOrderList, btnCustomer, btnStatistic, btnReceipt;
-
+	private Account ac;
 	public FrmMain() {
 		super("Quản lí cửa hàng");
 		setSize(900, 700);
@@ -189,11 +186,8 @@ public class FrmMain extends JFrame implements ActionListener {
 
 		} else if (obj.equals(btnOrder)) {
 			try {
-				new Gui_Employee().setVisible(true);
+				new FrmLogin().setVisible(true);
 			} catch (RemoteException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (NotBoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}

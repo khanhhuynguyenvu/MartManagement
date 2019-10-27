@@ -20,10 +20,11 @@ import javax.persistence.EntityManager;
 
 public class MainServer {
     private static final  int PORT = 9999;
-    public static void main(String[] args) throws RemoteException, AlreadyBoundException {
+    @SuppressWarnings("resource")
+	public static void main(String[] args) throws RemoteException, AlreadyBoundException {
         try {
             InetAddress.getLocalHost();
-            System.setProperty("java.rmi.server.hostname", "172.16.0.173");
+            System.setProperty("java.rmi.server.hostname","192.168.1.4");
         } catch (UnknownHostException e) {
             System.err.println("Can't get information host");
         }

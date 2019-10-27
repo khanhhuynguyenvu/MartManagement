@@ -16,6 +16,8 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.mongodb.lang.Nullable;
+
 @Entity
 public class Employee implements Serializable {
 	@Id
