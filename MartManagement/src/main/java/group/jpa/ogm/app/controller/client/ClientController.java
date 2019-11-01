@@ -7,6 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import group.jpa.ogm.app.repository.account.AccountDAO;
+import group.jpa.ogm.app.repository.category.CategoryDAO;
 import group.jpa.ogm.app.repository.employee.EmployeeDAO;
 import group.jpa.ogm.app.repository.goods.GoodDAO;
 import group.jpa.ogm.app.repository.invoice.InvoiceDAO;
@@ -38,6 +39,10 @@ public class ClientController {
 
 	public InvoiceDetailsDAO getInvoiceDetailsDAO() throws AccessException, RemoteException, NotBoundException {
 		return (InvoiceDetailsDAO) this.registry.lookup(InvoiceDetailsDAO.class.getSimpleName());
+	}
+	
+	public CategoryDAO getCategoryDAO()  throws AccessException, RemoteException, NotBoundException {
+		return (CategoryDAO) this.registry.lookup(CategoryDAO.class.getSimpleName());
 	}
 
 }

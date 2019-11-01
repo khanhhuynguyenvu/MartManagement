@@ -8,6 +8,8 @@ import java.rmi.RemoteException;
 import group.jpa.ogm.app.helper.RegisterRMIHelper;
 import group.jpa.ogm.app.repository.account.AccountDAO;
 import group.jpa.ogm.app.repository.account.AccountDAOImpl;
+import group.jpa.ogm.app.repository.category.CategoryDAO;
+import group.jpa.ogm.app.repository.category.CategoryDAOImpl;
 import group.jpa.ogm.app.repository.customer.CustomerDAO;
 import group.jpa.ogm.app.repository.customer.CustomerDAOImpl;
 import group.jpa.ogm.app.repository.employee.EmployeeDAO;
@@ -25,7 +27,7 @@ public class MainServer {
 	public static void main(String[] args) throws RemoteException, AlreadyBoundException {
 		try {
 			InetAddress.getLocalHost();
-			System.setProperty("java.rmi.server.hostname", "192.168.1.39");
+			System.setProperty("java.rmi.server.hostname", "192.168.31.22");
 		} catch (UnknownHostException e) {
 			System.err.println("Can't get information host");
 		}
@@ -37,6 +39,7 @@ public class MainServer {
 		registerRMIHelper.registerObject(GoodDAO.class.getSimpleName(), new GoodDAOImpl());
 		registerRMIHelper.registerObject(InvoiceDAO.class.getSimpleName(), new InvoiceDAOImpl());
 		registerRMIHelper.registerObject(InvoiceDetailsDAO.class.getSimpleName(), new InvoiceDetailsDAOImpl());
+		registerRMIHelper.registerObject(CategoryDAO.class.getSimpleName(), new CategoryDAOImpl());
 
 		System.out.println("Server started");
 	}
