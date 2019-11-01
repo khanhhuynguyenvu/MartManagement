@@ -1,4 +1,4 @@
-package group.jpa.ogm.app.ui;
+zzpackage group.jpa.ogm.app.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -101,7 +101,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
 
-		callSerivce = new ClientController("192.168.1.39", 9999);
+		callSerivce = new ClientController("192.168.31.22", 9999);
 
 		Box bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
 		/**
