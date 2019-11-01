@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.rmi.AccessException;
@@ -35,6 +36,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.TreePath;
 
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 import com.toedter.calendar.JDateChooser;
@@ -91,6 +93,8 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	JComboBox<String> cbbCategoryName;
 	DefaultComboBoxModel<String> modelcbbCategoryName;
 
+	TreeProducts treeProducts;
+
 	static ClientController callService;
 
 	private Account ac;
@@ -109,7 +113,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		tabManager = new JTabbedPane();
 		tabManager.setTabPlacement(JTabbedPane.LEFT);
 
-		callService = new ClientController("192.168.31.22", 9999);
+		callService = new ClientController("172.16.0.101", 9999);
 
 		//
 		Box acc_bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
@@ -394,12 +398,16 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bStock_TT5.add(stock_txtPrice = new JTextField());
 
 		// tree
-		DynamicTree treeGoods;
-		treeGoods = new DynamicTree();
+		// DynamicTree treeGoods;
+		// treeGoods = new DynamicTree();
 
-		treeGoods.setPreferredSize(new Dimension(250, 150));
-		bStock.add(treeGoods);
+		// treeGoods.setPreferredSize(new Dimension(250, 150));
+		// bStock.add(treeGoods);
 		// add(treeGoods, BorderLayout.WEST);
+
+		treeProducts = new TreeProducts();
+		treeProducts.setPreferredSize(new Dimension(250, 350));
+		bStock.add(treeProducts);
 
 		///
 
@@ -448,8 +456,8 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		/* load data */
 
 		LoadAccountsToTable();
-	//	LoadAllCategoiesToComboBox();
-		// LoadProductsToTable();
+		LoadAllCategoiesToComboBox();
+		LoadGoodsToTable();
 
 		/* add actionListener account frame */
 
@@ -461,6 +469,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 		/* add actionlListener stock frame */
 		stock_btnAdd.addActionListener(this);
+		tableGood.addMouseListener(this);
 
 		add(tabManager, BorderLayout.CENTER);
 		add(tabManager);
@@ -504,28 +513,46 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		int row = tableAccount.getSelectedRow();
+		int rowAcc = tableAccount.getSelectedRow();
+		int rowStock = tableGood.getSelectedRow();
 
-		if (row >= 0) {
-			txtAccId.setText(tableAccount.getValueAt(row, 0).toString());
-			txtAccUserName.setText(tableAccount.getValueAt(row, 1).toString());
+		if (rowAcc >= 0) {
+			txtAccId.setText(tableAccount.getValueAt(rowAcc, 0).toString());
+			txtAccUserName.setText(tableAccount.getValueAt(rowAcc, 1).toString());
 
-			txtAccPass.setText(tableAccount.getValueAt(row, 3).toString());
+			txtAccPass.setText(tableAccount.getValueAt(rowAcc, 3).toString());
 
 			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 			try {
-				txtAccStartingDate.setDate(sdf.parse((String) tableAccount.getValueAt(row, 4)));
+				txtAccStartingDate.setDate(sdf.parse((String) tableAccount.getValueAt(rowAcc, 4)));
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
-			if (tableAccount.getValueAt(row, 5).toString().equals("No"))
+			if (tableAccount.getValueAt(rowAcc, 5).toString().equals("No"))
 				radAccNoActive.setSelected(true);
 			else
 				radAccActive.setSelected(true);
 
 		}
+		if (rowStock >= 0) {
+			stock_txtGoodtId.setText(tableGood.getValueAt(rowStock, 0).toString());
+			cbbCategoryName.setSelectedItem((tableGood.getValueAt(rowStock, 1).toString()));
+			stock_txtGoodName.setText(tableGood.getValueAt(rowStock, 2).toString());
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+			try {
+				stock_txtEnterDate.setDate(sdf.parse((String) tableGood.getValueAt(rowStock, 3)));
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			stock_txtQuantity.setText(tableGood.getValueAt(rowStock, 4).toString());
+			stock_txtPrice.setText(tableGood.getValueAt(rowStock, 5).toString());
+		}
+
 	}
 
 	@Override
@@ -630,18 +657,20 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	}
 	/* method stock frame */
 
-	public void LoadProductsToTable() throws AccessException, RemoteException, NotBoundException {
+	public void LoadGoodsToTable() throws AccessException, RemoteException, NotBoundException {
 		ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO().findAll();
 
 		for (int i = 0; i < listGoods.size(); i++) {
 			String id = listGoods.get(i).getId();
 			String name = listGoods.get(i).getName();
-			SimpleDateFormat sdf = new SimpleDateFormat("dd//MM//yyyy");
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 			Date enterDate = listGoods.get(i).getEnterDate();
 			int quantity = listGoods.get(i).getQuantity();
 			double price = listGoods.get(i).getPrice();
+			String categoryName = listGoods.get(i).getCategory().getName();
 
-			String rowData[] = { id, name, sdf.format(enterDate), Integer.toString(quantity), Double.toString(price) };
+			String rowData[] = { id, categoryName, name, sdf.format(enterDate), Integer.toString(quantity),
+					Double.toString(price) };
 			tblModelGood.addRow(rowData);
 		}
 	}
@@ -683,12 +712,13 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		g.setPrice(price);
 		g.setCategory(category);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd//MM//yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-		String rowData[] = { name, category.getName(), sdf.format(enterDate), Integer.toString(qty),
+		String rowData[] = { "x", name, category.getName(), sdf.format(enterDate), Integer.toString(qty),
 				Double.toString(price) };
 		tblModelGood.addRow(rowData);
 		callService.getGoodDAO().save(g);
 		System.out.println("DONE");
 	}
+
 }

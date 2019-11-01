@@ -8,65 +8,23 @@ import java.util.Date;
 
 import group.jpa.ogm.app.controller.client.ClientController;
 import group.jpa.ogm.app.entities.Account;
+import group.jpa.ogm.app.entities.Category;
 import group.jpa.ogm.app.entities.Employee;
 import group.jpa.ogm.app.entities.Good;
 
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
 
-		ClientController callSerivce = new ClientController("192.168.31.22", 9999);
+		ClientController callSerivce = new ClientController("172.16.0.101", 9999);
 
 
+		Category category = new Category();
+		category.setName("Nước uống");
 		
-		Account account1=new Account();
+		//callSerivce.getCategoryDAO().save(category);
 		
-		account1.setUsername("kiet");
-		account1.setPassword("1");
-		account1.setStartingDate(new Date());
-		account1.setType(2);
-		
-		
-		Employee em = new Employee();
-		em.setFullName("NTK");
-		em.setGender("Male");
-		em.setBirthdate(new Date());
-		em.setAddress("AddressNVB");
-		em.setAccount(account1);
-		
-		callSerivce.getEmployeeDAO().save(em);
-		
-		//System.out.println("asda: " + callSerivce.getAccountDAO().findAll());
-		
-
+		System.out.println("asdas: " + callSerivce.getCategoryDAO().findbyName("Nước uống"));
 	
-//		callSerivce.getEmployeeDAO().save(em);
-//	
-		
-//		System.out.println("x: " + callSerivce.getAccountDAO().findByUserName("ac1").getUsername());
-//		System.out.println("x: " + callSerivce.getAccountDAO().findByUserName("ac2").getUsername());
-//		
-//		System.out.println(callSerivce.getAccountDAO().CheckMatKhauCu("1", "1"));
-//		
-//		
-//		System.out.println(account1.getPassword());
-//		System.out.println(callSerivce.getAccountDAO().doiMatKhau(account1, "123"));
-//		System.out.println(account1.getPassword());
-		
-		
-		Good g = new Good();
-		g.setName("Lavie");	
-		g.setEnterDate(new Date());	//	SimpleDateFormat ft =  new SimpleDateFormat ("E yyyy.MM.dd");	
-		g.setPrice((double) 5000);
-		g.setQuantity(10);
-		
-//		callSerivce.getGoodDAO().save(g);
-		
-		System.out.println("find by name: " + callSerivce.getCategoryDAO().findbyName("Nước giải khát"));
-		
-		
-		
-		
-		
 
 	
 		System.out.println("Done!");
