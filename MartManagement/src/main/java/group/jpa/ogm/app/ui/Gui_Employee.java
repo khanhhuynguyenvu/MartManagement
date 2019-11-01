@@ -4,11 +4,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-<<<<<<< HEAD
+
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-=======
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.rmi.AccessException;
@@ -17,7 +17,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
->>>>>>> 493fd53b1ca3ac8a8188dc2afd53fdd9e702d2ec
+
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -38,14 +38,14 @@ import javax.swing.table.DefaultTableModel;
 import group.jpa.ogm.app.controller.client.ClientController;
 import group.jpa.ogm.app.entities.Account;
 import group.jpa.ogm.app.entities.Employee;
-<<<<<<< HEAD
+
 import group.jpa.ogm.app.repository.account.AccountDAOImpl;
-=======
+
 import group.jpa.ogm.app.entities.Good;
 import group.jpa.ogm.app.entities.Invoice;
 import group.jpa.ogm.app.entities.InvoiceDetails;
 import javassist.expr.Instanceof;
->>>>>>> 493fd53b1ca3ac8a8188dc2afd53fdd9e702d2ec
+
 
 /**
  * 
@@ -53,25 +53,18 @@ import javassist.expr.Instanceof;
  *
  */
 
-<<<<<<< HEAD
-public class Gui_Employee extends JFrame{
-=======
+
 public class Gui_Employee extends JFrame implements ActionListener, MouseListener {
->>>>>>> 493fd53b1ca3ac8a8188dc2afd53fdd9e702d2ec
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	///////////////
-	ClientController callSerivce = new ClientController("192.168.1.4",9999);
-	///////////////
+	///////////////	///////////////
 	private JPasswordField txtmkc, txtmkm, txtnlmkm;
 	private JTabbedPane tbpqlcn;
 
-<<<<<<< HEAD
-=======
 	// Employee
->>>>>>> 493fd53b1ca3ac8a8188dc2afd53fdd9e702d2ec
+
 	private JLabel lblId, lblFullName, lblAddress, lblDateOfBirth;
 	private JTextField txtId, txtFullName, txtAddress, txtDateOfBirth;
 
@@ -96,30 +89,24 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	///////////////
 
 	private JTabbedPane tbp;
-<<<<<<< HEAD
+
 	private JTable table;
 	private DefaultTableModel tablemodel;
-=======
+
 	private JTable tableProduct;
 	private DefaultTableModel modelProduct;
 	/*
 	 * private NhanVienNhanBenhDaos nhanVienNhanBenhDaos; private List<BenhNhan>
 	 * dsbn; private List<NhanVien> dsnv;
 	 */
->>>>>>> 493fd53b1ca3ac8a8188dc2afd53fdd9e702d2ec
 	private JButton btnHelp;
 	private Account account;
 
-<<<<<<< HEAD
-	public Gui_Employee(Account account) throws RemoteException, NotBoundException {
-		this.account = account;
-=======
-	//
-
 	static ClientController callSerivce;
 
-	public Gui_Employee() throws RemoteException, NotBoundException {
->>>>>>> 493fd53b1ca3ac8a8188dc2afd53fdd9e702d2ec
+	public Gui_Employee(Account account) throws RemoteException, NotBoundException {
+		this.account = account;
+
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(1100, 700);
 		setResizable(true);
@@ -127,14 +114,9 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		setIconImage(new ImageIcon(getClass()
 				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
-<<<<<<< HEAD
-		Box bt = Box.createVerticalBox();
-=======
-
-		callSerivce = new ClientController("192.168.1.39", 9999);
+		callSerivce = new ClientController("192.168.31.109", 9999);
 
 		Box bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
->>>>>>> 493fd53b1ca3ac8a8188dc2afd53fdd9e702d2ec
 		/**
 		 * 
 		 */
@@ -376,7 +358,6 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		tbp.addTab("Quản lý bán hàng", bqlbn);
 		tbp.setFont(new Font("Times new Roman", Font.PLAIN, 20));
 		tbp.setTabPlacement(JTabbedPane.LEFT);
-<<<<<<< HEAD
 		/////////////////////////////////
 		/**
 		 *
@@ -389,8 +370,8 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		 */
 
 		// btnLuu.setEnabled(false);
-		table.setDefaultEditor(Object.class, null);
-		table.setEnabled(false);
+//		table.setDefaultEditor(Object.class, null);
+//		table.setEnabled(false);
 
 		// cmbTimbs.setEnabled(false);
 		btnChangePass.addActionListener(new ActionListener() {
@@ -409,9 +390,6 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		
 
 		hienthithongtin();
-=======
-
->>>>>>> 493fd53b1ca3ac8a8188dc2afd53fdd9e702d2ec
 		bt.add(tbp);
 		add(bt);
 		setLocationRelativeTo(null);
@@ -560,7 +538,6 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		// TODO Auto-generated method stub
 
 	}
-<<<<<<< HEAD
 	public void hienthithongtin() throws AccessException, RemoteException, NotBoundException {
 		System.out.println(account.getId());
 		System.out.println("user :" + account.getUsername());
@@ -617,10 +594,6 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		return true;
 	}
 	
-	
-	
-}
-=======
 
 	public void PrintInvoiceActions() {
 		Invoice inVoice = new Invoice();
@@ -681,4 +654,3 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	}
 
 }
->>>>>>> 493fd53b1ca3ac8a8188dc2afd53fdd9e702d2ec

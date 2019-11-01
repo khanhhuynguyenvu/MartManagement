@@ -30,6 +30,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import group.jpa.ogm.app.entities.Account;
+
 
 
 public class Gui_Manager extends JFrame {
@@ -73,8 +75,9 @@ public class Gui_Manager extends JFrame {
 	
 	JTable tableGood;
 	DefaultTableModel tblModelGood;
-
-	public Gui_Manager() {
+	private Account ac;
+	public Gui_Manager(Account ac) {
+		this.ac=ac;
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(1100, 700);
 		setResizable(true);
@@ -409,9 +412,5 @@ public class Gui_Manager extends JFrame {
 		
 		add(tabManager, BorderLayout.CENTER);
 		add(tabManager);
-	}
-
-	public static void main(String[] args) {
-		new Gui_Manager().setVisible(true);
 	}
 }

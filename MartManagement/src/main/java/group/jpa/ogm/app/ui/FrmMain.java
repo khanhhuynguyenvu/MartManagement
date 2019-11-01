@@ -1,4 +1,4 @@
-	package group.jpa.ogm.app.ui;
+package group.jpa.ogm.app.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import javax.swing.BorderFactory;
@@ -169,7 +170,7 @@ public class FrmMain extends JFrame implements ActionListener {
 
 		if (obj.equals(btnLogin)) {
 			try {
-				new Gui_Employee().setVisible(true);
+				new Gui_Employee(ac).setVisible(true);
 			} catch (RemoteException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -180,8 +181,11 @@ public class FrmMain extends JFrame implements ActionListener {
 		} else if (obj.equals(btnAccount)) {
 			System.out.println("hello kiet");
 			 try {
-				new Gui_Employee().setVisible(true);
-			} catch (RemoteException | NotBoundException e1) {
+				new Gui_Employee(ac).setVisible(true);
+			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (NotBoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
@@ -201,7 +205,7 @@ public class FrmMain extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		} else if (obj.equals(btnStock)) {
-			 new Gui_Manager().setVisible(true);
+			 new Gui_Manager(ac).setVisible(true);
 
 		} else if (obj.equals(btnOrder)) {
 			// new FrmOrder().setVisible(true);

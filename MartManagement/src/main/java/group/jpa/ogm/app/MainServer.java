@@ -32,11 +32,8 @@ public class MainServer {
 	public static void main(String[] args) throws RemoteException, AlreadyBoundException {
         try {
             InetAddress.getLocalHost();
-<<<<<<< HEAD
-            System.setProperty("java.rmi.server.hostname","192.168.1.4");
-=======
-            System.setProperty("java.rmi.server.hostname", "172.16.0.164");
->>>>>>> 493fd53b1ca3ac8a8188dc2afd53fdd9e702d2ec
+            System.setProperty("java.rmi.server.hostname","192.168.31.109");
+
         } catch (UnknownHostException e) {
             System.err.println("Can't get information host");
         }
