@@ -29,12 +29,13 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import javax.persistence.EntityManager;
 
 public class MainServer {
+
 	private static final int PORT = 9999;
 
 	public static void main(String[] args) throws RemoteException, AlreadyBoundException {
 		try {
 			InetAddress.getLocalHost();
-			System.setProperty("java.rmi.server.hostname", "172.16.0.164");
+			System.setProperty("java.rmi.server.hostname", "192.168.31.22");
 		} catch (UnknownHostException e) {
 			System.err.println("Can't get information host");
 		}
@@ -50,7 +51,7 @@ public class MainServer {
 		registerRMIHelper.registerObject(InvoiceDAO.class.getSimpleName(), new InvoiceDAOImpl());
 		registerRMIHelper.registerObject(InvoiceDetailsDAO.class.getSimpleName(), new InvoiceDetailsDAOImpl());
 		registerRMIHelper.registerObject(CategoryDAO.class.getSimpleName(), new CategoryDAOImpl());
-		
+
 		System.out.println("Server started");
 	}
 }

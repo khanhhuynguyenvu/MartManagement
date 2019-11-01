@@ -43,6 +43,7 @@ import group.jpa.ogm.app.controller.client.ClientController;
 import group.jpa.ogm.app.entities.Account;
 import group.jpa.ogm.app.entities.Category;
 import group.jpa.ogm.app.entities.Good;
+import group.jpa.ogm.app.entities.Account;
 
 public class Gui_Manager extends JFrame implements ActionListener, MouseListener {
 
@@ -92,7 +93,11 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 	static ClientController callService;
 
-	public Gui_Manager() throws RemoteException, NotBoundException {
+	private Account ac;
+
+	public Gui_Manager(Account ac) throws AccessException, RemoteException, NotBoundException {
+		this.ac = ac;
+
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(1100, 700);
 		setResizable(true);
@@ -443,7 +448,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		/* load data */
 
 		LoadAccountsToTable();
-		LoadAllCategoiesToComboBox();
+	//	LoadAllCategoiesToComboBox();
 		// LoadProductsToTable();
 
 		/* add actionListener account frame */
@@ -485,7 +490,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 			} else {
 				// no option
 			}
-		} else if(obj.equals(stock_btnAdd)) {
+		} else if (obj.equals(stock_btnAdd)) {
 			try {
 				AddProductActions();
 			} catch (RemoteException | NotBoundException e1) {
@@ -493,8 +498,6 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 				e1.printStackTrace();
 			}
 		}
-		
-		
 
 	}
 
@@ -665,9 +668,9 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 	public void AddProductActions() throws AccessException, RemoteException, NotBoundException {
 		Category category = getProductByName();
-		
+
 		System.out.println("category name: " + category.getName());
-		
+
 		String name = stock_txtGoodName.getText();
 		Date enterDate = stock_txtEnterDate.getDate();
 		int qty = Integer.parseInt(stock_txtQuantity.getText());
@@ -681,8 +684,6 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		g.setCategory(category);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd//MM//yyyy");
-		
-		
 
 		String rowData[] = { name, category.getName(), sdf.format(enterDate), Integer.toString(qty),
 				Double.toString(price) };

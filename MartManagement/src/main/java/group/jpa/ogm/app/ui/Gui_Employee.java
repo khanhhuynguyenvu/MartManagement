@@ -1,10 +1,14 @@
 package group.jpa.ogm.app.ui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.rmi.AccessException;
@@ -33,6 +37,9 @@ import javax.swing.table.DefaultTableModel;
 import group.jpa.ogm.app.controller.client.ClientController;
 import group.jpa.ogm.app.entities.Account;
 import group.jpa.ogm.app.entities.Employee;
+
+import group.jpa.ogm.app.repository.account.AccountDAOImpl;
+
 import group.jpa.ogm.app.entities.Good;
 import group.jpa.ogm.app.entities.Invoice;
 import group.jpa.ogm.app.entities.InvoiceDetails;
@@ -40,7 +47,7 @@ import javassist.expr.Instanceof;
 
 /**
  * 
- * @author DoÃ£n Tráº§n Tuáº¥n ï¿½?áº¡t - 16035741 NgÃ´ Tuáº¥n Kiá»‡t - 16044771
+ * @author Ngô Tuấn Kiệt
  *
  */
 
@@ -49,13 +56,12 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	///////////////
-
-	///////////////
+	/////////////// ///////////////
 	private JPasswordField txtmkc, txtmkm, txtnlmkm;
 	private JTabbedPane tbpqlcn;
 
 	// Employee
+
 	private JLabel lblId, lblFullName, lblAddress, lblDateOfBirth;
 	private JTextField txtId, txtFullName, txtAddress, txtDateOfBirth;
 
@@ -80,6 +86,10 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	///////////////
 
 	private JTabbedPane tbp;
+
+	private JTable table;
+	private DefaultTableModel tablemodel;
+
 	private JTable tableProduct;
 	private DefaultTableModel modelProduct;
 	/*
@@ -87,12 +97,13 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	 * dsbn; private List<NhanVien> dsnv;
 	 */
 	private JButton btnHelp;
-
-	//
+	private Account account;
 
 	static ClientController callService;
 
-	public Gui_Employee() throws RemoteException, NotBoundException {
+	public Gui_Employee(Account account) throws RemoteException, NotBoundException {
+		this.account = account;
+
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(1100, 700);
 		setResizable(true);
@@ -101,13 +112,11 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
 
-
 		callService = new ClientController("192.168.31.22", 9999);
-
 
 		Box bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
 		/**
-		 * CÃ¡i nÃ y lÃ  tiÃªu Ä‘ï¿½?
+		 * 
 		 */
 		////////////////////////////////
 		Box b1 = Box.createHorizontalBox();
@@ -128,18 +137,17 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		bt.add(Box.createVerticalStrut(0));
 		/////////////////////////////////
 		/**
-		 * CÃ¡i nÃ y lÃ  quáº£n lÃ½ bá»‡nh nhÃ¢n
+		 * 
 		 */
 		/////////////////////////////////
-		Box bqlbn = Box.createVerticalBox(); // bqlbn lÃ  box chung quáº£n lÃ½ toÃ n bá»™ quáº£n lÃ½ bá»‡nh nhÃ¢n
-
-		Box bqlbn1 = Box.createHorizontalBox(); // bqlbn1 lÃ  box Ä‘á»ƒ quáº£n lÃ½ dÃ²ng trÃªn cÃ¹ng
+		Box bqlbn = Box.createVerticalBox();
+		Box bqlbn1 = Box.createHorizontalBox();
 		Box bqlbn1_ThongTin = Box.createVerticalBox();
 		bqlbn1_ThongTin.setBorder(BorderFactory.createTitledBorder("Thông tin nhân viên"));
 
 		Box bqlbn1_ThongTin_IdBN = Box.createHorizontalBox();
 		bqlbn1_ThongTin_IdBN.add(new JLabel("Tìm thông tin sảm phẩm: "));
-		bqlbn1_ThongTin_IdBN.add(Box.createHorizontalStrut(20));// Khoáº£ng cÃ¡ch giá»¯a chá»¯ vÃ  textfield
+		bqlbn1_ThongTin_IdBN.add(Box.createHorizontalStrut(20));
 		bqlbn1_ThongTin_IdBN.add(txtSearch = new JTextField());
 		txtSearch.setPreferredSize(getPreferredSize());
 		bqlbn1_ThongTin_IdBN.add(Box.createHorizontalStrut(10));
@@ -348,7 +356,37 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		tbp.addTab("Quản lý bán hàng", bqlbn);
 		tbp.setFont(new Font("Times new Roman", Font.PLAIN, 20));
 		tbp.setTabPlacement(JTabbedPane.LEFT);
+		/////////////////////////////////
+		/**
+		 *
+		 */
+		/////////////////////////////////
+		/*
+		 * txtmanv.setEditable(false); txttennv.setEditable(false);
+		 * txthonv.setEditable(false); txtngaysinhnv.setEditable(false);
+		 * txtdiachinv.setEditable(false); txtsdtnv.setEditable(false);
+		 */
 
+		// btnLuu.setEnabled(false);
+//		table.setDefaultEditor(Object.class, null);
+//		table.setEnabled(false);
+
+		// cmbTimbs.setEnabled(false);
+		btnChangePass.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ChangePass();
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
+
+		hienthithongtin();
 		bt.add(tbp);
 		add(bt);
 		setLocationRelativeTo(null);
@@ -496,6 +534,62 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void hienthithongtin() throws AccessException, RemoteException, NotBoundException {
+		System.out.println(account.getId());
+		System.out.println("user :" + account.getUsername());
+		if (callService == null)
+			System.out.println("Không thể đăng nhập Error XKFME");
+		else {
+			System.out.println("xx");
+			Employee em = callService.getEmployeeDAO().getEmp(account.getId());
+			txtId.setText(em.getId());
+			txtFullName.setText(em.getFullName());
+			txtDateOfBirth.setText(em.getBirthdate().toString());
+			txtAddress.setText(em.getAddress());
+		}
+
+	}
+
+	private void XoaTrangDoiMatKhau() {
+		txtOldPass.setText("");
+		txtConfirmPass.setText("");
+		txtNewPass.setText("");
+	}
+
+	public boolean ChangePass() throws AccessException, RemoteException, NotBoundException {
+		String mkc = "", mkm = "", nlmkm = "";
+		char a[], b[], c[];
+		a = ((JPasswordField) txtOldPass).getPassword();
+		b = ((JPasswordField) txtConfirmPass).getPassword();
+		c = ((JPasswordField) txtNewPass).getPassword();
+		for (int i = 0; i < a.length; i++) {
+			mkc = mkc + a[i];
+		}
+		for (int i = 0; i < b.length; i++) {
+			mkm = mkm + b[i];
+		}
+		for (int i = 0; i < c.length; i++) {
+			nlmkm = nlmkm + c[i];
+		}
+		if (!callService.getAccountDAO().checkPassOld(account.getPassword(), mkc)) {
+			JOptionPane.showMessageDialog(new JFrame(), "Mật khẩu cũ không khớp");
+			XoaTrangDoiMatKhau();
+			return false;
+		} else if (!mkm.equals(nlmkm)) {
+			JOptionPane.showMessageDialog(new JFrame(), "Nhập lại mật khẩu mới không khớp");
+			XoaTrangDoiMatKhau();
+			return false;
+		} else if (callService.getAccountDAO().changePass(account, nlmkm)) {
+			JOptionPane.showMessageDialog(new JFrame(), "Đổi mật khẩu không thành công");
+			XoaTrangDoiMatKhau();
+			return false;
+		}
+		JOptionPane.showMessageDialog(new JFrame(), "Đổi mật khẩu thành công");
+		new FrmMain();
+		dispose();
+		return true;
 	}
 
 	public void PrintInvoiceActions() {
