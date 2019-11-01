@@ -21,7 +21,7 @@ public class DynamicTree extends JPanel {
 	public DynamicTree() {
 
 		super(new GridLayout(1, 0));
-		rootNode = new DefaultMutableTreeNode("Kho h�ng");
+		rootNode = new DefaultMutableTreeNode("Kho hàng");
 		treeModel = new DefaultTreeModel(rootNode);
 
 		tree = new JTree(treeModel);

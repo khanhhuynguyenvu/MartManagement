@@ -1,4 +1,4 @@
-zzpackage group.jpa.ogm.app.ui;
+package group.jpa.ogm.app.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -90,7 +90,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 	//
 
-	static ClientController callSerivce;
+	static ClientController callService;
 
 	public Gui_Employee() throws RemoteException, NotBoundException {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -101,7 +101,9 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
 
-		callSerivce = new ClientController("192.168.31.22", 9999);
+
+		callService = new ClientController("192.168.31.22", 9999);
+
 
 		Box bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
 		/**
@@ -363,7 +365,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	}
 
 	public void LoadAllProductToComboBox() throws AccessException, RemoteException, NotBoundException {
-		ArrayList<Good> listGoods = (ArrayList<Good>) callSerivce.getGoodDAO().findAll();
+		ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO().findAll();
 
 		for (int i = 0; i < listGoods.size(); i++) {
 			String getName = listGoods.get(i).getName();
@@ -373,7 +375,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	}
 
 	public void LoadProductByKey(String key) throws AccessException, RemoteException, NotBoundException {
-		ArrayList<Good> listGoods = (ArrayList<Good>) callSerivce.getGoodDAO().findByProductKey(key);
+		ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO().findByProductKey(key);
 		if (listGoods.size() > 0) {
 			modelcbbProductName.removeAllElements();
 
@@ -388,7 +390,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	}
 
 	public void LoadProductByName(String name) throws AccessException, RemoteException, NotBoundException {
-		Good g = callSerivce.getGoodDAO().findByProductName(name);
+		Good g = callService.getGoodDAO().findByProductName(name);
 
 		if (g != null) {
 			txtProductId.setText(g.getId());
@@ -506,7 +508,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		inVoice.setInvoiceDate(new Date());
 
 		try {
-			callSerivce.getInvoiceDAO().save(inVoice);
+			callService.getInvoiceDAO().save(inVoice);
 		} catch (RemoteException | NotBoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -535,7 +537,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		inVoiceDetails.setInvoice(inVoice);
 
 		try {
-			callSerivce.getInvoiceDetailsDAO().save(inVoiceDetails);
+			callService.getInvoiceDetailsDAO().save(inVoiceDetails);
 		} catch (RemoteException | NotBoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

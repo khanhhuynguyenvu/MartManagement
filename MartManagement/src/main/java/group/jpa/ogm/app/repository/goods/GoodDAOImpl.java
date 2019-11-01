@@ -1,7 +1,6 @@
 package group.jpa.ogm.app.repository.goods;
 
 import org.bson.Document;
-import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
@@ -16,13 +15,10 @@ import javax.persistence.Query;
 import java.rmi.RemoteException;
 import java.util.List;
 
-@Component
 public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
-	public GoodDAOImpl(EntityManager entityManager) throws RemoteException {
-		super(entityManager);
+	public GoodDAOImpl() throws RemoteException {
 	}
 
-	@Override
 	public List<Good> findAll() throws RemoteException {
 		EntityTransaction tr = entityManager.getTransaction();
 		tr.begin();
@@ -36,7 +32,6 @@ public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
 		return list;
 	}
 
-	@Override
 	public Good findByProductName(String name) throws RemoteException {
 		EntityTransaction tr = entityManager.getTransaction();
 		tr.begin();
@@ -58,23 +53,13 @@ public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
 		EntityTransaction tr = entityManager.getTransaction();
 		tr.begin();
 
-		// Document filter = new Document("$regex", "/.*" + key + ".*/");
-
-		// Pattern pattern = Pattern.compile("/.*" + key + ".*/");
-		// System.out.println("Ahahaa");
 		Document query = new Document("Name", new Document("$regex", key).append("$options", "i"));
-
-		// System.out.println("a: " + query);
 
 		Gson gson = new Gson();
 		Query q = entityManager.createNativeQuery(gson.toJson(query), Good.class);
 
-		System.out.println(gson.toJson(query));
-
 		@SuppressWarnings("unchecked")
 		List<Good> list = q.getResultList();
-
-		System.out.println("size: " + list.size());
 
 		tr.commit();
 

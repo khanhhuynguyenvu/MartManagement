@@ -17,20 +17,24 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
-		ClientController callSerivce = new ClientController(" 172.16.0.164", 9999);
+		ClientController callSerivce = new ClientController("192.168.31.22", 9999);
 
 	
 
 		Good g = new Good();
-		g.setName("Aquafina");	
+		g.setName("Lavie");	
 		g.setEnterDate(new Date());	//	SimpleDateFormat ft =  new SimpleDateFormat ("E yyyy.MM.dd");	
 		g.setPrice((double) 5000);
-		g.setQuantity(5);
+		g.setQuantity(10);
 		
 	//	callSerivce.getGoodDAO().save(g);
 		
+		System.out.println("find by name: " + callSerivce.getCategoryDAO().findbyName("Nước giải khát"));
 		
-		System.out.println("list: " + callSerivce.getGoodDAO().fillAll());
+		
+		
+		
+		
 		
 	
 		System.out.println("Done!");

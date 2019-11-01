@@ -207,7 +207,15 @@ public class FrmMain extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		} else if (obj.equals(btnStock)) {
-			 new Gui_Manager().setVisible(true);
+			 try {
+				new Gui_Manager().setVisible(true);
+			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (NotBoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 		} else if (obj.equals(btnOrder)) {
 			// new FrmOrder().setVisible(true);

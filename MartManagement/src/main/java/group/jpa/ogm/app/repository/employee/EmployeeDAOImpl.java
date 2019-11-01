@@ -7,15 +7,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
-import org.springframework.stereotype.Component;
+
 
 import group.jpa.ogm.app.entities.Employee;
 import group.jpa.ogm.app.repository.generics.GenericsDAOImpl;
 
-@Component
+
 public class EmployeeDAOImpl extends GenericsDAOImpl<Employee> implements EmployeeDAO {
-	public EmployeeDAOImpl(EntityManager entityManager) throws RemoteException {
-		super(entityManager);
+	public EmployeeDAOImpl() throws RemoteException {
 	}
 
 	public Employee findByName(String name) throws RemoteException {
