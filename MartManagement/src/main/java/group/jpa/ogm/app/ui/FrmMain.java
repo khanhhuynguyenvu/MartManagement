@@ -1,4 +1,4 @@
-package group.jpa.ogm.app.ui;
+	package group.jpa.ogm.app.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -205,8 +205,6 @@ public class FrmMain extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		} else if (obj.equals(btnStock)) {
-
-			
 
 			try {
 				new Gui_Manager(ac).setVisible(true);

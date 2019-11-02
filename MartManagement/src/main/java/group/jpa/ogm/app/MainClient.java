@@ -1,4 +1,4 @@
-package group.jpa.ogm.app;
+	package group.jpa.ogm.app;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -15,17 +15,10 @@ import group.jpa.ogm.app.entities.Good;
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
 
-		ClientController callSerivce = new ClientController("172.16.0.101", 9999);
+		ClientController callSerivce = new ClientController("172.16.0.102", 9999);
 
-
-		Category category = new Category();
-		category.setName("Nước uống");
 		
-		//callSerivce.getCategoryDAO().save(category);
-		
-		System.out.println("asdas: " + callSerivce.getCategoryDAO().findbyName("Nước uống"));
-	
-
+		System.out.println("call: " + callSerivce.getCategoryDAO().findAll());
 	
 		System.out.println("Done!");
 	}

@@ -67,7 +67,7 @@ public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
 	}
 
 	@Override
-	public List<Good> findAllGoodsByCategoryName(String categoryId) throws RemoteException {
+	public List<Good> findGoodsByCategoryId(String categoryId) throws RemoteException {
 		EntityTransaction tr = entityManager.getTransaction();
 		tr.begin();
 

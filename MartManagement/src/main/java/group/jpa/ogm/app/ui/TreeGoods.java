@@ -20,21 +20,20 @@ import group.jpa.ogm.app.controller.client.ClientController;
 import group.jpa.ogm.app.entities.Category;
 import group.jpa.ogm.app.entities.Good;
 
-public class TreeProducts extends JPanel {
+public class TreeGoods extends JPanel {
 
 	public JTree tree;
 	DefaultMutableTreeNode root;
 	static ClientController callService;
 
-	public TreeProducts() throws RemoteException, NotBoundException {
+	public TreeGoods() throws RemoteException, NotBoundException {
 		super(new GridLayout(1, 0));
 		root = new DefaultMutableTreeNode("Kho");
 
-		callService = new ClientController("172.16.0.101", 9999);
+		callService = new ClientController("172.16.0.102", 9999);
 
 		tree = new JTree(root);
 
-		
 		LoadGoodsToTree();
 
 		JScrollPane scrollPane = new JScrollPane(tree);
@@ -43,22 +42,23 @@ public class TreeProducts extends JPanel {
 
 	public void LoadGoodsToTree() throws AccessException, RemoteException, NotBoundException {
 		List<Category> listCategories = callService.getCategoryDAO().findAll();
+		
+		System.out.println("size: " + listCategories.size());
 
 		if (listCategories.size() > 0) {
 			for (int i = 0; i < listCategories.size(); i++) {
-				
+
 				DefaultMutableTreeNode category = new DefaultMutableTreeNode(listCategories.get(i).getName());
 				root.add(category);
-				
-				
-				List<Good> listGoods = (List<Good>) callService.getGoodDAO().findAllGoodsByCategoryName(listCategories.get(i).getId());
-				if(listGoods.size() > 0) {
-					for(int j = 0; j < listGoods.size(); j++) {
+
+				List<Good> listGoods = (List<Good>) callService.getGoodDAO()
+						.findGoodsByCategoryId(listCategories.get(i).getId());
+				if (listGoods.size() > 0) {
+					for (int j = 0; j < listGoods.size(); j++) {
 						category.add(new DefaultMutableTreeNode(listGoods.get(i).getName()));
 					}
 				}
-				
-				
+
 			}
 		} else {
 			System.out.println("NO");

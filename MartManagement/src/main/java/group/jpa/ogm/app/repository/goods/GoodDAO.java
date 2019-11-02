@@ -10,5 +10,5 @@ public interface GoodDAO extends GenericsDAO<Good> {
 	List<Good> findAll() throws RemoteException;
 	Good findByProductName(String name) throws RemoteException;
 	List<Good> findByProductKey(String key) throws RemoteException;
-	List<Good> findAllGoodsByCategoryName(String categoryId) throws RemoteException;
+	List<Good> findGoodsByCategoryId(String categoryId) throws RemoteException;
 }
