@@ -112,7 +112,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
 
-		callService = new ClientController("172.16.0.102", 9999);
+		callService = new ClientController("192.168.1.40", 9999);
 
 		Box bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
 		/**
@@ -356,22 +356,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		tbp.addTab("Quản lý bán hàng", bqlbn);
 		tbp.setFont(new Font("Times new Roman", Font.PLAIN, 20));
 		tbp.setTabPlacement(JTabbedPane.LEFT);
-		/////////////////////////////////
-		/**
-		 *
-		 */
-		/////////////////////////////////
-		/*
-		 * txtmanv.setEditable(false); txttennv.setEditable(false);
-		 * txthonv.setEditable(false); txtngaysinhnv.setEditable(false);
-		 * txtdiachinv.setEditable(false); txtsdtnv.setEditable(false);
-		 */
 
-		// btnLuu.setEnabled(false);
-//		table.setDefaultEditor(Object.class, null);
-//		table.setEnabled(false);
-
-		// cmbTimbs.setEnabled(false);
 		btnChangePass.addActionListener(new ActionListener() {
 
 			@Override
@@ -391,7 +376,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		add(bt);
 		setLocationRelativeTo(null);
 		setVisible(true);
-		LoadAllProductToComboBox();
+		LoadAllGoodsToComboBox();
 
 		btnSearch.addActionListener(this);
 		btnAdd.addActionListener(this);
@@ -402,14 +387,13 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		tableProduct.addMouseListener(this);
 	}
 
-	public void LoadAllProductToComboBox() throws AccessException, RemoteException, NotBoundException {
+	public void LoadAllGoodsToComboBox() throws AccessException, RemoteException, NotBoundException {
 		ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO().findAll();
 
-		for (int i = 0; i < listGoods.size(); i++) {
-			String getName = listGoods.get(i).getName();
+		for (Good good : listGoods) {
+			String getName = good.getName();
 			modelcbbProductName.addElement(getName);
 		}
-
 	}
 
 	public void LoadProductByKey(String key) throws AccessException, RemoteException, NotBoundException {
@@ -417,8 +401,8 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		if (listGoods.size() > 0) {
 			modelcbbProductName.removeAllElements();
 
-			for (int i = 0; i < listGoods.size(); i++) {
-				String getName = listGoods.get(i).getName();
+			for (Good good : listGoods) {
+				String getName = good.getName();
 				modelcbbProductName.addElement(getName);
 			}
 		} else {
@@ -643,9 +627,6 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	public void SearchActions() throws AccessException, RemoteException, NotBoundException {
 		if (txtSearch.getText() != null) {
 			String key = txtSearch.getText();
-
-			System.out.println("key: " + key);
-
 			LoadProductByKey(key);
 		}
 	}

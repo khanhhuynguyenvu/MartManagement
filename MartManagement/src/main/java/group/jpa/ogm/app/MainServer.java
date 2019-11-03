@@ -35,13 +35,11 @@ public class MainServer {
 	public static void main(String[] args) throws RemoteException, AlreadyBoundException {
 		try {
 			InetAddress.getLocalHost();
-			System.setProperty("java.rmi.server.hostname", "172.16.0.102");
+			System.setProperty("java.rmi.server.hostname", "192.168.1.40");
 		} catch (UnknownHostException e) {
 			System.err.println("Can't get information host");
 		}
 
-		ApplicationContext ctx = new AnnotationConfigApplicationContext(Config.class);
-		EntityManager entityManager = ctx.getBean(EntityManager.class);
 		RegisterRMIHelper registerRMIHelper = RegisterRMIHelper.getInstance(PORT);
 
 		registerRMIHelper.registerObject(EmployeeDAO.class.getSimpleName(), new EmployeeDAOImpl());

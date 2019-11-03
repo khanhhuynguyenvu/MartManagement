@@ -30,7 +30,7 @@ public class TreeGoods extends JPanel {
 		super(new GridLayout(1, 0));
 		root = new DefaultMutableTreeNode("Kho");
 
-		callService = new ClientController("172.16.0.102", 9999);
+		callService = new ClientController("192.168.1.40", 9999);
 
 		tree = new JTree(root);
 
@@ -42,20 +42,20 @@ public class TreeGoods extends JPanel {
 
 	public void LoadGoodsToTree() throws AccessException, RemoteException, NotBoundException {
 		List<Category> listCategories = callService.getCategoryDAO().findAll();
-		
+
 		System.out.println("size: " + listCategories.size());
 
 		if (listCategories.size() > 0) {
-			for (int i = 0; i < listCategories.size(); i++) {
+			for (Category category : listCategories) {
+				DefaultMutableTreeNode cate = new DefaultMutableTreeNode(category.getName());
+				root.add(cate);
 
-				DefaultMutableTreeNode category = new DefaultMutableTreeNode(listCategories.get(i).getName());
-				root.add(category);
+				List<Good> listGoodsByCategory = (List<Good>) callService.getGoodDAO()
+						.findGoodsByCategoryId(category.getId());
 
-				List<Good> listGoods = (List<Good>) callService.getGoodDAO()
-						.findGoodsByCategoryId(listCategories.get(i).getId());
-				if (listGoods.size() > 0) {
-					for (int j = 0; j < listGoods.size(); j++) {
-						category.add(new DefaultMutableTreeNode(listGoods.get(i).getName()));
+				if (listGoodsByCategory.size() > 0) {
+					for (Good g : listGoodsByCategory) {
+						cate.add(new DefaultMutableTreeNode(g.getName()));
 					}
 				}
 
