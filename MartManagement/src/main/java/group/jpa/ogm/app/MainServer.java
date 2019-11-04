@@ -36,12 +36,11 @@ public class MainServer {
 		try {
 			InetAddress.getLocalHost();
 			System.setProperty("java.rmi.server.hostname", "192.168.31.109");
+
 		} catch (UnknownHostException e) {
 			System.err.println("Can't get information host");
 		}
 
-		ApplicationContext ctx = new AnnotationConfigApplicationContext(Config.class);
-		EntityManager entityManager = ctx.getBean(EntityManager.class);
 		RegisterRMIHelper registerRMIHelper = RegisterRMIHelper.getInstance(PORT);
 
 		registerRMIHelper.registerObject(EmployeeDAO.class.getSimpleName(), new EmployeeDAOImpl());

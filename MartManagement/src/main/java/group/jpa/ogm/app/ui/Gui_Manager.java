@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.rmi.AccessException;
@@ -34,7 +35,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 import com.toedter.calendar.JDateChooser;
@@ -47,7 +52,7 @@ import group.jpa.ogm.app.entities.Good;
 import group.jpa.ogm.app.repository.account.AccountDAOImpl;
 import group.jpa.ogm.app.entities.Account;
 
-public class Gui_Manager extends JFrame implements ActionListener, MouseListener {
+public class Gui_Manager extends JFrame implements ActionListener, MouseListener, TreeSelectionListener {
 
 	JButton acc_btnLogout, acc_btnHelp;
 
@@ -70,7 +75,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	JLabel lblAccId, lblAccUserName, lblAccPass, lblAccType, lblAccStartingDate, lblAccStatus, lblAccActive,
 			lblAccNoActive;
 
-	JButton btnAdd_Acc, btnRemove_Acc, btnModify_Acc, btnSave_Acc, btnSearch_Acc;
+	JButton btnAdd_Acc, btnRemove_Acc, btnModify_Acc, btnSave_Acc, btnSearch_Acc, btnCancel_Acc;
 	// Quản lý nhân viên
 	private JLabel lblNhanVienID, lblHoNhanVien, lblTenNhanVien, lblSDTNhanVien, lblNSNhanVien, lblDiaChiNhanVien;
 	private JTextField txtNhanVienID, txtHoNhanVien, txtTenNhanVien, txtSDTNhanVien, txtDiaChiNhanVien, txtTimNhanVien;
@@ -85,13 +90,15 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	JLabel stock_lblGoodId, stock_lblGoodName, stock_lblEnterDate, stock_lblQuantity, stock_lblPrice,
 			stock_lblCategoryName;
 	JDateChooser stock_txtEnterDate;
-	JButton stock_btnAdd, stock_btnRemove, stock_btnModify, stock_btnSave;
+	JButton stock_btnAdd, stock_btnRemove, stock_btnModify, stock_btnSave, stock_btnReload;
 
 	JTable tableGood;
 	DefaultTableModel tblModelGood;
 
 	JComboBox<String> cbbCategoryName;
 	DefaultComboBoxModel<String> modelcbbCategoryName;
+
+	TreeGoods treeGoods;
 
 	static ClientController callService;
 
@@ -112,6 +119,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		tabManager.setTabPlacement(JTabbedPane.LEFT);
 
 		callService = new ClientController("192.168.31.109", 9999);
+
 
 		//
 		Box acc_bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
@@ -229,6 +237,10 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		acc_bqlbn2_ChucNang_1.add(btnSave_Acc = new JButton("Lưu",
 				new ImageIcon(getClass().getResource("../ima/if_receipt_3583272.png"))));
 		btnSave_Acc.setMaximumSize(getMaximumSize());
+
+		acc_bqlbn2_ChucNang_1.add(btnCancel_Acc = new JButton("Hủy",
+				new ImageIcon(getClass().getResource("../ima/if_Delete_1493279.png"))));
+		btnCancel_Acc.setMaximumSize(getMaximumSize());
 
 		acc_bqlbn2_ChucNang.add(acc_bqlbn2_ChucNang_1);
 
@@ -397,12 +409,16 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bStock_TT5.add(stock_txtPrice = new JTextField());
 
 		// tree
-		DynamicTree treeGoods;
-		treeGoods = new DynamicTree();
+		// DynamicTree treeGoods;
+		// treeGoods = new DynamicTree();
 
-		treeGoods.setPreferredSize(new Dimension(250, 150));
-		bStock.add(treeGoods);
+		// treeGoods.setPreferredSize(new Dimension(250, 150));
+		// bStock.add(treeGoods);
 		// add(treeGoods, BorderLayout.WEST);
+
+		treeGoods = new TreeGoods();
+		treeGoods.setPreferredSize(new Dimension(250, 350));
+		bStock.add(treeGoods);
 
 		///
 
@@ -420,7 +436,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bStock_CN.add(stock_btnSave = new JButton("Lưu",
 				new ImageIcon(getClass().getResource("../ima/if_Save_1493294.png"))));
 		bStock_CN.add(Box.createHorizontalStrut(10));
-		bStock_CN.add(stock_btnModify = new JButton("Tải lại danh sách",
+		bStock_CN.add(stock_btnReload = new JButton("Tải lại danh sách",
 				new ImageIcon(getClass().getResource("../ima/if_--07_1720774.png"))));
 		bStock_CN.add(Box.createHorizontalStrut(10));
 		bStock_CN.add(stock_btnRemove = new JButton("Xóa",
@@ -454,17 +470,23 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		LoadAllCategoiesToComboBox();
 		LoadAllEmployee();
 		// LoadProductsToTable();
+		LoadGoodsToTable();
+
 
 		/* add actionListener account frame */
 
 		// btnAdd_Acc.addActionListener(this);
 		btnModify_Acc.addActionListener(this);
 		btnRemove_Acc.addActionListener(this);
-
+		btnSave_Acc.addActionListener(this);
+		btnCancel_Acc.addActionListener(this);
 		tableAccount.addMouseListener(this);
 
+		btnSave_Acc.setEnabled(false);
+		btnCancel_Acc.setEnabled(false);
 		/* add actionlListener stock frame */
 		stock_btnAdd.addActionListener(this);
+
 		
 		//QLNV
 		//Trạng thái bắt đầu
@@ -477,6 +499,13 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		
 		btnThemNV.addActionListener(this);
 		btnSuaNV.addActionListener(this);
+		stock_btnModify.addActionListener(this);
+		stock_btnRemove.addActionListener(this);
+
+		treeGoods.tree.addTreeSelectionListener(this);
+
+		tableGood.addMouseListener(this);
+
 		add(tabManager, BorderLayout.CENTER);
 		add(tabManager);
 		
@@ -591,30 +620,90 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		Object obj = e.getSource();
 
 		if (obj.equals(btnModify_Acc)) {
+
+			LockTextFieldAccount(false);
+			btnModify_Acc.setEnabled(false);
+			btnRemove_Acc.setEnabled(false);
+			btnSave_Acc.setEnabled(true);
+			btnCancel_Acc.setEnabled(true);
+		} else if (obj.equals(btnRemove_Acc)) {
+
+			int row = tableAccount.getSelectedRow();
+
+			if (row >= 0) {
+				if (JOptionPane.showConfirmDialog(null, "Are you sure?", "WARNING",
+						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					try {
+						RemoveAccountActions(row);
+						JOptionPane.showMessageDialog(this, "Xóa thành công");
+					} catch (RemoteException | NotBoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				} else {
+					// no option
+				}
+			} else {
+				JOptionPane.showMessageDialog(this, "Chọn account để xóa");
+			}
+
+		} else if (obj.equals(btnSave_Acc)) {
 			try {
 				updateAccountActions();
 			} catch (RemoteException | NotBoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		} else if (obj.equals(btnRemove_Acc)) {
+			btnModify_Acc.setEnabled(true);
+			btnRemove_Acc.setEnabled(true);
+			btnSave_Acc.setEnabled(false);
+			btnCancel_Acc.setEnabled(false);
+
+			LockTextFieldAccount(true);
+			JOptionPane.showMessageDialog(this, "Sửa tài khoản thành công");
+			try {
+				LoadAccountsToTable();
+			} catch (RemoteException | NotBoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else if (obj.equals(btnCancel_Acc)) {
+			btnModify_Acc.setEnabled(true);
+			btnRemove_Acc.setEnabled(true);
+			btnSave_Acc.setEnabled(false);
+			btnCancel_Acc.setEnabled(false);
+			LockTextFieldAccount(true);
+		}
+
+		else if (obj.equals(stock_btnAdd)) {
+			try {
+				AddGoodActions();
+
+			} catch (RemoteException | NotBoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else if (obj.equals(stock_btnModify)) {
+			try {
+				updateGoodActions();
+				JOptionPane.showMessageDialog(this, "Sửa thành công");
+			} catch (RemoteException | NotBoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else if (obj.equals(stock_btnRemove)) {
+
 			if (JOptionPane.showConfirmDialog(null, "Are you sure?", "WARNING",
 					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				try {
-					RemoveAccountActions();
+					RemoveGoodActions();
+					JOptionPane.showMessageDialog(this, "Xóa thành công");
 				} catch (RemoteException | NotBoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			} else {
 				// no option
-			}
-		} else if (obj.equals(stock_btnAdd)) {
-			try {
-				AddProductActions();
-			} catch (RemoteException | NotBoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
 		}
 
@@ -624,28 +713,52 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		int row = tableAccount.getSelectedRow();
+		int rowAcc = tableAccount.getSelectedRow();
+		int rowStock = tableGood.getSelectedRow();
 
-		if (row >= 0) {
-			txtAccId.setText(tableAccount.getValueAt(row, 0).toString());
-			txtAccUserName.setText(tableAccount.getValueAt(row, 1).toString());
+		if (rowAcc >= 0) {
+			txtAccId.setText(tableAccount.getValueAt(rowAcc, 0).toString());
+			txtAccUserName.setText(tableAccount.getValueAt(rowAcc, 1).toString());
 
-			txtAccPass.setText(tableAccount.getValueAt(row, 3).toString());
+			txtAccPass.setText(tableAccount.getValueAt(rowAcc, 3).toString());
 
 			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 			try {
-				txtAccStartingDate.setDate(sdf.parse((String) tableAccount.getValueAt(row, 4)));
+				txtAccStartingDate.setDate(sdf.parse((String) tableAccount.getValueAt(rowAcc, 4)));
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
-			if (tableAccount.getValueAt(row, 5).toString().equals("No"))
+			if (tableAccount.getValueAt(rowAcc, 5).toString().equals("No"))
 				radAccNoActive.setSelected(true);
 			else
 				radAccActive.setSelected(true);
 
 		}
+		if (rowStock >= 0) {
+			stock_txtGoodtId.setText(tableGood.getValueAt(rowStock, 0).toString());
+			cbbCategoryName.setSelectedItem((tableGood.getValueAt(rowStock, 1).toString()));
+			stock_txtGoodName.setText(tableGood.getValueAt(rowStock, 2).toString());
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+			try {
+				stock_txtEnterDate.setDate(sdf.parse((String) tableGood.getValueAt(rowStock, 3)));
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			stock_txtQuantity.setText(tableGood.getValueAt(rowStock, 4).toString());
+			stock_txtPrice.setText(tableGood.getValueAt(rowStock, 5).toString());
+		}
+
+	}
+
+	public void LockTextFieldAccount(boolean b) {
+		txtAccId.setEnabled(b);
+		txtAccUserName.setEnabled(b);
+		txtAccStartingDate.setEnabled(b);
 	}
 
 	@Override
@@ -696,7 +809,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	public void LoadAccountsToTable() throws AccessException, RemoteException, NotBoundException {
 		List<Account> listAccounts = callService.getAccountDAO().findAll();
 
-		System.out.println("size: " + listAccounts.size());
+		tblModelAccount.setRowCount(0);
 
 		if (listAccounts.size() > 0) {
 			for (Account account : listAccounts) {
@@ -742,35 +855,71 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		callService.getAccountDAO().update(ac);
 	}
 
-	public void RemoveAccountActions() throws AccessException, RemoteException, NotBoundException {
+	public void RemoveAccountActions(int getSelectedRow) throws AccessException, RemoteException, NotBoundException {
+
 		String id = txtAccId.getText();
 		Account ac = new Account();
 		ac.setId(id);
 		callService.getAccountDAO().remove(ac);
+		tableAccount.remove(getSelectedRow);
+
 	}
 	/* method stock frame */
 
-	public void LoadProductsToTable() throws AccessException, RemoteException, NotBoundException {
+	public void LoadGoodsToTable() throws AccessException, RemoteException, NotBoundException {
+
+		tblModelGood.setRowCount(0);
+
 		ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO().findAll();
 
-		for (int i = 0; i < listGoods.size(); i++) {
-			String id = listGoods.get(i).getId();
-			String name = listGoods.get(i).getName();
-			SimpleDateFormat sdf = new SimpleDateFormat("dd//MM//yyyy");
-			Date enterDate = listGoods.get(i).getEnterDate();
-			int quantity = listGoods.get(i).getQuantity();
-			double price = listGoods.get(i).getPrice();
+		for (Good good : listGoods) {
+			String id = good.getId();
+			String name = good.getName();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			Date enterDate = good.getEnterDate();
+			int quantity = good.getQuantity();
+			double price = good.getPrice();
+			String categoryName = good.getCategory().getName();
 
-			String rowData[] = { id, name, sdf.format(enterDate), Integer.toString(quantity), Double.toString(price) };
+			String rowData[] = { id, categoryName, name, sdf.format(enterDate), Integer.toString(quantity),
+					Double.toString(price) };
 			tblModelGood.addRow(rowData);
 		}
+	}
+
+	public void LoadGoodsByCategoryNameToTable(String categoryName)
+			throws AccessException, RemoteException, NotBoundException {
+
+		tblModelGood.setRowCount(0);
+
+		Category getCategory = callService.getCategoryDAO().findbyName(categoryName);
+
+		if (!getCategory.equals(null)) {
+			ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO()
+					.findGoodsByCategoryId(getCategory.getId());
+
+			for (Good good : listGoods) {
+				String id = good.getId();
+				String name = good.getName();
+				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+				Date enterDate = good.getEnterDate();
+				int quantity = good.getQuantity();
+				double price = good.getPrice();
+				// String categoryName = listGoods.get(i).getCategory().getName();
+
+				String rowData[] = { id, categoryName, name, sdf.format(enterDate), Integer.toString(quantity),
+						Double.toString(price) };
+				tblModelGood.addRow(rowData);
+			}
+		}
+
 	}
 
 	public void LoadAllCategoiesToComboBox() throws AccessException, RemoteException, NotBoundException {
 		ArrayList<Category> listCategories = (ArrayList<Category>) callService.getCategoryDAO().findAll();
 
-		for (int i = 0; i < listCategories.size(); i++) {
-			String getName = listCategories.get(i).getName();
+		for (Category category : listCategories) {
+			String getName = category.getName();
 			modelcbbCategoryName.addElement(getName);
 		}
 
@@ -786,10 +935,8 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		return null;
 	}
 
-	public void AddProductActions() throws AccessException, RemoteException, NotBoundException {
+	public void AddGoodActions() throws AccessException, RemoteException, NotBoundException {
 		Category category = getProductByName();
-
-		System.out.println("category name: " + category.getName());
 
 		String name = stock_txtGoodName.getText();
 		Date enterDate = stock_txtEnterDate.getDate();
@@ -803,13 +950,63 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		g.setPrice(price);
 		g.setCategory(category);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd//MM//yyyy");
-
-		String rowData[] = { name, category.getName(), sdf.format(enterDate), Integer.toString(qty),
-				Double.toString(price) };
-		tblModelGood.addRow(rowData);
 		callService.getGoodDAO().save(g);
-		System.out.println("DONE");
+		System.out.println("UPDATE DONE");
+	}
+
+	public void updateGoodActions() throws AccessException, RemoteException, NotBoundException {
+
+		// enable txt id, categoryName, goodName, enterDate
+
+		Category category = getProductByName();
+		String id = stock_txtGoodtId.getText();
+		String name = stock_txtGoodName.getText();
+		Date enterDate = stock_txtEnterDate.getDate();
+		int qty = Integer.parseInt(stock_txtQuantity.getText());
+		double price = Double.parseDouble(stock_txtPrice.getText());
+
+		Good g = new Good();
+		g.setId(id);
+		g.setName(name);
+		g.setEnterDate(enterDate);
+		g.setQuantity(qty);
+		g.setPrice(price);
+		g.setCategory(category);
+
+		callService.getGoodDAO().update(g);
+	}
+
+	public void RemoveGoodActions() throws AccessException, RemoteException, NotBoundException {
+		String goodId = stock_txtGoodtId.getText();
+		Good g = new Good();
+
+		g.setId(goodId);
+		callService.getGoodDAO().remove(g);
+		LoadGoodsToTable();
+	}
+
+	@Override
+	public void valueChanged(TreeSelectionEvent e) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeGoods.tree.getLastSelectedPathComponent();
+
+		if (node == null)
+			return;
+		Object nodeInfo = node.getUserObject();
+
+		TreePath selectedPath = treeGoods.tree.getSelectionPath();
+		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
+
+		if (!selectedNode.toString().equals("Kho") && !selectedNode.isLeaf()) {
+			try {
+				LoadGoodsByCategoryNameToTable((String) nodeInfo);
+			} catch (RemoteException | NotBoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else {
+
+		}
+
 	}
 	
 	

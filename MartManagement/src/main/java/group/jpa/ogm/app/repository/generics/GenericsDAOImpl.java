@@ -30,7 +30,7 @@ public class GenericsDAOImpl<T> extends UnicastRemoteObject implements GenericsD
 	public void remove(T t) {
 		EntityTransaction transaction = entityManager.getTransaction();
 		transaction.begin();
-		entityManager.remove(t);
+		entityManager.remove(entityManager.contains(t) ? t : entityManager.merge(t));
 		transaction.commit();
 	}
 

@@ -28,7 +28,7 @@ public class CategoryDAOImpl extends GenericsDAOImpl<Category> implements Catego
 		try {
 			tr.begin();
 
-			Gson gson = new Gson();
+		//	Gson gson = new Gson();
 			String query = "db.Categories.find({})";
 			Query q = entityManager.createNativeQuery(query, Category.class);
 			list = q.getResultList();

@@ -65,4 +65,23 @@ public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
 
 		return list;
 	}
+
+	@Override
+	public List<Good> findGoodsByCategoryId(String categoryId) throws RemoteException {
+		EntityTransaction tr = entityManager.getTransaction();
+		tr.begin();
+
+		Document query = new Document("category_id", categoryId);
+
+		Gson gson = new Gson();
+		Query q = entityManager.createNativeQuery(gson.toJson(query), Good.class);
+
+		@SuppressWarnings("unchecked")
+		List<Good> list = q.getResultList();
+
+		tr.commit();
+
+		return list;
+	}
+
 }

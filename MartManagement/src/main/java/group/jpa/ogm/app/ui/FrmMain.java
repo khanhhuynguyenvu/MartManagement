@@ -179,7 +179,6 @@ public class FrmMain extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		} else if (obj.equals(btnAccount)) {
-			System.out.println("hello kiet");
 			try {
 				new Gui_Employee(ac).setVisible(true);
 			} catch (RemoteException e1) {
@@ -190,7 +189,6 @@ public class FrmMain extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		} else if (obj.equals(btnExit)) {
-			System.out.println("asdasda");
 			System.exit(0);
 		} else if (obj.equals(btnLogout)) {
 			lockButton();
@@ -205,8 +203,6 @@ public class FrmMain extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		} else if (obj.equals(btnStock)) {
-
-			
 
 			try {
 				new Gui_Manager(ac).setVisible(true);
