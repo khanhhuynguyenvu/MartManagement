@@ -14,8 +14,6 @@ import group.jpa.ogm.app.entities.Good;
 
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
-
-
 		System.out.println("Done!");
 	}
 	
