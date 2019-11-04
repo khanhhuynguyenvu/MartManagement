@@ -42,7 +42,9 @@ import com.toedter.calendar.JDateChooser;
 import group.jpa.ogm.app.controller.client.ClientController;
 import group.jpa.ogm.app.entities.Account;
 import group.jpa.ogm.app.entities.Category;
+import group.jpa.ogm.app.entities.Employee;
 import group.jpa.ogm.app.entities.Good;
+import group.jpa.ogm.app.repository.account.AccountDAOImpl;
 import group.jpa.ogm.app.entities.Account;
 
 public class Gui_Manager extends JFrame implements ActionListener, MouseListener {
@@ -54,13 +56,13 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	JTabbedPane tabManager;
 
 	// ----- Form Account
-
+	JTextField txtNgaySinhNhanVien,txtFullNameNV;
 	JTextField txtAccId, txtAccUserName, txtAccPass;
 	JTextField txtAccSearch;
-	JDateChooser txtAccStartingDate;
-	JRadioButton radAccActive, radAccNoActive;
-	ButtonGroup grAccStatus;
-
+	JDateChooser txtAccStartingDate,JdNgaySinhNV;
+	JRadioButton radAccActive, radAccNoActive, radNam,radNu;
+	ButtonGroup grAccStatus, grGT;
+	JTextField txtGioiTinhNV;
 	JTable tableAccount;
 	DefaultTableModel tblModelAccount;
 	//
@@ -109,7 +111,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		tabManager = new JTabbedPane();
 		tabManager.setTabPlacement(JTabbedPane.LEFT);
 
-		callService = new ClientController("192.168.31.22", 9999);
+		callService = new ClientController("192.168.31.109", 9999);
 
 		//
 		Box acc_bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
@@ -248,7 +250,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 		acc_bt.add(acc_bqlbn);
 		add(acc_bt);
-		/// quáº£n li nhan viÃªn
+		/// Quản lí nhân viên
 
 		Box bNhanVien = Box.createVerticalBox();
 		Box bNV1, bNV2, bNV3;
@@ -262,27 +264,27 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 		bNV_TT.add(bNV_TT1 = Box.createHorizontalBox());
 		bNV_TT.add(Box.createVerticalStrut(10));
-		bNV_TT1.add(lblNhanVienID = new JLabel("Mã nhân viên"));
+		bNV_TT1.add(lblNhanVienID = new JLabel("Mã số nhân viên"));
 		bNV_TT1.add(Box.createHorizontalStrut(10));
 		bNV_TT1.add(txtNhanVienID = new JTextField());
 
 		bNV_TT.add(bNV_TT2 = Box.createHorizontalBox());
 		bNV_TT.add(Box.createVerticalStrut(10));
-		bNV_TT2.add(lblHoNhanVien = new JLabel("Họ"));
+		bNV_TT2.add(lblHoNhanVien = new JLabel("Họ và Tên"));
 		bNV_TT2.add(Box.createHorizontalStrut(10));
-		bNV_TT2.add(txtHoNhanVien = new JTextField());
+		bNV_TT2.add(txtFullNameNV = new JTextField());
 
-		bNV_TT.add(bNV_TT3 = Box.createHorizontalBox());
-		bNV_TT.add(Box.createVerticalStrut(10));
-		bNV_TT3.add(lblTenNhanVien = new JLabel("Tên"));
-		bNV_TT3.add(Box.createHorizontalStrut(10));
-		bNV_TT3.add(txtTenNhanVien = new JTextField());
 
 		bNV_TT.add(bNV_TT4 = Box.createHorizontalBox());
 		bNV_TT.add(Box.createVerticalStrut(10));
-		bNV_TT4.add(lblSDTNhanVien = new JLabel(""));
+		bNV_TT4.add(lblSDTNhanVien = new JLabel("Giới Tính"));
+		bNV_TT4.add(radNam = new JRadioButton("Nam"));
 		bNV_TT4.add(Box.createHorizontalStrut(10));
-		bNV_TT4.add(txtSDTNhanVien = new JTextField());
+		bNV_TT4.add(radNu = new JRadioButton("Nữ"));
+		bNV_TT4.add(Box.createHorizontalGlue());
+		grGT = new ButtonGroup();
+		grGT.add(radNam);
+		grGT.add(radNu);
 
 		bNV_TT.add(bNV_TT5 = Box.createHorizontalBox());
 		bNV_TT.add(Box.createVerticalStrut(10));
@@ -293,9 +295,9 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bNV_TT.add(bNV_TT6 = Box.createHorizontalBox());
 		bNV_TT6.add(lblNSNhanVien = new JLabel("Ngày sinh"));
 		bNV_TT6.add(Box.createHorizontalStrut(10));
-		// bNV_TT6.add(datePicker = new DatePicker());
 
-		lblTenNhanVien.setPreferredSize(lblNhanVienID.getPreferredSize());
+		bNV_TT6.add(JdNgaySinhNV=new JDateChooser());
+
 		lblDiaChiNhanVien.setPreferredSize(lblNhanVienID.getPreferredSize());
 		lblHoNhanVien.setPreferredSize(lblNhanVienID.getPreferredSize());
 		lblSDTNhanVien.setPreferredSize(lblNhanVienID.getPreferredSize());
@@ -304,9 +306,9 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		// ***********************
 		bNV1.add(bNV_TK = Box.createVerticalBox());
 		bNV_TK.setMinimumSize(getMinimumSize());
-		bNV_TK.setBorder(BorderFactory.createTitledBorder("Tìm kiếm nhâ nvie6n"));
+		bNV_TK.setBorder(BorderFactory.createTitledBorder("Tìm kiếm nhân viên"));
 		bNV_TK.add(bNV_TK1 = Box.createHorizontalBox());
-		String[] timKiemNV = { "Tìm theo ID", "Tìm theo tên" };
+		String[] timKiemNV = { "Tìm theo ID", "Tìm theo tên", "Tìm theo số điện thoại" };
 		bNV_TK1.add(cbbTimNhanVien = new JComboBox<String>(timKiemNV));
 		bNV_TK1.add(Box.createHorizontalStrut(10));
 		bNV_TK1.add(txtTimNhanVien = new JTextField(1));
@@ -319,30 +321,31 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bNhanVien.add(bNV2 = Box.createVerticalBox());
 		bNV2.add(bNV_CN = Box.createHorizontalBox());
 		bNV2.setBorder(BorderFactory.createTitledBorder("Chức năng"));
-		bNV_CN.add(stock_btnAdd = new JButton("Thêm", new ImageIcon(getClass().getResource("../ima/if_7_330410.png"))));
+		bNV_CN.add(btnThemNV = new JButton("Thêm", new ImageIcon(getClass().getResource("../ima/if_7_330410.png"))));
 		bNV_CN.add(Box.createHorizontalStrut(10));
-		bNV_CN.add(stock_btnModify = new JButton("Sửa",
+		bNV_CN.add(btnSuaNV = new JButton("Sửa",
 				new ImageIcon(getClass().getResource("../ima/if_brush-pencil_1055103.png"))));
 		bNV_CN.add(Box.createHorizontalStrut(10));
-		bNV_CN.add(stock_btnSave = new JButton("Lưu",
-				new ImageIcon(getClass().getResource("../ima/if_Save_1493294.png"))));
+		bNV_CN.add(
+				btnLuuNV = new JButton("Lưu", new ImageIcon(getClass().getResource("../ima/if_Save_1493294.png"))));
 		bNV_CN.add(Box.createHorizontalStrut(10));
 
 		bNV_CN.add(Box.createHorizontalStrut(10));
-		bNV_CN.add(stock_btnRemove = new JButton("Xoá",
+		bNV_CN.add(btnXoaNV = new JButton("Xóa",
 				new ImageIcon(getClass().getResource("../ima/if_user-trash_118932.png"))));
 
 		// ***********************
 		bNhanVien.add(bNV3 = Box.createVerticalBox());
 		bNV3.setBorder(BorderFactory.createTitledBorder("Danh sách nhân viên"));
 
-		String[] headersNV = "Mã nah6n viên;Họ tên; Địa chỉ; Ngày sinh; Giới tinh".split(";");
+		String[] headersNV = "Mã số nhân viên;Họ Tên;Giới Tính;Địa chỉ;Ngày sinh".split(";");
 		modelNhanVien = new DefaultTableModel(headersNV, 0);
-		JScrollPane scrollNV = new JScrollPane();
+		JScrollPane scrollNV = new JScrollPane(tableNhanVien =new JTable(modelNhanVien));
 		scrollNV.setViewportView(tableNhanVien = new JTable(modelNhanVien));
 		tableNhanVien.setRowHeight(20);
 		tableNhanVien.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
 		bNV3.add(scrollNV);
+
 
 		// form kho hang
 
@@ -448,7 +451,8 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		/* load data */
 
 		LoadAccountsToTable();
-	//	LoadAllCategoiesToComboBox();
+		LoadAllCategoiesToComboBox();
+		LoadAllEmployee();
 		// LoadProductsToTable();
 
 		/* add actionListener account frame */
@@ -461,9 +465,124 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 		/* add actionlListener stock frame */
 		stock_btnAdd.addActionListener(this);
-
+		
+		//QLNV
+		//Trạng thái bắt đầu
+		txtNhanVienID.setEnabled(false);
+		txtFullNameNV.setEnabled(false);
+		JdNgaySinhNV.setEnabled(false);
+		txtDiaChiNhanVien.setEnabled(false);
+		btnLuuNV.setEnabled(false);
+		
+		
+		btnThemNV.addActionListener(this);
+		btnSuaNV.addActionListener(this);
 		add(tabManager, BorderLayout.CENTER);
 		add(tabManager);
+		
+		//Action QLNV
+		tableNhanVien.addMouseListener(new MouseListener() {
+
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				if (tableNhanVien.isEnabled())
+					targetColum();
+
+			}
+		});
+		btnThemNV.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					addAction();
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		btnSuaNV.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updateAction();
+			}
+		});
+		
+		btnLuuNV.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					saveAction();
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		
+		btnXoaNV.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					removeEmpActions();
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
+	public void targetColum() {
+		int a=tableNhanVien.getSelectedRow();
+		txtNhanVienID.setText(tableNhanVien.getValueAt(a, 0).toString());
+		txtFullNameNV.setText(tableNhanVien.getValueAt(a, 1).toString());
+		
+		if (tableNhanVien.getValueAt(a, 2).toString().equals("Nam"))
+			radNam.setSelected(true);
+		else
+			radNu.setSelected(true);
+		
+		txtDiaChiNhanVien.setText(tableNhanVien.getValueAt(a, 3).toString());
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		try {
+			JdNgaySinhNV.setDate(sdf.parse((String) tableNhanVien.getValueAt(a, 4)));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	@Override
@@ -501,6 +620,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 	}
 
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -530,7 +650,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+	
 
 	}
 
@@ -691,4 +811,152 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		callService.getGoodDAO().save(g);
 		System.out.println("DONE");
 	}
+	
+	
+	//Quản lí nhân viên
+	public void LoadAllEmployee()throws AccessException, RemoteException, NotBoundException{
+		List<Employee> listEmployee = callService.getEmployeeDAO().findAllEmp();
+		System.out.println("size: " + listEmployee.size());
+		
+		if (listEmployee.size() > 0) {
+			for (Employee emp : listEmployee) {
+				String id = emp.getId();
+				String Name = emp.getFullName();
+				
+				String sdt = emp.getGender();
+				String diachi = emp.getAddress();
+				Date ngaysinh = emp.getBirthdate();
+				System.out.println("date: " + ngaysinh);
+				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+				
+	
+				String rowData[] = { id, Name, sdt,diachi, sdf.format(ngaysinh) };
+				modelNhanVien.addRow(rowData);
+			}
+		}
+	}
+
+	public void AddEmpActions() throws AccessException, RemoteException, NotBoundException{
+
+		String getName = txtFullNameNV.getText();
+		String getgt = null;
+		if (radNam.isSelected()) {
+			getgt = radNam.getText();
+		} else {
+			getgt = radNu.getText();
+		}
+		String diachi = txtDiaChiNhanVien.getText();
+		Date getBD = JdNgaySinhNV.getDate();
+
+		Employee ac = new Employee();
+		
+		ac.setFullName(getName);
+		ac.setGender(getgt);
+		ac.setAddress(diachi);
+		ac.setBirthdate(getBD);
+
+		callService.getEmployeeDAO().save(ac);
+		System.out.println("DONE");
+
+	}
+
+	public void updateEmpAction() throws AccessException, RemoteException, NotBoundException{
+		String id = txtNhanVienID.getText();
+		String getName = txtFullNameNV.getText();
+		String getgt = null;
+		if (radNam.isSelected()) {
+			getgt = radNam.getText();
+		} else {
+			getgt = radNu.getText();
+		}
+		String diachi = txtDiaChiNhanVien.getText();
+		Date getBD = JdNgaySinhNV.getDate();
+
+		Employee ac = new Employee();
+		
+		ac.setId(id);
+		ac.setFullName(getName);
+		ac.setGender(getgt);
+		ac.setAddress(diachi);
+		ac.setBirthdate(getBD);
+		callService.getEmployeeDAO().update(ac);
+	}
+
+	public void removeEmpActions()throws AccessException, RemoteException, NotBoundException{
+		String id=txtNhanVienID.getText();
+		Employee em = new Employee();
+		em.setId(id);
+		callService.getEmployeeDAO().remove(em);
+	}
+	
+	//ActionButton QLNV
+	private void setText(boolean a) {
+		txtNhanVienID.setEnabled(false);
+		txtFullNameNV.setEnabled(a);
+		JdNgaySinhNV.setEnabled(a);
+		txtDiaChiNhanVien.setEnabled(a);
+	}
+	
+	private void addAction()throws AccessException, RemoteException, NotBoundException {
+		if(btnThemNV.getText().equalsIgnoreCase("Thêm")) {
+			setText(true);
+			btnThemNV.setText("Hủy");
+			btnThemNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_Delete_1493279.png")));
+			btnSuaNV.setEnabled(false);
+			btnXoaNV.setEnabled(false);
+			btnLuuNV.setEnabled(true);
+		}else if (btnThemNV.getText().equalsIgnoreCase("Hủy")) {
+			setText(false);
+			btnThemNV.setText("Thêm");
+			btnThemNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_7_330410.png")));
+			btnSuaNV.setEnabled(true);
+			btnXoaNV.setEnabled(true);
+			btnLuuNV.setEnabled(false);
+		}
+
+	}
+
+	private void updateAction() {
+		if(btnSuaNV.getText().equalsIgnoreCase("Sửa")) {
+			setText(true);
+			btnSuaNV.setText("Hủy");
+			btnSuaNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_Delete_1493279.png")));
+			btnThemNV.setEnabled(false);
+			btnXoaNV.setEnabled(false);
+			btnLuuNV.setEnabled(true);
+		}else if (btnSuaNV.getText().equalsIgnoreCase("Hủy")) {
+			setText(false);
+			btnSuaNV.setText("Sửa");
+			btnSuaNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_7_330410.png")));
+			btnThemNV.setEnabled(true);
+			btnXoaNV.setEnabled(true);
+			btnLuuNV.setEnabled(false);
+		}
+		
+	}
+	private void saveAction() throws AccessException, RemoteException, NotBoundException {
+		if(btnThemNV.getText().equalsIgnoreCase("Hủy")) {
+			AddEmpActions();
+			setText(false);
+			btnThemNV.setText("Thêm");
+			btnThemNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_7_330410.png")));
+			btnSuaNV.setEnabled(true);
+			btnXoaNV.setEnabled(true);
+			btnLuuNV.setEnabled(false);
+		}else if(btnSuaNV.getText().equalsIgnoreCase("Hủy")) {
+			updateEmpAction();
+			setText(false);
+			btnSuaNV.setText("Sửa");
+			btnSuaNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_7_330410.png")));
+			btnThemNV.setEnabled(true);
+			btnXoaNV.setEnabled(true);
+			btnLuuNV.setEnabled(false);	
+		}
+			
+		
+	}
+
+	
+
+
 }

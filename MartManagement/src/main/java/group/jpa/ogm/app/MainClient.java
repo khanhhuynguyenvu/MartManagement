@@ -14,16 +14,16 @@ import group.jpa.ogm.app.entities.Good;
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
 
-		ClientController callSerivce = new ClientController("192.168.31.22", 9999);
+		ClientController callSerivce = new ClientController("192.168.31.109", 9999);
 
 
 		
 		Account account1=new Account();
 		
-		account1.setUsername("kiet");
+		account1.setUsername("kietnhanvien");
 		account1.setPassword("1");
 		account1.setStartingDate(new Date());
-		account1.setType(2);
+		account1.setType(1);
 		
 		
 		Employee em = new Employee();
@@ -36,9 +36,7 @@ public class MainClient {
 		callSerivce.getEmployeeDAO().save(em);
 		
 		//System.out.println("asda: " + callSerivce.getAccountDAO().findAll());
-		
-
-	
+			
 //		callSerivce.getEmployeeDAO().save(em);
 //	
 		
@@ -53,14 +51,14 @@ public class MainClient {
 //		System.out.println(account1.getPassword());
 		
 		
-		Good g = new Good();
-		g.setName("Lavie");	
-		g.setEnterDate(new Date());	//	SimpleDateFormat ft =  new SimpleDateFormat ("E yyyy.MM.dd");	
-		g.setPrice((double) 5000);
-		g.setQuantity(10);
-		
+//		Good g = new Good();
+//		g.setName("Lavie");	
+//		g.setEnterDate(new Date());	//	SimpleDateFormat ft =  new SimpleDateFormat ("E yyyy.MM.dd");	
+//		g.setPrice((double) 5000);
+//		g.setQuantity(10);
+//		
 //		callSerivce.getGoodDAO().save(g);
-		
+//		
 		System.out.println("find by name: " + callSerivce.getCategoryDAO().findbyName("Nước giải khát"));
 		
 		

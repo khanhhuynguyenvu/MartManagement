@@ -112,7 +112,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
 
-		callService = new ClientController("192.168.31.22", 9999);
+		callService = new ClientController("192.168.31.109", 9999);
 
 		Box bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
 		/**
@@ -573,6 +573,14 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		for (int i = 0; i < c.length; i++) {
 			nlmkm = nlmkm + c[i];
 		}
+		Account ac=new Account();
+		ac.setId(account.getId());
+		ac.setType(account.getType());
+		ac.setStartingDate(account.getStartingDate());
+		ac.setStatus(account.getStatus());
+		ac.setUsername(account.getUsername());
+		ac.setPassword(mkm);
+		
 		if (!callService.getAccountDAO().checkPassOld(account.getPassword(), mkc)) {
 			JOptionPane.showMessageDialog(new JFrame(), "Mật khẩu cũ không khớp");
 			XoaTrangDoiMatKhau();
@@ -581,14 +589,9 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 			JOptionPane.showMessageDialog(new JFrame(), "Nhập lại mật khẩu mới không khớp");
 			XoaTrangDoiMatKhau();
 			return false;
-		} else if (callService.getAccountDAO().changePass(account, nlmkm)) {
-			JOptionPane.showMessageDialog(new JFrame(), "Đổi mật khẩu không thành công");
-			XoaTrangDoiMatKhau();
-			return false;
 		}
+		callService.getAccountDAO().update(ac);
 		JOptionPane.showMessageDialog(new JFrame(), "Đổi mật khẩu thành công");
-		new FrmMain();
-		dispose();
 		return true;
 	}
 
