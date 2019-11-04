@@ -2,6 +2,7 @@ package group.jpa.ogm.app.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -118,7 +119,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		tabManager = new JTabbedPane();
 		tabManager.setTabPlacement(JTabbedPane.LEFT);
 
-		callService = new ClientController("192.168.31.109", 9999);
+		callService = new ClientController("172.16.0.204", 9999);
 
 
 		//
@@ -569,10 +570,33 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		});
 		
 		btnLuuNV.addActionListener(new ActionListener() {
+			private Component frame;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					saveAction();
+					if(txtFullNameNV.getText().equals("")||txtFullNameNV.getText().length()>30)
+					{
+						JOptionPane.showMessageDialog(frame,
+								"Tên nhân viên không hợp lệ!!!");
+					}
+					else if(txtDiaChiNhanVien.getText().equals("")||txtDiaChiNhanVien.getText().length()>100){
+						JOptionPane.showMessageDialog(frame,
+								"Địa chỉ không hợp lệ!!!");
+					}
+					else if(JdNgaySinhNV.getDate()==null)
+					{
+						JOptionPane.showMessageDialog(frame,
+								"Ngày sinh không được để trống!!!");
+					}
+					else if(grGT.isSelected(null)==true) {
+						JOptionPane.showMessageDialog(frame,
+								"Xin chọn giới tính!!!");
+					}else {
+						saveAction();
+					}
+						
+				
 				} catch (RemoteException | NotBoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -584,12 +608,22 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		btnXoaNV.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+			if (JOptionPane.showConfirmDialog(null, "Are you sure?", "WARNING",
+						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				try {
 					removeEmpActions();
 				} catch (RemoteException | NotBoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			}
+			}
+		});
+		acc_btnLogout.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new FrmMain();
+				dispose();
 			}
 		});
 	}

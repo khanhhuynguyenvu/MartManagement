@@ -112,7 +112,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
 
-		callService = new ClientController("192.168.31.109", 9999);
+		callService = new ClientController("172.16.0.204", 9999);
 
 
 		Box bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
@@ -372,6 +372,13 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 			}
 		});
 
+		btnLogout.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new FrmMain();
+				dispose();
+			}
+		});
 		hienthithongtin();
 		bt.add(tbp);
 		add(bt);
