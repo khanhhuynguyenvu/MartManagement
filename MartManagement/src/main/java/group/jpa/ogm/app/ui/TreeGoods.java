@@ -30,7 +30,7 @@ public class TreeGoods extends JPanel {
 		super(new GridLayout(1, 0));
 		root = new DefaultMutableTreeNode("Kho");
 
-		callService = new ClientController("192.168.1.40", 9999);
+		callService = new ClientController("172.16.0.204", 9999);
 
 		tree = new JTree(root);
 
