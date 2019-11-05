@@ -2,6 +2,7 @@
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,28 +16,27 @@ import group.jpa.ogm.app.entities.Good;
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
 
-		ClientController callSerivce = new ClientController("192.168.1.40", 9999);
+		ClientController callSerivce = new ClientController("192.168.88.25", 9999);
 
-		
 		Account ac = new Account();
-		ac.setUsername("luan");
+		ac.setUsername("l");
 		ac.setPassword("1");
 		ac.setStartingDate(new Date());
-		ac.setStatus("Active");
+		ac.setStatus("Yes");
 		ac.setType(1);
-		
+
+
 		Employee em = new Employee();
-		em.setAccount(ac);
-		em.setFullName("N Thanh Luan");
-		em.setGender("male");
+		em.setFullName("Ronaldo Nguyen");
+		em.setGender("Male");
+		em.setAddress("NVB");
 		em.setBirthdate(new Date());
-		em.setAddress("LA");
+		em.setAccount(ac);
 		
-		callSerivce.getEmployeeDAO().save(em);
-	
-		//callSerivce.getAccountDAO().save(ac);
-	
-		System.out.println("Done!");
+		//callSerivce.getEmployeeDAO().save(em);
+		
+		System.out.println("DONE");
+		
 	}
 	
 }

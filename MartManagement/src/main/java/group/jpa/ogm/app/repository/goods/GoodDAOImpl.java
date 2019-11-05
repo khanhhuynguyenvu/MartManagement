@@ -16,6 +16,11 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public GoodDAOImpl() throws RemoteException {
 	}
 
@@ -26,6 +31,7 @@ public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
 		String query = "db.Good.find({})";
 		Query q = entityManager.createNativeQuery(query, Good.class);
 
+		@SuppressWarnings("unchecked")
 		List<Good> list = q.getResultList();
 		tr.commit();
 
@@ -42,6 +48,7 @@ public class GoodDAOImpl extends GenericsDAOImpl<Good> implements GoodDAO {
 
 		Query q = entityManager.createNativeQuery(gson.toJson(query), Good.class);
 
+		@SuppressWarnings("unchecked")
 		List<Good> list = q.getResultList();
 
 		tr.commit();

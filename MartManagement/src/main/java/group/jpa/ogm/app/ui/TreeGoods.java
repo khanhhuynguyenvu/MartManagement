@@ -32,9 +32,10 @@ public class TreeGoods extends JPanel {
 
 	public TreeGoods() throws RemoteException, NotBoundException {
 		super(new GridLayout(1, 0));
+
 		rootNode = new DefaultMutableTreeNode("Kho");
 		model = new DefaultTreeModel(rootNode);
-		callService = new ClientController("172.16.0.101", 9999);
+		callService = new ClientController("192.168.88.25", 9999);
 
 		tree = new JTree(model);
 		
@@ -86,7 +87,7 @@ public class TreeGoods extends JPanel {
 	public void LoadGoodsToTree() throws AccessException, RemoteException, NotBoundException {
 		List<Category> listCategories = callService.getCategoryDAO().findAll();
 
-		// System.out.println("size category: " + listCategories.size());
+		 System.out.println("size category: " + listCategories.size());
 
 		if (listCategories.size() > 0) {
 			for (Category category : listCategories) {

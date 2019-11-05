@@ -120,7 +120,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
 
-		callService = new ClientController("172.16.0.101", 9999);
+		callService = new ClientController("192.168.88.25", 9999);
 
 		listAllGoods = new ArrayList<Good>();
 		listGoodsBought = new ArrayList<Good>();
@@ -388,6 +388,13 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 			}
 		});
 
+		btnLogout.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new FrmMain();
+				dispose();
+			}
+		});
 		hienthithongtin();
 		bt.add(tbp);
 		add(bt);
@@ -703,6 +710,14 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		for (int i = 0; i < c.length; i++) {
 			nlmkm = nlmkm + c[i];
 		}
+		Account ac = new Account();
+		ac.setId(account.getId());
+		ac.setType(account.getType());
+		ac.setStartingDate(account.getStartingDate());
+		ac.setStatus(account.getStatus());
+		ac.setUsername(account.getUsername());
+		ac.setPassword(mkm);
+
 		if (!callService.getAccountDAO().checkPassOld(account.getPassword(), mkc)) {
 			JOptionPane.showMessageDialog(new JFrame(), "Mật khẩu cũ không khớp");
 			XoaTrangDoiMatKhau();
@@ -711,14 +726,9 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 			JOptionPane.showMessageDialog(new JFrame(), "Nhập lại mật khẩu mới không khớp");
 			XoaTrangDoiMatKhau();
 			return false;
-		} else if (callService.getAccountDAO().changePass(account, nlmkm)) {
-			JOptionPane.showMessageDialog(new JFrame(), "Đổi mật khẩu không thành công");
-			XoaTrangDoiMatKhau();
-			return false;
 		}
+		callService.getAccountDAO().update(ac);
 		JOptionPane.showMessageDialog(new JFrame(), "Đổi mật khẩu thành công");
-		new FrmMain();
-		dispose();
 		return true;
 	}
 
@@ -732,20 +742,6 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		inVoice.setInvoiceDate(new Date());
 
 		InvoiceDetails inVoiceDetails = new InvoiceDetails();
-		/*
-		 * List<Good> listGoods = new ArrayList<>();
-		 * 
-		 * for (int i = 0; i < modelGood.getRowCount(); i++) { String id =
-		 * modelGood.getValueAt(i, 0).toString(); String name = modelGood.getValueAt(i,
-		 * 1).toString(); String quantity = (String) modelGood.getValueAt(i, 2); String
-		 * price = (String) modelGood.getValueAt(i, 3);
-		 * 
-		 * Good g = new Good(); g.setId(id); g.setName(name);
-		 * g.setQuantity(Integer.parseInt(quantity)); //
-		 * g.setPrice(Double.parseDouble(price));
-		 * 
-		 * listGoods.add(g); }
-		 */
 
 		inVoiceDetails.setGoods(listGoodsBought);
 		inVoiceDetails.setInvoice(inVoice);
@@ -761,6 +757,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		updateGoods();
 		listGoodsBought.clear();
 		JOptionPane.showMessageDialog(this, "In hoá đơn thành công");
+		RemoveTextFields();
 		// showReceipt("001", "N T Luan", "a", "nv01", "01", "1000", "213123",
 		// "12/2/2014");
 	}

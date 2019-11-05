@@ -4,23 +4,17 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
 
 import org.bson.Document;
+import javax.persistence.Query;
 
 import com.google.gson.Gson;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 
 import group.jpa.ogm.app.entities.Account;
 import group.jpa.ogm.app.repository.generics.GenericsDAOImpl;
 
 public class AccountDAOImpl extends GenericsDAOImpl<Account> implements AccountDAO {
 
-	private MongoClient client = new MongoClient("localhost", 27017);
-	private MongoDatabase db = client.getDatabase("MartDB");
-	private MongoCollection<Document> cols = db.getCollection("Accounts");
 	Gson gson = new Gson();
 
 	public AccountDAOImpl() throws RemoteException {
@@ -40,7 +34,6 @@ public class AccountDAOImpl extends GenericsDAOImpl<Account> implements AccountD
 			Query query = entityManager.createNativeQuery(gson.toJson(query1), Account.class);
 
 			list = (List<Account>) query.getResultList();
-
 			tr.commit();
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -118,23 +111,21 @@ public class AccountDAOImpl extends GenericsDAOImpl<Account> implements AccountD
 
 	public boolean changePass(Account ac, String mkm) {
 		EntityTransaction tr = entityManager.getTransaction();
-		int list = 0;
+		int list = 0 ;
 		try {
 			tr.begin();
 //			db.Accounts.updateOne({"_id":"8645822b-cfa7-42b1-92c5-92c3cddfba39"},
 //			$set:{"Password":"2"},
 //			$currentDate:{lastModified: true}})
-
+//			db.Accounts.updateOne({Username:"kietnhanvien"},{$set:{"Password":"2"}})
+			
 			Document query1 = new Document();
-
-			query1.append("$set", new Document().append("Password", mkm));
-
-			Document filter = new Document().append("_id", ac.getId());
-
-			cols.updateOne(filter, query1);
-
-			System.out.println("ok");
-
+			
+			query1
+			.append("_id", ac.getId())
+			.append("$set", new Document().append("Password", mkm))
+			;
+			System.out.println(gson.toJson(query1));
 			Query query = entityManager.createNativeQuery(gson.toJson(query1), Account.class);
 
 			list = query.executeUpdate();
@@ -143,6 +134,8 @@ public class AccountDAOImpl extends GenericsDAOImpl<Account> implements AccountD
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		System.out.println("Kq");
+		System.out.println(list);
 		return list > 0;
 	}
 

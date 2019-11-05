@@ -67,5 +67,22 @@ public class EmployeeDAOImpl extends GenericsDAOImpl<Employee> implements Employ
 		return (Employee) list.get(0);
 	}
 
+	public List<Employee> findAllEmp() throws RemoteException {
+		EntityTransaction tr = entityManager.getTransaction();
+		List<Employee> list = null;
+		try {
+			tr.begin();
 
+			Document doc = new Document();
+			Gson gson = new Gson();
+
+			Query q = entityManager.createNativeQuery(gson.toJson(doc), Employee.class);
+
+			list = q.getResultList();
+			tr.commit();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return list;
+	}
 }
