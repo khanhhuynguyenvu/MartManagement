@@ -39,6 +39,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
@@ -84,11 +85,13 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	private DefaultTableModel modelNhanVien;
 
 	/* Quan ly kho */
-	JTextField stock_txtGoodtId, stock_txtGoodName, stock_txtQuantity, stock_txtPrice;
+	JTextField stock_txtGoodId, stock_txtGoodName, stock_txtQuantity, stock_txtPrice;
 	JLabel stock_lblGoodId, stock_lblGoodName, stock_lblEnterDate, stock_lblQuantity, stock_lblPrice,
 			stock_lblCategoryName;
 	JDateChooser stock_txtEnterDate;
-	JButton stock_btnAdd, stock_btnRemove, stock_btnModify, stock_btnSave, stock_btnReload;
+	JButton stock_btnAdd, stock_btnRemove, stock_btnModify, stock_btnSave, stock_btnReload, stock_btnCancel;
+
+	boolean stock_flagAdd = false, stock_flagModify = false;
 
 	JTable tableGood;
 	DefaultTableModel tblModelGood;
@@ -107,6 +110,8 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(1100, 700);
+		// setExtendedState(JFrame.MAXIMIZED_BOTH);
+		// setUndecorated(true);
 		setResizable(true);
 		setTitle("Form Quản lý");
 		setIconImage(new ImageIcon(getClass()
@@ -116,7 +121,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		tabManager = new JTabbedPane();
 		tabManager.setTabPlacement(JTabbedPane.LEFT);
 
-		callService = new ClientController("192.168.1.40", 9999);
+		callService = new ClientController("172.16.0.101", 9999);
 
 		//
 		Box acc_bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
@@ -370,7 +375,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bStock_ThongTin.add(Box.createVerticalStrut(10));
 		bStock_TT1.add(stock_lblGoodId = new JLabel("Mã sản phẩm"));
 		bStock_TT1.add(Box.createHorizontalStrut(10));
-		bStock_TT1.add(stock_txtGoodtId = new JTextField());
+		bStock_TT1.add(stock_txtGoodId = new JTextField());
 		bStock_TT1.add(stock_lblCategoryName = new JLabel("Loại"));
 
 		bStock_TT1.add(Box.createHorizontalStrut(30));
@@ -432,8 +437,8 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bStock_CN.add(stock_btnSave = new JButton("Lưu",
 				new ImageIcon(getClass().getResource("../ima/if_Save_1493294.png"))));
 		bStock_CN.add(Box.createHorizontalStrut(10));
-		bStock_CN.add(stock_btnReload = new JButton("Tải lại danh sách",
-				new ImageIcon(getClass().getResource("../ima/if_--07_1720774.png"))));
+		bStock_CN.add(stock_btnCancel = new JButton("Hủy",
+				new ImageIcon(getClass().getResource("../ima/if_Delete_1493279.png"))));
 		bStock_CN.add(Box.createHorizontalStrut(10));
 		bStock_CN.add(stock_btnRemove = new JButton("Xóa",
 				new ImageIcon(getClass().getResource("../ima/if_user-trash_118932.png"))));
@@ -465,22 +470,30 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		LoadAccountsToTable();
 		LoadAllCategoiesToComboBox();
 		LoadGoodsToTable();
+		// LoadGoodsToTree();
 
 		/* add actionListener account frame */
 
 		// btnAdd_Acc.addActionListener(this);
+		btnSave_Acc.setEnabled(false);
+		btnCancel_Acc.setEnabled(false);
+
 		btnModify_Acc.addActionListener(this);
 		btnRemove_Acc.addActionListener(this);
 		btnSave_Acc.addActionListener(this);
 		btnCancel_Acc.addActionListener(this);
 		tableAccount.addMouseListener(this);
 
-		btnSave_Acc.setEnabled(false);
-		btnCancel_Acc.setEnabled(false);
 		/* add actionlListener stock frame */
+		stock_txtGoodId.setEnabled(false);
+		stock_btnSave.setEnabled(false);
+		stock_btnCancel.setEnabled(false);
+
 		stock_btnAdd.addActionListener(this);
 		stock_btnModify.addActionListener(this);
 		stock_btnRemove.addActionListener(this);
+		stock_btnSave.addActionListener(this);
+		stock_btnCancel.addActionListener(this);
 
 		treeGoods.tree.addTreeSelectionListener(this);
 
@@ -490,9 +503,16 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		add(tabManager);
 	}
 
+	public void RemoveTextFieldsStock() {
+		stock_txtGoodId.setText("");
+		stock_txtGoodName.setText("");
+		stock_txtEnterDate.setDate(new Date());
+		stock_txtQuantity.setText("");
+		stock_txtPrice.setText("");
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		Object obj = e.getSource();
 
 		if (obj.equals(btnModify_Acc)) {
@@ -524,25 +544,32 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 			}
 
 		} else if (obj.equals(btnSave_Acc)) {
-			try {
-				updateAccountActions();
-			} catch (RemoteException | NotBoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			btnModify_Acc.setEnabled(true);
-			btnRemove_Acc.setEnabled(true);
-			btnSave_Acc.setEnabled(false);
-			btnCancel_Acc.setEnabled(false);
+			int getSelectedRow = tableAccount.getSelectedRow();
 
-			LockTextFieldAccount(true);
-			JOptionPane.showMessageDialog(this, "Sửa tài khoản thành công");
-			try {
-				LoadAccountsToTable();
-			} catch (RemoteException | NotBoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			if (getSelectedRow >= 0) {
+				try {
+					updateAccountActions();
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				btnModify_Acc.setEnabled(true);
+				btnRemove_Acc.setEnabled(true);
+				btnSave_Acc.setEnabled(false);
+				btnCancel_Acc.setEnabled(false);
+
+				LockTextFieldAccount(true);
+				JOptionPane.showMessageDialog(this, "Sửa tài khoản thành công");
+				try {
+					LoadAccountsToTable();
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			} else {
+				JOptionPane.showMessageDialog(this, "Chọn account để sửa");
 			}
+
 		} else if (obj.equals(btnCancel_Acc)) {
 			btnModify_Acc.setEnabled(true);
 			btnRemove_Acc.setEnabled(true);
@@ -552,21 +579,30 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		}
 
 		else if (obj.equals(stock_btnAdd)) {
-			try {
-				AddGoodActions();
+			RemoveTextFieldsStock();
+			stock_btnAdd.setEnabled(false);
+			stock_btnModify.setEnabled(false);
+			stock_btnRemove.setEnabled(false);
+			stock_btnSave.setEnabled(true);
+			stock_btnCancel.setEnabled(true);
 
-			} catch (RemoteException | NotBoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			stock_txtGoodId.setEditable(true);
+			tableGood.setEnabled(false);
+
+			stock_flagAdd = true;
+
 		} else if (obj.equals(stock_btnModify)) {
-			try {
-				updateGoodActions();
-				JOptionPane.showMessageDialog(this, "Sửa thành công");
-			} catch (RemoteException | NotBoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+
+			stock_btnAdd.setEnabled(false);
+			stock_btnModify.setEnabled(false);
+			stock_btnRemove.setEnabled(false);
+			stock_btnSave.setEnabled(true);
+			stock_btnCancel.setEnabled(true);
+
+			cbbCategoryName.setEnabled(false);
+			stock_txtEnterDate.setEnabled(false);
+			stock_flagModify = true;
+
 		} else if (obj.equals(stock_btnRemove)) {
 
 			if (JOptionPane.showConfirmDialog(null, "Are you sure?", "WARNING",
@@ -581,6 +617,47 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 			} else {
 				// no option
 			}
+		} else if (obj.equals(stock_btnSave)) {
+
+			if (stock_flagAdd) {
+				try {
+					AddGoodActions();
+					JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công");
+					stock_flagAdd = false;
+					LoadGoodsToTable();
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				stock_btnAdd.setEnabled(true);
+				stock_btnModify.setEnabled(true);
+				stock_btnRemove.setEnabled(true);
+				tableGood.setEnabled(true);
+			}
+
+			if (stock_flagModify) {
+				try {
+					updateGoodActions();
+					stock_flagModify = false;
+					JOptionPane.showMessageDialog(this, "Sửa thành công");
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+
+		} else if (obj.equals(stock_btnCancel)) {
+
+			stock_btnAdd.setEnabled(true);
+			stock_btnModify.setEnabled(true);
+			stock_btnRemove.setEnabled(true);
+			stock_btnSave.setEnabled(false);
+			stock_btnCancel.setEnabled(false);
+			cbbCategoryName.setEnabled(true);
+			stock_txtEnterDate.setEnabled(true);
+			tableGood.setEnabled(true);
+			LockTextFieldAccount(true);
 		}
 
 	}
@@ -612,7 +689,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 		}
 		if (rowStock >= 0) {
-			stock_txtGoodtId.setText(tableGood.getValueAt(rowStock, 0).toString());
+			stock_txtGoodId.setText(tableGood.getValueAt(rowStock, 0).toString());
 			cbbCategoryName.setSelectedItem((tableGood.getValueAt(rowStock, 1).toString()));
 			stock_txtGoodName.setText(tableGood.getValueAt(rowStock, 2).toString());
 
@@ -825,8 +902,19 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		g.setPrice(price);
 		g.setCategory(category);
 
+		// DefaultTreeModel model = (DefaultTreeModel) treeGoods.tree.getModel();
 		callService.getGoodDAO().save(g);
-		System.out.println("UPDATE DONE");
+
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeGoods.tree.getLastSelectedPathComponent();
+		// get node
+
+		DefaultMutableTreeNode nodeCategory = new DefaultMutableTreeNode(category.getName());
+
+		treeGoods.addObject(nodeCategory, g.getName());
+		treeGoods.rootNode.removeAllChildren();
+		treeGoods.LoadGoodsToTree();
+
+		System.out.println("ADD DONE");
 	}
 
 	public void updateGoodActions() throws AccessException, RemoteException, NotBoundException {
@@ -834,7 +922,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		// enable txt id, categoryName, goodName, enterDate
 
 		Category category = getProductByName();
-		String id = stock_txtGoodtId.getText();
+		String id = stock_txtGoodId.getText();
 		String name = stock_txtGoodName.getText();
 		Date enterDate = stock_txtEnterDate.getDate();
 		int qty = Integer.parseInt(stock_txtQuantity.getText());
@@ -852,7 +940,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	}
 
 	public void RemoveGoodActions() throws AccessException, RemoteException, NotBoundException {
-		String goodId = stock_txtGoodtId.getText();
+		String goodId = stock_txtGoodId.getText();
 		Good g = new Good();
 
 		g.setId(goodId);

@@ -1,4 +1,4 @@
-package group.jpa.ogm.app.repository.goods;
+	package group.jpa.ogm.app.repository.goods;
 
 import org.bson.Document;
 
