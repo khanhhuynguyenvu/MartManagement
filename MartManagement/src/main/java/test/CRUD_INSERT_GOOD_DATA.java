@@ -68,19 +68,19 @@ public class CRUD_INSERT_GOOD_DATA {
 		Good g3_1 = constructGood(c3,"5/12/2019","Dairyland",4.80, 4000);
 		Good g3_2 = constructGood(c3,"22/12/2019","Amul",4.80, 1000);
 		Good g3_3 = constructGood(c3,"15/10/2019","Mayfield Dairy",4.80, 500);
-		Good g3_4 = constructGood(c3,"01/7/2019","Trader Joe's",4.80, 300);
+		Good g3_4 = constructGood(c3,"01/07/2019","Trader Joe's",4.80, 300);
 		Good g3_5 = constructGood(c3,"03/11/2019","Sraus",4.87, 200);
 		//Add Fresh Bread & Rolls
 		Category c4 = categoryService.findbyName("Fresh Bread & Rolls");
 		Good g4_1 = constructGood(c4,"5/12/2019","FULLY BAKED CLASSIC BRIOCHE BUN SLICED",4.80, 2000);
 		Good g4_2 = constructGood(c4,"15/12/2019","ASSORTED CHEVERNY ROLLS (FRENCH WHEAT ONION DILL)",6.88, 3000);
 		Good g4_3 = constructGood(c4,"03/12/2019","BAGUETTE BREAD DOUGH",3.80, 170);
-		Good g4_4 = constructGood(c4,"03/12/2019","ASSORTED PARBAKED ROLLS",5.80, 370);
-		Good g4_5 = constructGood(c4,"03/12/2019","BAKED BUN BRIOCHE",1.81, 1000);
-		Good g4_6 = constructGood(c4,"03/12/2019","BOLILLO ROLL DOUGH",3.83, 300);
-		Good g4_7 = constructGood(c4,"03/12/2019","BORDEAUX ROLL",2.85, 500);
-		Good g4_8 = constructGood(c4,"03/12/2019","BRIOCHE DINNER ROLL FULLY BAKED",2.93, 200);
-		Good g4_9 = constructGood(c4,"03/12/2019","BUTTER EGG DINNER ROLL DOUGH",3.18, 100);
+		Good g4_4 = constructGood(c4,"13/03/2019","ASSORTED PARBAKED ROLLS",5.80, 370);
+		Good g4_5 = constructGood(c4,"23/10/2019","BAKED BUN BRIOCHE",1.81, 1000);
+		Good g4_6 = constructGood(c4,"05/11/2019","BOLILLO ROLL DOUGH",3.83, 300);
+		Good g4_7 = constructGood(c4,"15/12/2019","BORDEAUX ROLL",2.85, 500);
+		Good g4_8 = constructGood(c4,"13/12/2019","BRIOCHE DINNER ROLL FULLY BAKED",2.93, 200);
+		Good g4_9 = constructGood(c4,"23/02/2019","BUTTER EGG DINNER ROLL DOUGH",3.18, 100);
 		Good g4_10 = constructGood(c4,"03/12/2019","CIABATTA STYLE LOAF",2.87, 300);
 		List<Good> listGoods = Arrays.asList(g1_1,g1_2,g1_3,g1_4,g1_5,g1_6,g1_7,g1_8,
 				g2_1,g2_2,g2_3,g2_4,g2_5,

@@ -15,8 +15,6 @@ import group.jpa.ogm.app.entities.Good;
 
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
-<<<<<<< HEAD
-=======
 		ClientController callSerivce = new ClientController("172.16.0.204", 9999);
 
 		Account ac = new Account();
@@ -72,8 +70,6 @@ public class MainClient {
 
 		System.out.println("Done!");
 
-
->>>>>>> bd4da8be34ca8e83c1bd55c3f824d942665830cd
 		System.out.println("Done!");
 	}
 	
