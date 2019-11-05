@@ -15,16 +15,20 @@ import group.jpa.ogm.app.entities.Good;
 
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
+<<<<<<< HEAD
 		ClientController callSerivce = new ClientController("172.16.0.204", 9999);
+=======
+
+		ClientController callSerivce = new ClientController("192.168.88.25", 9999);
+>>>>>>> 8ea8f49833582def452ca7f93703bd4b40376e75
 
 		Account ac = new Account();
-		ac.setUsername("kiet");
-		ac.setPassword("123");
+		ac.setUsername("l");
+		ac.setPassword("1");
 		ac.setStartingDate(new Date());
 		ac.setStatus("Yes");
-		ac.setType(2);
+		ac.setType(1);
 
-		callSerivce.getAccountDAO().save(ac);
 
 		Employee em = new Employee();
 		em.setFullName("Ronaldo Nguyen");
@@ -33,6 +37,7 @@ public class MainClient {
 		em.setBirthdate(new Date());
 		em.setAccount(ac);
 		
+<<<<<<< HEAD
 //		callSerivce.getEmployeeDAO().save(em);
 //    	Employee em1 = callSerivce.getEmployeeDAO().findByName("Luan");
 //    	System.out.println(em1.getId()+" "+em1.getFullName()+" "+em1.getGender());
@@ -71,6 +76,12 @@ public class MainClient {
 		System.out.println("Done!");
 
 		System.out.println("Done!");
+=======
+		//callSerivce.getEmployeeDAO().save(em);
+		
+		System.out.println("DONE");
+		
+>>>>>>> 8ea8f49833582def452ca7f93703bd4b40376e75
 	}
 	
 }

@@ -1,6 +1,9 @@
 package group.jpa.ogm.app.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-
+import java.text.SimpleDateFormat;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.rmi.AccessException;
@@ -20,6 +23,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,6 +31,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -90,8 +95,8 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	private JTable table;
 	private DefaultTableModel tablemodel;
 
-	private JTable tableProduct;
-	private DefaultTableModel modelProduct;
+	private JTable tableGood;
+	private DefaultTableModel modelGood;
 	/*
 	 * private NhanVienNhanBenhDaos nhanVienNhanBenhDaos; private List<BenhNhan>
 	 * dsbn; private List<NhanVien> dsnv;
@@ -100,6 +105,9 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	private Account account;
 
 	static ClientController callService;
+
+	static List<Good> listAllGoods;
+	static List<Good> listGoodsBought;
 
 	public Gui_Employee(Account account) throws RemoteException, NotBoundException {
 		this.account = account;
@@ -112,8 +120,10 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
 
-		callService = new ClientController("172.16.0.204", 9999);
+		callService = new ClientController("192.168.88.25", 9999);
 
+		listAllGoods = new ArrayList<Good>();
+		listGoodsBought = new ArrayList<Good>();
 
 		Box bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
 		/**
@@ -148,7 +158,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 		Box bqlbn1_ThongTin_IdBN = Box.createHorizontalBox();
 		bqlbn1_ThongTin_IdBN.add(new JLabel("Tìm thông tin sảm phẩm: "));
-		bqlbn1_ThongTin_IdBN.add(Box.createHorizontalStrut(20));
+		bqlbn1_ThongTin_IdBN.add(Box.createHorizontalStrut(0));
 		bqlbn1_ThongTin_IdBN.add(txtSearch = new JTextField());
 		txtSearch.setPreferredSize(getPreferredSize());
 		bqlbn1_ThongTin_IdBN.add(Box.createHorizontalStrut(10));
@@ -156,26 +166,26 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 		Box bqlbn1_ThongTin_Ho = Box.createHorizontalBox();
 		bqlbn1_ThongTin_Ho.add(new JLabel("Tên sản phẩm: "));
-		bqlbn1_ThongTin_Ho.add(Box.createHorizontalStrut(60));
+		bqlbn1_ThongTin_Ho.add(Box.createHorizontalStrut(50));
 		modelcbbProductName = new DefaultComboBoxModel<String>();
 		bqlbn1_ThongTin_Ho.add(cbbProductName = new JComboBox<String>(modelcbbProductName));
 
 		Box bqlbn1_ThongTin_PId = Box.createHorizontalBox();
 		bqlbn1_ThongTin_PId.add(new JLabel("Mã sản phẩm: "));
-		bqlbn1_ThongTin_PId.add(Box.createHorizontalStrut(60));
+		bqlbn1_ThongTin_PId.add(Box.createHorizontalStrut(55));
 		bqlbn1_ThongTin_PId.add(txtProductId = new JTextField());
 
 		// cbbName.setPreferredSize(getPreferredSize());
 
 		Box bqlbn1_ThongTin_Ten = Box.createHorizontalBox();
 		bqlbn1_ThongTin_Ten.add(new JLabel("Số lượng: "));
-		bqlbn1_ThongTin_Ten.add(Box.createHorizontalStrut(90));
+		bqlbn1_ThongTin_Ten.add(Box.createHorizontalStrut(80));
 		bqlbn1_ThongTin_Ten.add(txtQuantity = new JTextField());
 		// txtQuantity.setPreferredSize(getPreferredSize());
 
 		Box bqlbn1_ThongTin_Sdt = Box.createHorizontalBox();
 		bqlbn1_ThongTin_Sdt.add(new JLabel("Giá: "));
-		bqlbn1_ThongTin_Sdt.add(Box.createHorizontalStrut(120));
+		bqlbn1_ThongTin_Sdt.add(Box.createHorizontalStrut(110));
 		bqlbn1_ThongTin_Sdt.add(txtPrice = new JTextField());
 		// txtPrice.setPreferredSize(getPreferredSize());
 
@@ -203,9 +213,11 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				.add(btnAdd = new JButton("Thêm", new ImageIcon(getClass().getResource("../ima/if_7_330410.png"))));
 		btnAdd.setMaximumSize(getMaximumSize());
 		bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
-		bqlbn2_ChucNang_1.add(btnModify = new JButton("Cập nhật",
-				new ImageIcon(getClass().getResource("../ima/if_brush-pencil_1055103.png"))));
-		btnModify.setMaximumSize(getMaximumSize());
+		/*
+		 * bqlbn2_ChucNang_1.add(btnModify = new JButton("Cập nhật", new
+		 * ImageIcon(getClass().getResource("../ima/if_brush-pencil_1055103.png"))));
+		 * btnModify.setMaximumSize(getMaximumSize());
+		 */
 		bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
 		bqlbn2_ChucNang_1.add(
 				btnRemove = new JButton("Xóa", new ImageIcon(getClass().getResource("../ima/if_Save_1493294.png"))));
@@ -223,17 +235,21 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		bqlbn3_Danhsach.setBorder(BorderFactory.createTitledBorder("Danh sách mua"));
 		Box bqlbn3_Danhsach_1 = Box.createHorizontalBox();
 		String[] headers = "Mã sản phẩm; Tên sản phẩm; Số lượng; Giá mỗi sản phẩm; Thành tiền".split(";");
-		modelProduct = new DefaultTableModel(headers, 0);
-		bqlbn3_Danhsach_1.add(new JScrollPane(tableProduct = new JTable(modelProduct)));
-		// tableProduct.setDefaultEditor(Object.class, null);
+		modelGood = new DefaultTableModel(headers, 0);
+		bqlbn3_Danhsach_1.add(new JScrollPane(tableGood = new JTable(modelGood)));
+		// tableGood.setDefaultEditor(Object.class, null);
 		bqlbn3_Danhsach.add(bqlbn3_Danhsach_1);
 
+		JLabel lblSum;
 		Box bqlbn3_Sum = Box.createHorizontalBox();
 		bqlbn3_Sum.add(Box.createHorizontalGlue());
-		bqlbn3_Sum.add(new JLabel("Tong"));
+		bqlbn3_Sum.add(lblSum = new JLabel("TỔNG THÀNH TIỀN"));
+		lblSum.setFont(new Font("Times new roman", Font.PLAIN, 22));
 		bqlbn3_Sum.add(Box.createHorizontalStrut(10));
 		bqlbn3_Sum.add(lblSumInvoice = new JLabel());
+		lblSumInvoice.setFont(new Font("Times new roman", Font.PLAIN, 22));
 
+		bqlbn3_Sum.add(Box.createHorizontalStrut(30));
 		bqlbn3_Sum.add(btnPrintInvoice = new JButton("In hóa đơn",
 				new ImageIcon(getClass().getResource("../ima/if_receipt_3583272.png"))));
 		// btnPrintInvoice.setMaximumSize(getMaximumSize());
@@ -385,14 +401,27 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		setLocationRelativeTo(null);
 		setVisible(true);
 		LoadAllGoodsToComboBox();
+		LoadAllGoods();
 
 		btnSearch.addActionListener(this);
 		btnAdd.addActionListener(this);
 		btnRemove.addActionListener(this);
 		btnPrintInvoice.addActionListener(this);
 
+		txtPrice.setEnabled(false);
+		txtId.setEnabled(false);
+
 		cbbProductName.addActionListener(this);
-		tableProduct.addMouseListener(this);
+		tableGood.addMouseListener(this);
+	}
+
+	public void LoadAllGoods() throws AccessException, RemoteException, NotBoundException {
+
+		ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO().findAll();
+
+		for (Good good : listGoods) {
+			listAllGoods.add(good);
+		}
 	}
 
 	public void LoadAllGoodsToComboBox() throws AccessException, RemoteException, NotBoundException {
@@ -420,29 +449,119 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	}
 
 	public void LoadProductByName(String name) throws AccessException, RemoteException, NotBoundException {
-		Good g = callService.getGoodDAO().findByProductName(name);
+		// Good g = callService.getGoodDAO().findByProductName(name);
 
-		if (g != null) {
-			txtProductId.setText(g.getId());
-			txtQuantity.setText(g.getQuantity().toString());
-			txtPrice.setText(g.getPrice().toString());
+		for (Good good : listAllGoods) {
+			if (good.getName().equals(name)) {
+				txtProductId.setText(good.getId());
+				txtQuantity.setText(good.getQuantity().toString());
+				txtPrice.setText(good.getPrice().toString());
+			}
 		}
+
 	}
 
 	public void BuyProduct() {
 
-		String name = cbbProductName.getSelectedItem().toString();
-		String id = txtProductId.getText();
-		double price = Double.parseDouble(txtPrice.getText());
-		int quantity = Integer.parseInt(txtQuantity.getText());
-		double total = price * quantity;
+		// kiểm trống
+		// kiểm <= 0
+		// kiểm tra > lớn hơn sl
+		// kiểm tra trùng
 
-		String rowData[] = { id, name, Integer.toString(quantity), Double.toString(price), Double.toString(total) };
-		sumInvoice += total;
-		lblSumInvoice.setText(Double.toString(sumInvoice));
+		if (!txtQuantity.getText().equals("")) {
+			if (Integer.parseInt(txtQuantity.getText()) <= 0) {
+				JOptionPane.showMessageDialog(null, "Số lượng sản phẩm phải lớn hơn 0");
+				txtQuantity.requestFocus();
+			} else {
+				String id = txtProductId.getText();
+				String name = cbbProductName.getSelectedItem().toString();
+				double price = Double.parseDouble(txtPrice.getText());
+				int quantity = Integer.parseInt(txtQuantity.getText());
+				double total = price * quantity;
 
-		modelProduct.addRow(rowData);
+				Good g = new Good();
+				g.setId(id);
+				g.setName(name);
+				g.setQuantity(quantity);
+				g.setPrice(price);
 
+				boolean flag = false; // kiểm tra số lượng okay
+
+				for (Good good : listAllGoods) {
+					if (good.getId().equals(g.getId())) {
+
+						if (g.getQuantity() > good.getQuantity()) {
+							JOptionPane.showMessageDialog(this, "Quá số lượng");
+							txtQuantity.selectAll();
+							txtQuantity.requestFocus();
+						} else {
+
+							int temp = good.getQuantity() - g.getQuantity();
+							good.setQuantity(temp);
+
+							flag = true;
+							break;
+						}
+
+					}
+
+				}
+
+				if (flag) { // nếu sl ok
+					// kiểm tra trùng id
+					boolean flagId = false;
+					int sumQty = 0;
+
+					for (Good good : listGoodsBought) {
+						if (good.getId().equals(g.getId())) {
+
+							System.out.println("trùng id*****");
+
+							sumQty = good.getQuantity() + g.getQuantity();
+							System.out.println("sum qty: " + sumQty);
+							good.setQuantity(good.getQuantity() + g.getQuantity());
+
+							flagId = true;
+
+						}
+					}
+
+					if (flagId) { // nếu trùng id
+						for (int i = 0; i < modelGood.getRowCount(); i++) {
+							if (modelGood.getValueAt(i, 0).toString().equals(g.getId())) {
+								modelGood.setValueAt(sumQty, i, 2);
+								RemoveTextFields();
+								break;
+							}
+						}
+
+					} else {
+						listGoodsBought.add(g);
+						String rowData[] = { id, name, Integer.toString(g.getQuantity()), Double.toString(price),
+								Double.toString(total) };
+						sumInvoice += total;
+
+						// lblSumInvoice.setText(Double.toString(sumInvoice));
+
+						modelGood.addRow(rowData);
+						RemoveTextFields();
+					}
+
+				}
+			}
+
+		} else {
+			JOptionPane.showMessageDialog(null, "Số lượng không được để trống");
+			txtQuantity.requestFocus();
+		}
+	}
+
+	public void RemoveTextFields() {
+		txtSearch.setText("");
+		modelcbbProductName.setSelectedItem("");
+		txtProductId.setText("");
+		txtQuantity.setText("");
+		txtPrice.setText("");
 	}
 
 	@Override
@@ -452,13 +571,39 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 		if (obj.equals(btnAdd)) {
 			BuyProduct();
-		} else if (obj.equals(btnRemove)) {
-			int row = tableProduct.getSelectedRow();
-			if (row >= 0) {
-				modelProduct.removeRow(row);
+			double sum = 0;
+			if (listGoodsBought.size() > 0) {
+				for (Good good : listGoodsBought) {
+					sum += good.getQuantity() * good.getPrice();
+				}
 			}
+			lblSumInvoice.setText(Double.toString(sum));
+
+		} else if (obj.equals(btnRemove)) {
+			int row = tableGood.getSelectedRow();
+			if (row >= 0) {
+				RemoveGoodActions();
+				modelGood.removeRow(row);
+				try {
+					LoadAllGoodsToComboBox();
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				RemoveTextFields();
+				JOptionPane.showMessageDialog(this, "Xoá sản phẩm thành công");
+			} else {
+				JOptionPane.showMessageDialog(this, "Chọn sản phẩm để xóa");
+				tableGood.requestFocus();
+			}
+
 		} else if (obj.equals(btnPrintInvoice)) {
-			PrintInvoiceActions();
+			try {
+				PrintInvoiceActions();
+			} catch (RemoteException | NotBoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		} else if (obj.equals(btnSearch)) {
 			try {
 				SearchActions();
@@ -486,16 +631,16 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		int row = tableProduct.getSelectedRow();
+		int row = tableGood.getSelectedRow();
 		if (row >= 0) {
 
-			txtProductId.setText(tableProduct.getValueAt(row, 0).toString());
+			txtProductId.setText(tableGood.getValueAt(row, 0).toString());
 
 			modelcbbProductName.removeAllElements();
-			modelcbbProductName.setSelectedItem(tableProduct.getValueAt(row, 1).toString());
-			// .setText(tableProduct.getValueAt(row, 1).toString());
-			txtQuantity.setText(tableProduct.getValueAt(row, 2).toString());
-			txtPrice.setText(tableProduct.getValueAt(row, 3).toString());
+			modelcbbProductName.setSelectedItem(tableGood.getValueAt(row, 1).toString());
+			// .setText(tableGood.getValueAt(row, 1).toString());
+			txtQuantity.setText(tableGood.getValueAt(row, 2).toString());
+			txtPrice.setText(tableGood.getValueAt(row, 3).toString());
 
 			/*
 			 * if (table.getValueAt(row, 3).equals("NS")) { comboBox.setSelectedIndex(1); }
@@ -565,14 +710,14 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		for (int i = 0; i < c.length; i++) {
 			nlmkm = nlmkm + c[i];
 		}
-		Account ac=new Account();
+		Account ac = new Account();
 		ac.setId(account.getId());
 		ac.setType(account.getType());
 		ac.setStartingDate(account.getStartingDate());
 		ac.setStatus(account.getStatus());
 		ac.setUsername(account.getUsername());
 		ac.setPassword(mkm);
-		
+
 		if (!callService.getAccountDAO().checkPassOld(account.getPassword(), mkc)) {
 			JOptionPane.showMessageDialog(new JFrame(), "Mật khẩu cũ không khớp");
 			XoaTrangDoiMatKhau();
@@ -587,7 +732,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		return true;
 	}
 
-	public void PrintInvoiceActions() {
+	public void PrintInvoiceActions() throws AccessException, RemoteException, NotBoundException {
 		Invoice inVoice = new Invoice();
 		Employee em = new Employee();
 		Account ac = new Account();
@@ -596,33 +741,9 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 		inVoice.setInvoiceDate(new Date());
 
-		try {
-			callService.getInvoiceDAO().save(inVoice);
-		} catch (RemoteException | NotBoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
 		InvoiceDetails inVoiceDetails = new InvoiceDetails();
 
-		List<Good> listGoods = new ArrayList<>();
-
-		for (int i = 0; i < modelProduct.getRowCount(); i++) {
-			String id = modelProduct.getValueAt(i, 0).toString();
-			String name = modelProduct.getValueAt(i, 1).toString();
-			String quantity = (String) modelProduct.getValueAt(i, 2);
-			String price = (String) modelProduct.getValueAt(i, 3);
-
-			Good g = new Good();
-			g.setId(id);
-			g.setName(name);
-			g.setQuantity(Integer.parseInt(quantity));
-			// g.setPrice(Double.parseDouble(price));
-
-			listGoods.add(g);
-		}
-
-		inVoiceDetails.setGoods(listGoods);
+		inVoiceDetails.setGoods(listGoodsBought);
 		inVoiceDetails.setInvoice(inVoice);
 
 		try {
@@ -631,8 +752,25 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		modelGood.setRowCount(0);
 
-		System.out.println("DONE PRINT INVOICE");
+		updateGoods();
+		listGoodsBought.clear();
+		JOptionPane.showMessageDialog(this, "In hoá đơn thành công");
+		RemoveTextFields();
+		// showReceipt("001", "N T Luan", "a", "nv01", "01", "1000", "213123",
+		// "12/2/2014");
+	}
+
+	public void updateGoods() throws AccessException, RemoteException, NotBoundException {
+
+		for (int i = 0; i < listGoodsBought.size(); i++) {
+			for (int j = 0; j < listAllGoods.size(); j++) {
+				if (listGoodsBought.get(i).getId().equals(listAllGoods.get(j).getId())) {
+					callService.getGoodDAO().update(listAllGoods.get(j));
+				}
+			}
+		}
 	}
 
 	public void SearchActions() throws AccessException, RemoteException, NotBoundException {
@@ -642,4 +780,159 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		}
 	}
 
+	public void RemoveGoodActions() {
+		// 1 tìm obj xóa trong list mua hàng
+		// 2 lấy obj tìm trong list sản phẩm
+		// 3 + thêm vào
+
+		int row = tableGood.getSelectedRow();
+		Good goodSelected = null;
+
+		if (row >= 0) {
+			for (Good good : listGoodsBought) {
+				if (good.getId().equals(tableGood.getValueAt(row, 0))) {
+					goodSelected = good;
+					listGoodsBought.remove(good);
+					System.out.println("bought: " + good.getQuantity());
+				}
+				break;
+			}
+			for (Good good : listAllGoods) {
+				if (good.getId().equals(goodSelected.getId())) {
+					good.setQuantity(good.getQuantity() + goodSelected.getQuantity());
+				}
+			}
+		}
+
+	}
+	/*
+	 * private void showReceipt(String maHang, String tenKH, String tenSP, String
+	 * tenNV, String soLuong, String tongTien, String diachi, String ngaygui) {
+	 * JFrame frame = new JFrame("Hóa đơn"); frame.setSize(500, 600);
+	 * frame.setVisible(true); frame.setLocationRelativeTo(null);
+	 * frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+	 * 
+	 * Font font = new Font("monospaced", Font.PLAIN, 18);
+	 * 
+	 * //
+	 * -----------------------------------------------------------------------------
+	 * --------- JPanel pNorth = new JPanel(); pNorth.setBackground(Color.WHITE);
+	 * 
+	 * JLabel lblTitile, lblTitle2, lblTitile3;
+	 * 
+	 * pNorth.setLayout(new BoxLayout(pNorth, BoxLayout.Y_AXIS));
+	 * 
+	 * pNorth.add(lblTitile = new JLabel("SIÊU THỊ MINI", JLabel.CENTER));
+	 * lblTitile.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+	 * pNorth.add(Box.createVerticalStrut(5)); pNorth.add(lblTitle2 = new
+	 * JLabel("12-Nguyễn Văn Bảo-Phường 4-Gò Vấp-TP.HCM", JLabel.CENTER));
+	 * lblTitle2.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+	 * pNorth.add(Box.createVerticalStrut(5)); pNorth.add(lblTitile3 = new
+	 * JLabel("***********************", JLabel.CENTER));
+	 * lblTitile3.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+	 * 
+	 * pNorth.add(Box.createVerticalStrut(50));
+	 * 
+	 * frame.add(pNorth, BorderLayout.NORTH);
+	 * 
+	 * //
+	 * -----------------------------------------------------------------------------
+	 * --------- JPanel pCenter = new JPanel(); pCenter.setBackground(Color.WHITE);
+	 * pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
+	 * 
+	 * Box b = Box.createVerticalBox();
+	 * 
+	 * Box b1, b2, b3, b4, b5, b6, b7, b8;
+	 * 
+	 * JLabel lblMa, lblTenKH, lblTenSP, lblTenNV, lblSoLuong, lblTongTien,
+	 * lblDiaChi, lblNgayGui; JLabel lblMa2, lblTenKH2, lblTenSP2, lblTenNV2,
+	 * lblSoLuong2, lblTongTien2, lblDiaChi2, lblNgayGui2;
+	 * 
+	 * b.add(b1 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
+	 * b1.add(Box.createHorizontalStrut(20)); b1.add(lblMa = new
+	 * JLabel("Mã đặt hàng:")); b1.add(Box.createHorizontalStrut(50)); b1.add(lblMa2
+	 * = new JLabel(maHang));
+	 * 
+	 * b.add(b2 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
+	 * b2.add(Box.createHorizontalStrut(20)); b2.add(lblTenKH = new
+	 * JLabel("Tên khách hàng:")); b2.add(Box.createHorizontalStrut(50));
+	 * b2.add(lblTenKH2 = new JLabel(tenKH));
+	 * 
+	 * 
+	 * b.add(b3 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
+	 * b3.add(Box.createHorizontalStrut(20)); b3.add(lblTenSP = new
+	 * JLabel("Tên sản phẩm:")); b3.add(Box.createHorizontalStrut(50));
+	 * b3.add(lblTenSP2 = new JLabel(tenSP));
+	 * 
+	 * 
+	 * for (Good good : listGoodsBought) { Box x = Box.createHorizontalBox();
+	 * 
+	 * b.add(Box.createVerticalStrut(10)); x.add(Box.createHorizontalStrut(20));
+	 * x.add(new JLabel("Tên sản phẩm:")); x.add(Box.createHorizontalStrut(50));
+	 * x.add(new JLabel(good.getName())); x.add(Box.createHorizontalStrut(20));
+	 * x.add(new JLabel("Số lượng:")); x.add(Box.createHorizontalStrut(50));
+	 * x.add(new JLabel(Integer.toString(good.getQuantity()))); b.add(x); }
+	 * 
+	 * b.add(b4 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
+	 * b4.add(Box.createHorizontalStrut(20)); b4.add(lblTenNV = new
+	 * JLabel("Tên nhân viên:")); b4.add(Box.createHorizontalStrut(50));
+	 * b4.add(lblTenNV2 = new JLabel(tenNV));
+	 * 
+	 * b.add(b5 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
+	 * b5.add(Box.createHorizontalStrut(20)); b5.add(lblSoLuong = new
+	 * JLabel("Số lượng:")); b5.add(Box.createHorizontalStrut(50));
+	 * b5.add(lblSoLuong2 = new JLabel(soLuong));
+	 * 
+	 * b.add(b6 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
+	 * b6.add(Box.createHorizontalStrut(20)); b6.add(lblTongTien = new
+	 * JLabel("Tổng tiền:")); b6.add(Box.createHorizontalStrut(50));
+	 * b6.add(lblTongTien2 = new JLabel(tongTien));
+	 * 
+	 * b.add(b7 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
+	 * b7.add(Box.createHorizontalStrut(20)); b7.add(lblDiaChi = new
+	 * JLabel("Địa chỉ gửi:")); b7.add(Box.createHorizontalStrut(50));
+	 * b7.add(lblDiaChi2 = new JLabel(diachi));
+	 * 
+	 * b.add(b8 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
+	 * b8.add(Box.createHorizontalStrut(20)); b8.add(lblNgayGui = new
+	 * JLabel("Ngày gửi:")); b8.add(Box.createHorizontalStrut(50));
+	 * b8.add(lblNgayGui2 = new JLabel(ngaygui));
+	 * 
+	 * pCenter.add(b);
+	 * 
+	 * frame.add(pCenter, BorderLayout.CENTER);
+	 * 
+	 * //
+	 * -----------------------------------------------------------------------------
+	 * --------- JPanel pSouth = new JPanel(); pSouth.setLayout(new
+	 * FlowLayout(FlowLayout.CENTER)); pSouth.setBackground(Color.WHITE);
+	 * 
+	 * JLabel lblBottom1, lblBottom2;
+	 * 
+	 * Box bot = Box.createVerticalBox();
+	 * 
+	 * bot.add(new JLabel("--------------------------------------"));
+	 * bot.add(Box.createVerticalStrut(10)); bot.add(lblBottom1 = new
+	 * JLabel("Cảm ơn quý khách")); bot.add(Box.createVerticalStrut(10));
+	 * bot.add(lblBottom2 = new JLabel("Xin hẹn gặp lại"));
+	 * 
+	 * pSouth.add(bot);
+	 * 
+	 * frame.add(pSouth, BorderLayout.SOUTH);
+	 * 
+	 * //
+	 * -----------------------------------------------------------------------------
+	 * --------- lblTitile.setFont(font); lblTitle2.setFont(font);
+	 * lblTitile3.setFont(font); lblMa.setFont(font); lblMa2.setFont(font);
+	 * lblTenKH.setFont(font); lblTenKH2.setFont(font); lblDiaChi.setFont(font);
+	 * lblDiaChi2.setFont(font); lblNgayGui.setFont(font);
+	 * lblNgayGui2.setFont(font); lblSoLuong.setFont(font);
+	 * lblSoLuong2.setFont(font); lblTenNV.setFont(font); lblTenNV2.setFont(font);
+	 * lblTongTien.setFont(font); lblTongTien2.setFont(font); //
+	 * lblTenSP.setFont(font); // lblTenSP2.setFont(font); lblBottom1.setFont(font);
+	 * lblBottom2.setFont(font);
+	 * 
+	 * lblDiaChi.setPreferredSize(lblTenKH.getPreferredSize());
+	 * lblSoLuong.setPreferredSize(lblTenKH.getPreferredSize()); }
+	 */
 }
