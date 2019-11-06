@@ -20,42 +20,6 @@ import group.jpa.ogm.app.entities.InvoiceDetails;
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
 
-		ClientController callSerivce = new ClientController("192.168.88.25", 9999);
-
-		Account ac = new Account();
-		ac.setUsername("a");
-		ac.setPassword("1");
-		ac.setStartingDate(new Date());
-		ac.setStatus("Yes");
-		ac.setType(2);
-
-		Employee em = new Employee();
-		em.setFullName("Ronaldo Nguyen");
-		em.setGender("Male");
-		em.setAddress("NVB");
-		em.setBirthdate(new Date());
-		em.setAccount(ac);
-		
-	//	callSerivce.getEmployeeDAO().save(em);
-
-		/*
-		 * Invoice in = new Invoice(); in.setInvoiceDate(new Date());
-		 * 
-		 * 
-		 * 
-		 * 
-		 * List<Good> goods = callSerivce.getGoodDAO().findAll();
-		 * 
-		 * InvoiceDetails inD = new InvoiceDetails(); inD.setGoods(goods);
-		 * 
-		 * inD.setInvoice(in);
-		 * 
-		 * callSerivce.getInvoiceDetailsDAO().save(inD);
-		 * 
-		 * // callSerivce.getEmployeeDAO().save(em);
-		 */
-		System.out.println("DONE");
-
 	}
 
 }
