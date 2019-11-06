@@ -44,7 +44,9 @@ import group.jpa.ogm.app.entities.Account;
 import group.jpa.ogm.app.entities.Employee;
 
 import group.jpa.ogm.app.repository.account.AccountDAOImpl;
-
+import group.jpa.ogm.app.repository.goods.GoodDAO;
+import group.jpa.ogm.app.repository.goods.GoodDAOImpl;
+import group.jpa.ogm.app.repository.invoiceDetails.InvoiceDetailsDAO;
 import group.jpa.ogm.app.entities.Good;
 import group.jpa.ogm.app.entities.Invoice;
 import group.jpa.ogm.app.entities.InvoiceDetails;
@@ -105,6 +107,8 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	private Account account;
 
 	static ClientController callService;
+	private GoodDAO goodService;
+	private InvoiceDetailsDAO invoideDetailsService;
 
 	static List<Good> listAllGoods;
 	static List<Good> listGoodsBought;
@@ -121,6 +125,8 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 						.getImage());
 
 		callService = new ClientController("192.168.88.25", 9999);
+		goodService = callService.getGoodDAO();
+		invoideDetailsService = callService.getInvoiceDetailsDAO();
 
 		listAllGoods = new ArrayList<Good>();
 		listGoodsBought = new ArrayList<Good>();
@@ -417,7 +423,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 	public void LoadAllGoods() throws AccessException, RemoteException, NotBoundException {
 
-		ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO().findAll();
+		ArrayList<Good> listGoods = (ArrayList<Good>) goodService.findAll();
 
 		for (Good good : listGoods) {
 			listAllGoods.add(good);
@@ -425,7 +431,9 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	}
 
 	public void LoadAllGoodsToComboBox() throws AccessException, RemoteException, NotBoundException {
-		ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO().findAll();
+		ArrayList<Good> listGoods = (ArrayList<Good>) goodService.findAll();
+
+		System.out.println("SUCCESS");
 
 		for (Good good : listGoods) {
 			String getName = good.getName();
@@ -434,7 +442,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	}
 
 	public void LoadProductByKey(String key) throws AccessException, RemoteException, NotBoundException {
-		ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO().findByProductKey(key);
+		ArrayList<Good> listGoods = (ArrayList<Good>) goodService.findByProductKey(key);
 		if (listGoods.size() > 0) {
 			modelcbbProductName.removeAllElements();
 
@@ -746,14 +754,9 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		inVoiceDetails.setGoods(listGoodsBought);
 		inVoiceDetails.setInvoice(inVoice);
 
-		try {
-			callService.getInvoiceDetailsDAO().save(inVoiceDetails);
-		} catch (RemoteException | NotBoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		modelGood.setRowCount(0);
+		invoideDetailsService.save(inVoiceDetails);
 
+		modelGood.setRowCount(0);
 		updateGoods();
 		listGoodsBought.clear();
 		JOptionPane.showMessageDialog(this, "In hoá đơn thành công");
@@ -767,7 +770,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		for (int i = 0; i < listGoodsBought.size(); i++) {
 			for (int j = 0; j < listAllGoods.size(); j++) {
 				if (listGoodsBought.get(i).getId().equals(listAllGoods.get(j).getId())) {
-					callService.getGoodDAO().update(listAllGoods.get(j));
+					goodService.update(listAllGoods.get(j));
 				}
 			}
 		}

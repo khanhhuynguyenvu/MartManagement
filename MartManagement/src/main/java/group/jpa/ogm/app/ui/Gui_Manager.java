@@ -51,7 +51,10 @@ import group.jpa.ogm.app.entities.Account;
 import group.jpa.ogm.app.entities.Category;
 import group.jpa.ogm.app.entities.Employee;
 import group.jpa.ogm.app.entities.Good;
+import group.jpa.ogm.app.repository.account.AccountDAO;
 import group.jpa.ogm.app.repository.account.AccountDAOImpl;
+import group.jpa.ogm.app.repository.category.CategoryDAO;
+import group.jpa.ogm.app.repository.goods.GoodDAO;
 import group.jpa.ogm.app.entities.Account;
 
 public class Gui_Manager extends JFrame implements ActionListener, MouseListener, TreeSelectionListener {
@@ -104,7 +107,10 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 	TreeGoods treeGoods;
 
-	static ClientController callService;
+	private ClientController callService;
+	private AccountDAO accountService;
+	private GoodDAO goodService;
+	private CategoryDAO categoryService;
 
 	private Account ac;
 
@@ -125,6 +131,9 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		tabManager.setTabPlacement(JTabbedPane.LEFT);
 
 		callService = new ClientController("192.168.88.25", 9999);
+		accountService = callService.getAccountDAO();
+		goodService = callService.getGoodDAO();
+		categoryService = callService.getCategoryDAO();
 
 		//
 		Box acc_bt = Box.createVerticalBox();// CÃ¡i nÃ y lÃ  quáº£n lÃ½ chung cá»§a cáº£ frame
@@ -691,12 +700,14 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 				LockTextFieldAccount(true);
 				JOptionPane.showMessageDialog(this, "Sửa tài khoản thành công");
+
 				try {
 					LoadAccountsToTable();
 				} catch (RemoteException | NotBoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+
 			} else {
 				JOptionPane.showMessageDialog(this, "Chọn account để sửa");
 			}
@@ -724,15 +735,21 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 		} else if (obj.equals(stock_btnModify)) {
 
-			stock_btnAdd.setEnabled(false);
-			stock_btnModify.setEnabled(false);
-			stock_btnRemove.setEnabled(false);
-			stock_btnSave.setEnabled(true);
-			stock_btnCancel.setEnabled(true);
+			int row = tableGood.getSelectedRow();
 
-			cbbCategoryName.setEnabled(false);
-			stock_txtEnterDate.setEnabled(false);
-			stock_flagModify = true;
+			if (row >= 0) {
+				stock_btnAdd.setEnabled(false);
+				stock_btnModify.setEnabled(false);
+				stock_btnRemove.setEnabled(false);
+				stock_btnSave.setEnabled(true);
+				stock_btnCancel.setEnabled(true);
+
+				cbbCategoryName.setEnabled(false);
+				stock_txtEnterDate.setEnabled(false);
+				stock_flagModify = true;
+			} else {
+				JOptionPane.showMessageDialog(this, "Chọn sản phẩm để sửa");
+			}
 
 		} else if (obj.equals(stock_btnRemove)) {
 
@@ -771,6 +788,16 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 				try {
 					updateGoodActions();
 					stock_flagModify = false;
+
+					stock_btnAdd.setEnabled(true);
+					stock_btnModify.setEnabled(true);
+					stock_btnRemove.setEnabled(true);
+					stock_btnSave.setEnabled(false);
+					stock_btnCancel.setEnabled(false);
+
+					cbbCategoryName.setEnabled(true);
+					stock_txtEnterDate.setEnabled(true);
+
 					JOptionPane.showMessageDialog(this, "Sửa thành công");
 				} catch (RemoteException | NotBoundException e1) {
 					// TODO Auto-generated catch block
@@ -889,7 +916,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	}
 
 	public void LoadAccountsToTable() throws AccessException, RemoteException, NotBoundException {
-		List<Account> listAccounts = callService.getAccountDAO().findAll();
+		List<Account> listAccounts = accountService.findAll();
 
 		tblModelAccount.setRowCount(0);
 
@@ -934,7 +961,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		ac.setStartingDate(getStartingDate);
 		ac.setStatus(getStatus);
 
-		callService.getAccountDAO().update(ac);
+		accountService.update(ac);
 	}
 
 	public void RemoveAccountActions(int getSelectedRow) throws AccessException, RemoteException, NotBoundException {
@@ -942,7 +969,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		String id = txtAccId.getText();
 		Account ac = new Account();
 		ac.setId(id);
-		callService.getAccountDAO().remove(ac);
+		accountService.remove(ac);
 		tableAccount.remove(getSelectedRow);
 
 	}
@@ -952,7 +979,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 		tblModelGood.setRowCount(0);
 
-		ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO().findAll();
+		ArrayList<Good> listGoods = (ArrayList<Good>) goodService.findAll();
 
 		for (Good good : listGoods) {
 			String id = good.getId();
@@ -974,7 +1001,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 		tblModelGood.setRowCount(0);
 
-		Category getCategory = callService.getCategoryDAO().findbyName(categoryName);
+		Category getCategory = categoryService.findbyName(categoryName);
 
 		if (!getCategory.equals(null)) {
 			ArrayList<Good> listGoods = (ArrayList<Good>) callService.getGoodDAO()
@@ -998,7 +1025,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	}
 
 	public void LoadAllCategoiesToComboBox() throws AccessException, RemoteException, NotBoundException {
-		ArrayList<Category> listCategories = (ArrayList<Category>) callService.getCategoryDAO().findAll();
+		ArrayList<Category> listCategories = (ArrayList<Category>) categoryService.findAll();
 
 		for (Category category : listCategories) {
 			String getName = category.getName();
@@ -1010,7 +1037,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	public Category getProductByName() throws AccessException, RemoteException, NotBoundException {
 		String name = (String) cbbCategoryName.getSelectedItem();
 
-		Category category = callService.getCategoryDAO().findbyName(name);
+		Category category = categoryService.findbyName(name);
 
 		if (category != null)
 			return category;
@@ -1047,26 +1074,45 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		System.out.println("ADD DONE");
 	}
 
-	public void updateGoodActions() throws AccessException, RemoteException, NotBoundException {
+	public boolean updateGoodActions() throws AccessException, RemoteException, NotBoundException {
 
 		// enable txt id, categoryName, goodName, enterDate
 
-		Category category = getProductByName();
-		String id = stock_txtGoodId.getText();
-		String name = stock_txtGoodName.getText();
-		Date enterDate = stock_txtEnterDate.getDate();
-		int qty = Integer.parseInt(stock_txtQuantity.getText());
-		double price = Double.parseDouble(stock_txtPrice.getText());
+		int getSelectedRow = tableGood.getSelectedRow();
 
-		Good g = new Good();
-		g.setId(id);
-		g.setName(name);
-		g.setEnterDate(enterDate);
-		g.setQuantity(qty);
-		g.setPrice(price);
-		g.setCategory(category);
+		System.out.println("selected row: " + getSelectedRow);
 
-		callService.getGoodDAO().update(g);
+		if (getSelectedRow >= 0) {
+			Category category = getProductByName();
+			String id = stock_txtGoodId.getText();
+			String name = stock_txtGoodName.getText();
+			Date enterDate = stock_txtEnterDate.getDate();
+			int qty = Integer.parseInt(stock_txtQuantity.getText());
+			double price = Double.parseDouble(stock_txtPrice.getText());
+
+			Good g = new Good();
+			g.setId(id);
+			g.setName(name);
+			g.setEnterDate(enterDate);
+			g.setQuantity(qty);
+			g.setPrice(price);
+			g.setCategory(category);
+
+			goodService.update(g);
+
+			for (int i = 0; i < tblModelGood.getRowCount(); i++) {
+				if (tblModelGood.getValueAt(i, 0).toString().equals(g.getId())) {
+					tblModelGood.setValueAt(g.getQuantity(), i, 4);
+					break;
+				}
+			}
+
+			return true;
+		} else {
+			JOptionPane.showMessageDialog(this, "Chọn sản phẩm để sửa");
+		}
+
+		return false;
 	}
 
 	public void RemoveGoodActions() throws AccessException, RemoteException, NotBoundException {
@@ -1074,7 +1120,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		Good g = new Good();
 
 		g.setId(goodId);
-		callService.getGoodDAO().remove(g);
+		goodService.remove(g);
 		LoadGoodsToTable();
 	}
 

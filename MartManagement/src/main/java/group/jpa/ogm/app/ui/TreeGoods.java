@@ -21,12 +21,16 @@ import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 import group.jpa.ogm.app.controller.client.ClientController;
 import group.jpa.ogm.app.entities.Category;
 import group.jpa.ogm.app.entities.Good;
+import group.jpa.ogm.app.repository.category.CategoryDAO;
+import group.jpa.ogm.app.repository.goods.GoodDAO;
 
 public class TreeGoods extends JPanel {
 
 	public JTree tree;
 	public DefaultTreeModel model;
 	public DefaultMutableTreeNode rootNode;
+	private GoodDAO goodService;
+	private CategoryDAO categoryService;
 
 	static ClientController callService;
 
@@ -36,6 +40,8 @@ public class TreeGoods extends JPanel {
 		rootNode = new DefaultMutableTreeNode("Kho");
 		model = new DefaultTreeModel(rootNode);
 		callService = new ClientController("192.168.88.25", 9999);
+		goodService = callService.getGoodDAO();
+		categoryService = callService.getCategoryDAO();
 
 		tree = new JTree(model);
 		
@@ -85,7 +91,7 @@ public class TreeGoods extends JPanel {
 	}
 
 	public void LoadGoodsToTree() throws AccessException, RemoteException, NotBoundException {
-		List<Category> listCategories = callService.getCategoryDAO().findAll();
+		List<Category> listCategories = categoryService.findAll();
 
 		 System.out.println("size category: " + listCategories.size());
 
@@ -94,9 +100,7 @@ public class TreeGoods extends JPanel {
 				DefaultMutableTreeNode cate = new DefaultMutableTreeNode(category.getName());
 				rootNode.add(cate);
 
-				List<Good> listGoodsByCategory = (List<Good>) callService.getGoodDAO()
-						.findGoodsByCategoryId(category.getId());
-
+				List<Good> listGoodsByCategory = goodService.findGoodsByCategoryId(category.getId());
 				// System.out.println("size goods by category: " + listGoodsByCategory.size());
 
 				if (listGoodsByCategory.size() > 0) {
