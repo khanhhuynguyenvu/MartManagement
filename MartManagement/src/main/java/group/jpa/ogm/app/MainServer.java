@@ -36,6 +36,7 @@ public class MainServer {
 		try {
 			InetAddress.getLocalHost();
 			System.setProperty("java.rmi.server.hostname", "192.168.31.22");
+
 		} catch (UnknownHostException e) {
 			System.err.println("Can't get information host");
 		}

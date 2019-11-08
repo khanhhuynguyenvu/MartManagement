@@ -11,4 +11,5 @@ public interface EmployeeDAO extends GenericsDAO<Employee> {
 	Employee findByName(String name) throws RemoteException;
 	Employee getEmp(String user) throws RemoteException;
 	List<Employee> findAllEmp() throws RemoteException;
+	List<Employee> findName(String name) throws RemoteException;
 }

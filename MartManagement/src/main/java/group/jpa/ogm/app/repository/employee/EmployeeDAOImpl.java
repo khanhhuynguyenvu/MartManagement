@@ -35,7 +35,19 @@ public class EmployeeDAOImpl extends GenericsDAOImpl<Employee> implements Employ
 		tr.commit();
 		return listEm.get(0);
 	}
-
+	public List<Employee> findName(String name) throws RemoteException {
+		// TODO Auto-generated method stub
+		EntityTransaction tr = entityManager.getTransaction();
+		tr.begin();
+		String query = "db.Employee.find({'FullName':'{p1}'})";
+		query = query.replace("{p1}", name);
+		Query q = entityManager.createNativeQuery(query, Employee.class);
+		System.out.println("Size : " + q.getResultList().size());
+		@SuppressWarnings("unchecked")
+		List<Employee> listEm = q.getResultList();
+		tr.commit();
+		return listEm;
+	}
 	public Employee add(Employee e) throws RemoteException {
 
 		EntityTransaction tr = entityManager.getTransaction();
