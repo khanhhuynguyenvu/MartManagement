@@ -201,12 +201,18 @@ public class FrmMain extends JFrame implements ActionListener {
 			} catch (RemoteException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+			} catch (NotBoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		} else if (obj.equals(btnStock)) {
 
 			try {
 				new FrmLogin().setVisible(true);
 			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (NotBoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
