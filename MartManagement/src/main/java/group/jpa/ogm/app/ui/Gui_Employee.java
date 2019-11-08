@@ -49,11 +49,11 @@ import group.jpa.ogm.app.repository.account.AccountDAOImpl;
 import group.jpa.ogm.app.repository.employee.EmployeeDAO;
 import group.jpa.ogm.app.repository.goods.GoodDAO;
 import group.jpa.ogm.app.repository.goods.GoodDAOImpl;
+import group.jpa.ogm.app.repository.invoice.InvoiceDAO;
 import group.jpa.ogm.app.repository.invoiceDetails.InvoiceDetailsDAO;
 import group.jpa.ogm.app.entities.Good;
 import group.jpa.ogm.app.entities.Invoice;
 import group.jpa.ogm.app.entities.InvoiceDetails;
-import javassist.expr.Instanceof;
 
 /**
  * 
@@ -115,9 +115,13 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	private InvoiceDetailsDAO invoideDetailsService;
 	private AccountDAO accountService;
 	private EmployeeDAO employeeService;
+	private InvoiceDAO inVoiceService;
 
 	static List<Good> listAllGoods;
 	static List<Good> listGoodsBought;
+
+	private JTable tableGoodsBought;
+	private DefaultTableModel modelGoodsBought;
 
 	public Gui_Employee(Account account) throws RemoteException, NotBoundException {
 		this.account = account;
@@ -127,15 +131,15 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		setResizable(true);
 		setTitle("Nhân viên bán hàng");
 
-		setIconImage(new ImageIcon(getClass().getResource(
-				"../../resources/ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
-						.getImage());
+		setIconImage(new ImageIcon("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png")
+				.getImage());
 
-		callService = new ClientController("172.16.0.95", 9999);
+		callService = new ClientController("192.168.31.22", 9999);
 		goodService = callService.getGoodDAO();
 		invoideDetailsService = callService.getInvoiceDetailsDAO();
 		accountService = callService.getAccountDAO();
 		employeeService = callService.getEmployeeDAO();
+		inVoiceService = callService.getInvoiceDAO();
 
 		listAllGoods = new ArrayList<Good>();
 		listGoodsBought = new ArrayList<Good>();
@@ -148,20 +152,16 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		Box b1 = Box.createHorizontalBox();
 		b1.setMaximumSize(getMaximumSize());
 		b1.add(Box.createHorizontalStrut(20));
-		b1.add(new JLabel(new ImageIcon(
-				getClass().getResource("../../resources/ima/if_cv_job_seeker_employee_unemployee_work_2620524.png"))));
+		b1.add(new JLabel(new ImageIcon(("../ima/if_cv_job_seeker_employee_unemployee_work_2620524.png"))));
 		b1.add(Box.createHorizontalStrut(10));
 
-		System.out.println("path: "
-				+ getClass().getResource("../../resources/ima/if_cv_job_seeker_employee_unemployee_work_2620524.png"));
+		System.out.println("path: " + ("../ima/if_cv_job_seeker_employee_unemployee_work_2620524.png"));
 
 		b1.add(Box.createHorizontalStrut(400));
-		b1.add(btnLogout = new JButton("Đăng xuất",
-				new ImageIcon(getClass().getResource("../../resources/ima/if_Logout_105217.png"))));
+		b1.add(btnLogout = new JButton("Đăng xuất", new ImageIcon(("../ima/if_Logout_105217.png"))));
 		bt.add(Box.createVerticalStrut(10));
 		b1.add(Box.createHorizontalStrut(10));
-		b1.add(btnHelp = new JButton("Hỗ trợ",
-				new ImageIcon(getClass().getResource("../../resources/ima/if_user_help_1902262.png"))));
+		b1.add(btnHelp = new JButton("Hỗ trợ", new ImageIcon(("../ima/if_user_help_1902262.png"))));
 		bt.add(b1);
 		bt.add(Box.createVerticalStrut(0));
 		/////////////////////////////////
@@ -227,25 +227,22 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		bqlbn2_ChucNang.setMaximumSize(getMaximumSize());
 		Box bqlbn2_ChucNang_1 = Box.createHorizontalBox();
 		bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
-		bqlbn2_ChucNang_1.add(btnAdd = new JButton("Thêm",
-				new ImageIcon(getClass().getResource("../../resources/ima/if_7_330410.png"))));
+		bqlbn2_ChucNang_1.add(btnAdd = new JButton("Thêm", new ImageIcon(("../ima/if_7_330410.png"))));
 		btnAdd.setMaximumSize(getMaximumSize());
 		bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
 		/*
-		 * bqlbn2_ChucNang_1.add(btnModify = new JButton("Cập nhật", new
-		 * ImageIcon(getClass().getResource(
-		 * "../../resources/ima/if_brush-pencil_1055103.png"))));
+		 * bqlbn2_ChucNang_1.add(btnModify = new JButton("Cập nhật", new ImageIcon((
+		 * "../ima/if_brush-pencil_1055103.png"))));
 		 * btnModify.setMaximumSize(getMaximumSize());
 		 */
 		bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
-		bqlbn2_ChucNang_1.add(btnRemove = new JButton("Xóa",
-				new ImageIcon(getClass().getResource("../../resources/ima/if_Save_1493294.png"))));
+		bqlbn2_ChucNang_1.add(btnRemove = new JButton("Xóa", new ImageIcon(("../ima/if_Save_1493294.png"))));
 		btnRemove.setMaximumSize(getMaximumSize());
 		/*
 		 * bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
 		 * bqlbn2_ChucNang_1.add(btnPrintInvoice = new JButton("In hóa đơn", new
-		 * ImageIcon(getClass().getResource("../../resources/ima/if_receipt_3583272.png"
-		 * )))); btnPrintInvoice.setMaximumSize(getMaximumSize());
+		 * ImageIcon(("../ima/if_receipt_3583272.png" ))));
+		 * btnPrintInvoice.setMaximumSize(getMaximumSize());
 		 */
 
 		bqlbn2_ChucNang.add(bqlbn2_ChucNang_1);
@@ -269,8 +266,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		lblSumInvoice.setFont(new Font("Times new roman", Font.PLAIN, 22));
 
 		bqlbn3_Sum.add(Box.createHorizontalStrut(30));
-		bqlbn3_Sum.add(btnPrintInvoice = new JButton("In hóa đơn",
-				new ImageIcon(getClass().getResource("../../resources/ima/if_receipt_3583272.png"))));
+		bqlbn3_Sum.add(btnPrintInvoice = new JButton("In hóa đơn", new ImageIcon(("../ima/if_receipt_3583272.png"))));
 		// btnPrintInvoice.setMaximumSize(getMaximumSize());
 		bqlbn3_Danhsach.add(bqlbn3_Sum);
 
@@ -361,12 +357,11 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 		Box b_ChangePassword_button = Box.createHorizontalBox();
 		b_ChangePassword_button.add(Box.createHorizontalStrut(20));
-		b_ChangePassword_button.add(btnChangePass = new JButton("Đổi mật khẩu", new ImageIcon(
-				getClass().getResource("../../resources/ima/if_Access_field_pin_input_password_2629858 .png"))));
+		b_ChangePassword_button.add(btnChangePass = new JButton("Đổi mật khẩu",
+				new ImageIcon(("../ima/if_Access_field_pin_input_password_2629858 .png"))));
 		btnChangePass.setSize(new Dimension(50, 20));
 		b_ChangePassword_button.add(Box.createHorizontalStrut(50));
-		b_ChangePassword_button.add(btnCancel = new JButton("Hủy",
-				new ImageIcon(getClass().getResource("../../resources/ima/if_Delete_1493279.png"))));
+		b_ChangePassword_button.add(btnCancel = new JButton("Hủy", new ImageIcon(("../ima/if_Delete_1493279.png"))));
 		btnCancel.setMaximumSize(new Dimension(150, 60));
 		b_ChangePassword_button.add(Box.createHorizontalStrut(20));
 		b_ChangePassword.add(Box.createVerticalStrut(10));
@@ -420,7 +415,12 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		setLocationRelativeTo(null);
 		setVisible(true);
 		LoadAllGoodsToComboBox();
+
 		LoadAllGoods();
+		
+		txtPrice.setText(listAllGoods.get(0).getPrice().toString());
+		txtProductId.setText(listAllGoods.get(0).getId());
+		txtQuantity.setText(listAllGoods.get(0).getQuantity().toString());
 
 		btnSearch.addActionListener(this);
 		btnAdd.addActionListener(this);
@@ -428,7 +428,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		btnPrintInvoice.addActionListener(this);
 
 		txtPrice.setEnabled(false);
-		txtId.setEnabled(false);
+		txtProductId.setEnabled(false);
 
 		cbbProductName.addActionListener(this);
 		tableGood.addMouseListener(this);
@@ -479,11 +479,10 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				txtPrice.setText(good.getPrice().toString());
 			}
 		}
-
 	}
 
 	public boolean AddGood() {
-		// kiểm trống
+		// kiểm trốngp
 		// kiểm <= 0
 		// kiểm tra > lớn hơn sl
 		// kiểm tra trùng
@@ -593,7 +592,8 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 						sum += good.getQuantity() * good.getPrice();
 					}
 				}
-				lblSumInvoice.setText(Double.toString(sum));
+				String outString = String.format("%.2f", sum);
+				lblSumInvoice.setText(outString);
 			}
 
 		} else if (obj.equals(btnRemove)) {
@@ -622,16 +622,29 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 			}
 
 		} else if (obj.equals(btnPrintInvoice)) {
+
+			Invoice in = null;
 			try {
-				if (PrintInvoiceActions()) {
-					JOptionPane.showMessageDialog(this, "In hóa đơn thành công");
-				} else {
-					JOptionPane.showMessageDialog(this, "In hóa đơn thất bại do không sản phẩm nào");
-				}
-			} catch (HeadlessException | RemoteException | NotBoundException e1) {
+				in = inVoiceService.getLastInvoiceByDate();
+			} catch (RemoteException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+
+			if (!in.equals("")) {
+				JOptionPane.showMessageDialog(this, "In hóa đơn thành công");
+				try {
+					showReceipt(in);
+					listGoodsBought.clear();
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			} else {
+				JOptionPane.showMessageDialog(this, "In hóa đơn thất bại do không sản phẩm nào");
+			}
+
 		} else if (obj.equals(btnSearch)) {
 			try {
 				SearchActions();
@@ -705,9 +718,8 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		System.out.println(account.getId());
 		System.out.println("user :" + account.getUsername());
 		if (callService == null)
-			System.out.println("Không thể đăng nhập Error XKFME");
+			System.out.println("Không thể đăng nhập");
 		else {
-			System.out.println("xx");
 			Employee em = callService.getEmployeeDAO().getEmp(account.getId());
 			txtId.setText(em.getId());
 			txtFullName.setText(em.getFullName());
@@ -760,7 +772,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		return true;
 	}
 
-	public boolean PrintInvoiceActions() throws AccessException, RemoteException, NotBoundException {
+	public Invoice PrintInvoiceActions() throws AccessException, RemoteException, NotBoundException {
 
 		if (listGoodsBought.size() > 0) {
 			/*
@@ -784,18 +796,19 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 			inVoiceDetails.setGoods(listGoodsBought);
 			inVoiceDetails.setInvoice(inVoice);
+			inVoiceDetails.setTotal(sumInvoice);
 			invoideDetailsService.save(inVoiceDetails);
+
+			System.out.println("id: " + inVoiceDetails.getId());
 
 			modelGood.setRowCount(0);
 			updateGoods();
-			listGoodsBought.clear();
+			lblSumInvoice.setText("");
 			RemoveTextFields();
-			return true;
+			return inVoice;
 		}
 
-		// showReceipt("001", "N T Luan", "a", "nv01", "01", "1000", "213123",
-		// "12/2/2014");
-		return false;
+		return null;
 	}
 
 	public void updateGoods() throws AccessException, RemoteException, NotBoundException {
@@ -841,134 +854,135 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		return false;
 
 	}
-	/*
-	 * private void showReceipt(String maHang, String tenKH, String tenSP, String
-	 * tenNV, String soLuong, String tongTien, String diachi, String ngaygui) {
-	 * JFrame frame = new JFrame("Hóa đơn"); frame.setSize(500, 600);
-	 * frame.setVisible(true); frame.setLocationRelativeTo(null);
-	 * frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-	 * 
-	 * Font font = new Font("monospaced", Font.PLAIN, 18);
-	 * 
-	 * //
-	 * -----------------------------------------------------------------------------
-	 * --------- JPanel pNorth = new JPanel(); pNorth.setBackground(Color.WHITE);
-	 * 
-	 * JLabel lblTitile, lblTitle2, lblTitile3;
-	 * 
-	 * pNorth.setLayout(new BoxLayout(pNorth, BoxLayout.Y_AXIS));
-	 * 
-	 * pNorth.add(lblTitile = new JLabel("SIÊU THỊ MINI", JLabel.CENTER));
-	 * lblTitile.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-	 * pNorth.add(Box.createVerticalStrut(5)); pNorth.add(lblTitle2 = new
-	 * JLabel("12-Nguyễn Văn Bảo-Phường 4-Gò Vấp-TP.HCM", JLabel.CENTER));
-	 * lblTitle2.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-	 * pNorth.add(Box.createVerticalStrut(5)); pNorth.add(lblTitile3 = new
-	 * JLabel("***********************", JLabel.CENTER));
-	 * lblTitile3.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-	 * 
-	 * pNorth.add(Box.createVerticalStrut(50));
-	 * 
-	 * frame.add(pNorth, BorderLayout.NORTH);
-	 * 
-	 * //
-	 * -----------------------------------------------------------------------------
-	 * --------- JPanel pCenter = new JPanel(); pCenter.setBackground(Color.WHITE);
-	 * pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
-	 * 
-	 * Box b = Box.createVerticalBox();
-	 * 
-	 * Box b1, b2, b3, b4, b5, b6, b7, b8;
-	 * 
-	 * JLabel lblMa, lblTenKH, lblTenSP, lblTenNV, lblSoLuong, lblTongTien,
-	 * lblDiaChi, lblNgayGui; JLabel lblMa2, lblTenKH2, lblTenSP2, lblTenNV2,
-	 * lblSoLuong2, lblTongTien2, lblDiaChi2, lblNgayGui2;
-	 * 
-	 * b.add(b1 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
-	 * b1.add(Box.createHorizontalStrut(20)); b1.add(lblMa = new
-	 * JLabel("Mã đặt hàng:")); b1.add(Box.createHorizontalStrut(50)); b1.add(lblMa2
-	 * = new JLabel(maHang));
-	 * 
-	 * b.add(b2 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
-	 * b2.add(Box.createHorizontalStrut(20)); b2.add(lblTenKH = new
-	 * JLabel("Tên khách hàng:")); b2.add(Box.createHorizontalStrut(50));
-	 * b2.add(lblTenKH2 = new JLabel(tenKH));
-	 * 
-	 * 
-	 * b.add(b3 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
-	 * b3.add(Box.createHorizontalStrut(20)); b3.add(lblTenSP = new
-	 * JLabel("Tên sản phẩm:")); b3.add(Box.createHorizontalStrut(50));
-	 * b3.add(lblTenSP2 = new JLabel(tenSP));
-	 * 
-	 * 
-	 * for (Good good : listGoodsBought) { Box x = Box.createHorizontalBox();
-	 * 
-	 * b.add(Box.createVerticalStrut(10)); x.add(Box.createHorizontalStrut(20));
-	 * x.add(new JLabel("Tên sản phẩm:")); x.add(Box.createHorizontalStrut(50));
-	 * x.add(new JLabel(good.getName())); x.add(Box.createHorizontalStrut(20));
-	 * x.add(new JLabel("Số lượng:")); x.add(Box.createHorizontalStrut(50));
-	 * x.add(new JLabel(Integer.toString(good.getQuantity()))); b.add(x); }
-	 * 
-	 * b.add(b4 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
-	 * b4.add(Box.createHorizontalStrut(20)); b4.add(lblTenNV = new
-	 * JLabel("Tên nhân viên:")); b4.add(Box.createHorizontalStrut(50));
-	 * b4.add(lblTenNV2 = new JLabel(tenNV));
-	 * 
-	 * b.add(b5 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
-	 * b5.add(Box.createHorizontalStrut(20)); b5.add(lblSoLuong = new
-	 * JLabel("Số lượng:")); b5.add(Box.createHorizontalStrut(50));
-	 * b5.add(lblSoLuong2 = new JLabel(soLuong));
-	 * 
-	 * b.add(b6 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
-	 * b6.add(Box.createHorizontalStrut(20)); b6.add(lblTongTien = new
-	 * JLabel("Tổng tiền:")); b6.add(Box.createHorizontalStrut(50));
-	 * b6.add(lblTongTien2 = new JLabel(tongTien));
-	 * 
-	 * b.add(b7 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
-	 * b7.add(Box.createHorizontalStrut(20)); b7.add(lblDiaChi = new
-	 * JLabel("Địa chỉ gửi:")); b7.add(Box.createHorizontalStrut(50));
-	 * b7.add(lblDiaChi2 = new JLabel(diachi));
-	 * 
-	 * b.add(b8 = Box.createHorizontalBox()); b.add(Box.createVerticalStrut(10));
-	 * b8.add(Box.createHorizontalStrut(20)); b8.add(lblNgayGui = new
-	 * JLabel("Ngày gửi:")); b8.add(Box.createHorizontalStrut(50));
-	 * b8.add(lblNgayGui2 = new JLabel(ngaygui));
-	 * 
-	 * pCenter.add(b);
-	 * 
-	 * frame.add(pCenter, BorderLayout.CENTER);
-	 * 
-	 * //
-	 * -----------------------------------------------------------------------------
-	 * --------- JPanel pSouth = new JPanel(); pSouth.setLayout(new
-	 * FlowLayout(FlowLayout.CENTER)); pSouth.setBackground(Color.WHITE);
-	 * 
-	 * JLabel lblBottom1, lblBottom2;
-	 * 
-	 * Box bot = Box.createVerticalBox();
-	 * 
-	 * bot.add(new JLabel("--------------------------------------"));
-	 * bot.add(Box.createVerticalStrut(10)); bot.add(lblBottom1 = new
-	 * JLabel("Cảm ơn quý khách")); bot.add(Box.createVerticalStrut(10));
-	 * bot.add(lblBottom2 = new JLabel("Xin hẹn gặp lại"));
-	 * 
-	 * pSouth.add(bot);
-	 * 
-	 * frame.add(pSouth, BorderLayout.SOUTH);
-	 * 
-	 * //
-	 * -----------------------------------------------------------------------------
-	 * --------- lblTitile.setFont(font); lblTitle2.setFont(font);
-	 * lblTitile3.setFont(font); lblMa.setFont(font); lblMa2.setFont(font);
-	 * lblTenKH.setFont(font); lblTenKH2.setFont(font); lblDiaChi.setFont(font);
-	 * lblDiaChi2.setFont(font); lblNgayGui.setFont(font);
-	 * lblNgayGui2.setFont(font); lblSoLuong.setFont(font);
-	 * lblSoLuong2.setFont(font); lblTenNV.setFont(font); lblTenNV2.setFont(font);
-	 * lblTongTien.setFont(font); lblTongTien2.setFont(font); //
-	 * lblTenSP.setFont(font); // lblTenSP2.setFont(font); lblBottom1.setFont(font);
-	 * lblBottom2.setFont(font);
-	 * 
-	 * lblDiaChi.setPreferredSize(lblTenKH.getPreferredSize());
-	 * lblSoLuong.setPreferredSize(lblTenKH.getPreferredSize()); }
-	 */
+
+	private void showReceipt(Invoice invoice) throws RemoteException {
+		JFrame frame = new JFrame("Hóa đơn");
+		frame.setSize(600, 600);
+		frame.setVisible(true);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+		Font font = new Font("monospaced", Font.PLAIN, 18);
+
+		InvoiceDetails inD = invoideDetailsService.findByInvoiceId(invoice.getId());
+
+		JPanel pNorth = new JPanel();
+		pNorth.setBackground(Color.WHITE);
+
+		JLabel lblTitile, lblTitle2, lblTitile3;
+
+		pNorth.setLayout(new BoxLayout(pNorth, BoxLayout.Y_AXIS));
+
+		pNorth.add(lblTitile = new JLabel("SIÊU THỊ MINI", JLabel.CENTER));
+		lblTitile.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		pNorth.add(Box.createVerticalStrut(5));
+		pNorth.add(lblTitle2 = new JLabel("12-Nguyễn Văn Bảo-Phường 4-Gò Vấp-TP.HCM", JLabel.CENTER));
+		lblTitle2.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		pNorth.add(Box.createVerticalStrut(5));
+		pNorth.add(lblTitile3 = new JLabel("***********************", JLabel.CENTER));
+		lblTitile3.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+
+		pNorth.add(Box.createVerticalStrut(50));
+
+		frame.add(pNorth, BorderLayout.NORTH);
+
+		//
+
+		JPanel pCenter = new JPanel();
+		pCenter.setBackground(Color.WHITE);
+		pCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		Box b = Box.createVerticalBox();
+
+		Box b1, b2, b3, b4, b5, b6, b7, b8, b9;
+
+		JLabel lblMa, lblTenKH, lblTenSP, lblTenNV, lblSoLuong, lblTongTien, lblDiaChi, lblNgayGui, lblSum;
+		JLabel lblMa2, lblTenKH2, lblTenSP2, lblTenNV2, lblSoLuong2, lblTongTien2, lblDiaChi2, lblNgayGui2;
+
+		b.add(b1 = Box.createHorizontalBox());
+		b.add(Box.createVerticalStrut(10));
+		b1.add(lblMa = new JLabel("Mã đặt hàng:"));
+		b1.add(Box.createHorizontalStrut(50));
+		b1.add(lblMa2 = new JLabel(invoice.getId()));
+
+		b.add(b2 = Box.createHorizontalBox());
+		b.add(Box.createVerticalStrut(10));
+		b2.add(lblTenKH = new JLabel("Tên khách hàng:"));
+		b2.add(Box.createHorizontalStrut(50));
+		b2.add(lblTenKH2 = new JLabel("Khach vang lai"));
+
+		b.add(b4 = Box.createHorizontalBox());
+		b.add(Box.createVerticalStrut(10));
+		b4.add(lblTenNV = new JLabel("Tên nhân viên:"));
+		b4.add(Box.createHorizontalStrut(50));
+		b4.add(lblTenNV2 = new JLabel("nv1"));
+
+		String[] headers = "Tên sản phẩm; Số lượng; Giá mỗi sản phẩm; Thành tiền".split(";");
+		modelGoodsBought = new DefaultTableModel(headers, 0);
+		b.add(new JScrollPane(tableGoodsBought = new JTable(modelGoodsBought)));
+
+		LoadAllBoughtToTable(inD);
+
+		pCenter.add(b);
+
+		frame.add(pCenter, BorderLayout.CENTER);
+
+		//
+
+		JPanel pSouth = new JPanel();
+		pSouth.setLayout(new FlowLayout(FlowLayout.CENTER));
+		pSouth.setBackground(Color.WHITE);
+
+		JLabel lblBottom1, lblBottom2;
+
+		Box bot = Box.createVerticalBox();
+
+		bot.add(b9 = Box.createHorizontalBox());
+		bot.add(Box.createVerticalStrut(10));
+		b9.add(lblNgayGui = new JLabel("Tổng tiền:"));
+		b9.add(Box.createHorizontalStrut(50));
+		b9.add(lblSum = new JLabel());
+		lblSum.setText(lblSumInvoice.getText());
+
+		bot.add(b8 = Box.createHorizontalBox());
+		bot.add(Box.createVerticalStrut(10));
+		b8.add(lblNgayGui = new JLabel("Ngày:"));
+		b8.add(Box.createHorizontalStrut(50));
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		b8.add(lblNgayGui2 = new JLabel(sdf.format(invoice.getInvoiceDate())));
+
+		bot.add(new JLabel("--------------------------------------"));
+		bot.add(Box.createVerticalStrut(10));
+		bot.add(lblBottom1 = new JLabel("Cảm ơn quý khách"));
+		bot.add(Box.createVerticalStrut(10));
+		bot.add(lblBottom2 = new JLabel("Xin hẹn gặp lại"));
+
+		pSouth.add(bot);
+
+		frame.add(pSouth, BorderLayout.SOUTH);
+
+		lblTitile.setFont(font);
+		lblTitle2.setFont(font);
+		lblTitile3.setFont(font);
+		lblMa.setFont(font);
+		lblMa2.setFont(font);
+		lblTenKH.setFont(font);
+		lblTenKH2.setFont(font);
+	}
+
+	public void LoadAllBoughtToTable(InvoiceDetails inD) {
+		List<Good> listBought = inD.getGoods();
+
+		for (Good good : listGoodsBought) {
+			String name = good.getName();
+			int quantity = good.getQuantity();
+			double price = good.getPrice();
+			double sum = quantity * price;
+			String rowData[] = { name, Integer.toString(quantity), Double.toString(price), Double.toString(sum) };
+
+			modelGoodsBought.addRow(rowData);
+		}
+	}
+
 }

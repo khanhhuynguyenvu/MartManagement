@@ -19,7 +19,15 @@ import group.jpa.ogm.app.entities.InvoiceDetails;
 
 public class MainClient {
 	public static void main(String[] args) throws RemoteException, NotBoundException, ParseException {
-
+		ClientController call = new ClientController("192.168.31.22", 9999);
+		
+		System.out.println("tesst: " + call.getInvoiceDAO().getLastInvoiceByDate());
+		System.out.println("find by id: ");
+		InvoiceDetails inD = call.getInvoiceDetailsDAO().findByInvoiceId(call.getInvoiceDAO().getLastInvoiceByDate().getId());
+		
+		
+		
+		
 	}
 
 }
