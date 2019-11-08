@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -41,9 +42,11 @@ import javax.swing.table.DefaultTableModel;
 
 import group.jpa.ogm.app.controller.client.ClientController;
 import group.jpa.ogm.app.entities.Account;
+import group.jpa.ogm.app.entities.Customer;
 import group.jpa.ogm.app.entities.Employee;
-
+import group.jpa.ogm.app.repository.account.AccountDAO;
 import group.jpa.ogm.app.repository.account.AccountDAOImpl;
+import group.jpa.ogm.app.repository.employee.EmployeeDAO;
 import group.jpa.ogm.app.repository.goods.GoodDAO;
 import group.jpa.ogm.app.repository.goods.GoodDAOImpl;
 import group.jpa.ogm.app.repository.invoiceDetails.InvoiceDetailsDAO;
@@ -106,9 +109,12 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 	private JButton btnHelp;
 	private Account account;
 
+	/* Call service */
 	static ClientController callService;
 	private GoodDAO goodService;
 	private InvoiceDetailsDAO invoideDetailsService;
+	private AccountDAO accountService;
+	private EmployeeDAO employeeService;
 
 	static List<Good> listAllGoods;
 	static List<Good> listGoodsBought;
@@ -120,13 +126,18 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		setSize(1100, 700);
 		setResizable(true);
 		setTitle("Nhân viên bán hàng");
-		setIconImage(new ImageIcon(getClass()
-				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
+
+		setIconImage(new ImageIcon(getClass().getResource(
+				"../../resources/ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
 
+
 		callService = new ClientController("192.168.31.109", 9999);
+
 		goodService = callService.getGoodDAO();
 		invoideDetailsService = callService.getInvoiceDetailsDAO();
+		accountService = callService.getAccountDAO();
+		employeeService = callService.getEmployeeDAO();
 
 		listAllGoods = new ArrayList<Good>();
 		listGoodsBought = new ArrayList<Good>();
@@ -139,17 +150,20 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		Box b1 = Box.createHorizontalBox();
 		b1.setMaximumSize(getMaximumSize());
 		b1.add(Box.createHorizontalStrut(20));
-		b1.add(new JLabel(
-				new ImageIcon(getClass().getResource("../ima/if_cv_job_seeker_employee_unemployee_work_2620524.png"))));
+		b1.add(new JLabel(new ImageIcon(
+				getClass().getResource("../../resources/ima/if_cv_job_seeker_employee_unemployee_work_2620524.png"))));
 		b1.add(Box.createHorizontalStrut(10));
+
+		System.out.println("path: "
+				+ getClass().getResource("../../resources/ima/if_cv_job_seeker_employee_unemployee_work_2620524.png"));
 
 		b1.add(Box.createHorizontalStrut(400));
 		b1.add(btnLogout = new JButton("Đăng xuất",
-				new ImageIcon(getClass().getResource("../ima/if_Logout_105217.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_Logout_105217.png"))));
 		bt.add(Box.createVerticalStrut(10));
 		b1.add(Box.createHorizontalStrut(10));
 		b1.add(btnHelp = new JButton("Hỗ trợ",
-				new ImageIcon(getClass().getResource("../ima/if_user_help_1902262.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_user_help_1902262.png"))));
 		bt.add(b1);
 		bt.add(Box.createVerticalStrut(0));
 		/////////////////////////////////
@@ -215,24 +229,25 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		bqlbn2_ChucNang.setMaximumSize(getMaximumSize());
 		Box bqlbn2_ChucNang_1 = Box.createHorizontalBox();
 		bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
-		bqlbn2_ChucNang_1
-				.add(btnAdd = new JButton("Thêm", new ImageIcon(getClass().getResource("../ima/if_7_330410.png"))));
+		bqlbn2_ChucNang_1.add(btnAdd = new JButton("Thêm",
+				new ImageIcon(getClass().getResource("../../resources/ima/if_7_330410.png"))));
 		btnAdd.setMaximumSize(getMaximumSize());
 		bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
 		/*
 		 * bqlbn2_ChucNang_1.add(btnModify = new JButton("Cập nhật", new
-		 * ImageIcon(getClass().getResource("../ima/if_brush-pencil_1055103.png"))));
+		 * ImageIcon(getClass().getResource(
+		 * "../../resources/ima/if_brush-pencil_1055103.png"))));
 		 * btnModify.setMaximumSize(getMaximumSize());
 		 */
 		bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
-		bqlbn2_ChucNang_1.add(
-				btnRemove = new JButton("Xóa", new ImageIcon(getClass().getResource("../ima/if_Save_1493294.png"))));
+		bqlbn2_ChucNang_1.add(btnRemove = new JButton("Xóa",
+				new ImageIcon(getClass().getResource("../../resources/ima/if_Save_1493294.png"))));
 		btnRemove.setMaximumSize(getMaximumSize());
 		/*
 		 * bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
 		 * bqlbn2_ChucNang_1.add(btnPrintInvoice = new JButton("In hóa đơn", new
-		 * ImageIcon(getClass().getResource("../ima/if_receipt_3583272.png"))));
-		 * btnPrintInvoice.setMaximumSize(getMaximumSize());
+		 * ImageIcon(getClass().getResource("../../resources/ima/if_receipt_3583272.png"
+		 * )))); btnPrintInvoice.setMaximumSize(getMaximumSize());
 		 */
 
 		bqlbn2_ChucNang.add(bqlbn2_ChucNang_1);
@@ -257,7 +272,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 		bqlbn3_Sum.add(Box.createHorizontalStrut(30));
 		bqlbn3_Sum.add(btnPrintInvoice = new JButton("In hóa đơn",
-				new ImageIcon(getClass().getResource("../ima/if_receipt_3583272.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_receipt_3583272.png"))));
 		// btnPrintInvoice.setMaximumSize(getMaximumSize());
 		bqlbn3_Danhsach.add(bqlbn3_Sum);
 
@@ -348,12 +363,12 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 		Box b_ChangePassword_button = Box.createHorizontalBox();
 		b_ChangePassword_button.add(Box.createHorizontalStrut(20));
-		b_ChangePassword_button.add(btnChangePass = new JButton("Đổi mật khẩu",
-				new ImageIcon(getClass().getResource("../ima/if_Access_field_pin_input_password_2629858 .png"))));
+		b_ChangePassword_button.add(btnChangePass = new JButton("Đổi mật khẩu", new ImageIcon(
+				getClass().getResource("../../resources/ima/if_Access_field_pin_input_password_2629858 .png"))));
 		btnChangePass.setSize(new Dimension(50, 20));
 		b_ChangePassword_button.add(Box.createHorizontalStrut(50));
-		b_ChangePassword_button.add(
-				btnCancel = new JButton("Hủy", new ImageIcon(getClass().getResource("../ima/if_Delete_1493279.png"))));
+		b_ChangePassword_button.add(btnCancel = new JButton("Hủy",
+				new ImageIcon(getClass().getResource("../../resources/ima/if_Delete_1493279.png"))));
 		btnCancel.setMaximumSize(new Dimension(150, 60));
 		b_ChangePassword_button.add(Box.createHorizontalStrut(20));
 		b_ChangePassword.add(Box.createVerticalStrut(10));
@@ -469,8 +484,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 	}
 
-	public void BuyProduct() {
-
+	public boolean AddGood() {
 		// kiểm trống
 		// kiểm <= 0
 		// kiểm tra > lớn hơn sl
@@ -522,15 +536,9 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 					for (Good good : listGoodsBought) {
 						if (good.getId().equals(g.getId())) {
-
-							System.out.println("trùng id*****");
-
 							sumQty = good.getQuantity() + g.getQuantity();
-							System.out.println("sum qty: " + sumQty);
 							good.setQuantity(good.getQuantity() + g.getQuantity());
-
 							flagId = true;
-
 						}
 					}
 
@@ -553,6 +561,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 						modelGood.addRow(rowData);
 						RemoveTextFields();
+						return true;
 					}
 
 				}
@@ -562,6 +571,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 			JOptionPane.showMessageDialog(null, "Số lượng không được để trống");
 			txtQuantity.requestFocus();
 		}
+		return false;
 	}
 
 	public void RemoveTextFields() {
@@ -578,28 +588,36 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		Object obj = e.getSource();
 
 		if (obj.equals(btnAdd)) {
-			BuyProduct();
-			double sum = 0;
-			if (listGoodsBought.size() > 0) {
-				for (Good good : listGoodsBought) {
-					sum += good.getQuantity() * good.getPrice();
+			if (AddGood()) {
+				double sum = 0;
+				if (listGoodsBought.size() > 0) {
+					for (Good good : listGoodsBought) {
+						sum += good.getQuantity() * good.getPrice();
+					}
 				}
+				lblSumInvoice.setText(Double.toString(sum));
 			}
-			lblSumInvoice.setText(Double.toString(sum));
 
 		} else if (obj.equals(btnRemove)) {
 			int row = tableGood.getSelectedRow();
 			if (row >= 0) {
-				RemoveGoodActions();
-				modelGood.removeRow(row);
-				try {
-					LoadAllGoodsToComboBox();
-				} catch (RemoteException | NotBoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+
+				if (JOptionPane.showConfirmDialog(null, "Bạn muốn muốn xóa sản phẩm này không?", "Cảnh báo",
+						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					RemoveGoodActions();
+					modelGood.removeRow(row);
+					try {
+						LoadAllGoodsToComboBox();
+					} catch (RemoteException | NotBoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					RemoveTextFields();
+					JOptionPane.showMessageDialog(this, "Xoá sản phẩm thành công");
+				} else {
+					// no option
 				}
-				RemoveTextFields();
-				JOptionPane.showMessageDialog(this, "Xoá sản phẩm thành công");
+
 			} else {
 				JOptionPane.showMessageDialog(this, "Chọn sản phẩm để xóa");
 				tableGood.requestFocus();
@@ -607,8 +625,12 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 		} else if (obj.equals(btnPrintInvoice)) {
 			try {
-				PrintInvoiceActions();
-			} catch (RemoteException | NotBoundException e1) {
+				if (PrintInvoiceActions()) {
+					JOptionPane.showMessageDialog(this, "In hóa đơn thành công");
+				} else {
+					JOptionPane.showMessageDialog(this, "In hóa đơn thất bại do không sản phẩm nào");
+				}
+			} catch (HeadlessException | RemoteException | NotBoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
@@ -740,29 +762,42 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		return true;
 	}
 
-	public void PrintInvoiceActions() throws AccessException, RemoteException, NotBoundException {
-		Invoice inVoice = new Invoice();
-		Employee em = new Employee();
-		Account ac = new Account();
-		ac.setUsername("Luan");
-		em.setAccount(ac);
+	public boolean PrintInvoiceActions() throws AccessException, RemoteException, NotBoundException {
 
-		inVoice.setInvoiceDate(new Date());
+		if (listGoodsBought.size() > 0) {
+			/*
+			 * Employee em = new Employee(); Account ac = new Account();
+			 * ac.setUsername("Luan"); em.setAccount(ac);
+			 */
 
-		InvoiceDetails inVoiceDetails = new InvoiceDetails();
+			Employee getEm = employeeService.getEmp(account.getId());
 
-		inVoiceDetails.setGoods(listGoodsBought);
-		inVoiceDetails.setInvoice(inVoice);
+			/*
+			 * Customer customer = new Customer(); customer.setFullName("Khach hang 1");
+			 * customer.setAddress("TP HCM");
+			 */
+			Invoice inVoice = new Invoice();
 
-		invoideDetailsService.save(inVoiceDetails);
+			inVoice.setInvoiceDate(new Date());
+			// inVoice.setCustomer(customer);
+			inVoice.setEmployee(getEm);
 
-		modelGood.setRowCount(0);
-		updateGoods();
-		listGoodsBought.clear();
-		JOptionPane.showMessageDialog(this, "In hoá đơn thành công");
-		RemoveTextFields();
+			InvoiceDetails inVoiceDetails = new InvoiceDetails();
+
+			inVoiceDetails.setGoods(listGoodsBought);
+			inVoiceDetails.setInvoice(inVoice);
+			invoideDetailsService.save(inVoiceDetails);
+
+			modelGood.setRowCount(0);
+			updateGoods();
+			listGoodsBought.clear();
+			RemoveTextFields();
+			return true;
+		}
+
 		// showReceipt("001", "N T Luan", "a", "nv01", "01", "1000", "213123",
 		// "12/2/2014");
+		return false;
 	}
 
 	public void updateGoods() throws AccessException, RemoteException, NotBoundException {
@@ -783,7 +818,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 		}
 	}
 
-	public void RemoveGoodActions() {
+	public boolean RemoveGoodActions() {
 		// 1 tìm obj xóa trong list mua hàng
 		// 2 lấy obj tìm trong list sản phẩm
 		// 3 + thêm vào
@@ -796,7 +831,6 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				if (good.getId().equals(tableGood.getValueAt(row, 0))) {
 					goodSelected = good;
 					listGoodsBought.remove(good);
-					System.out.println("bought: " + good.getQuantity());
 				}
 				break;
 			}
@@ -806,6 +840,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				}
 			}
 		}
+		return false;
 
 	}
 	/*

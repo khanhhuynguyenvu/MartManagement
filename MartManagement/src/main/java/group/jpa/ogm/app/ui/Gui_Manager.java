@@ -126,13 +126,14 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		setResizable(true);
 		setTitle("Form Quản lý");
 		setIconImage(new ImageIcon(getClass()
-				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
+				.getResource("../../resources/ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
 		// tab
 		tabManager = new JTabbedPane();
 		tabManager.setTabPlacement(JTabbedPane.LEFT);
 
 		callService = new ClientController("192.168.31.109", 9999);
+
 		accountService = callService.getAccountDAO();
 		goodService = callService.getGoodDAO();
 		categoryService = callService.getCategoryDAO();
@@ -148,16 +149,16 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		acc_b1.setMaximumSize(getMaximumSize());
 		acc_b1.add(Box.createHorizontalStrut(20));
 		acc_b1.add(new JLabel(
-				new ImageIcon(getClass().getResource("../ima/if_cv_job_seeker_employee_unemployee_work_2620524.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_cv_job_seeker_employee_unemployee_work_2620524.png"))));
 		acc_b1.add(Box.createHorizontalStrut(10));
 
 		acc_b1.add(Box.createHorizontalStrut(400));
 		acc_b1.add(acc_btnLogout = new JButton("Đăng nhập",
-				new ImageIcon(getClass().getResource("../ima/if_Logout_105217.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_Logout_105217.png"))));
 		acc_bt.add(Box.createVerticalStrut(10));
 		acc_b1.add(Box.createHorizontalStrut(10));
 		acc_b1.add(acc_btnHelp = new JButton("Thông tin",
-				new ImageIcon(getClass().getResource("../ima/if_user_help_1902262.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_user_help_1902262.png"))));
 
 		// acc_bt.add(acc_b1); // add button help, logout to Account Box
 		add(acc_b1, BorderLayout.NORTH);
@@ -238,24 +239,24 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		// acc_bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
 		/*
 		 * acc_bqlbn2_ChucNang_1.add( btnAdd_Acc = new JButton("Thêm", new
-		 * ImageIcon(getClass().getResource("../ima/if_7_330410.png"))));
+		 * ImageIcon(getClass().getResource("../../resources/ima/if_7_330410.png"))));
 		 * btnAdd_Acc.setMaximumSize(getMaximumSize());
 		 */
 		acc_bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
 		acc_bqlbn2_ChucNang_1.add(btnModify_Acc = new JButton("Cập nhật",
-				new ImageIcon(getClass().getResource("../ima/if_brush-pencil_1055103.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_brush-pencil_1055103.png"))));
 		btnModify_Acc.setMaximumSize(getMaximumSize());
 		acc_bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
 		acc_bqlbn2_ChucNang_1.add(btnRemove_Acc = new JButton("Xoá",
-				new ImageIcon(getClass().getResource("../ima/if_Save_1493294.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_Save_1493294.png"))));
 		btnRemove_Acc.setMaximumSize(getMaximumSize());
 		acc_bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
 		acc_bqlbn2_ChucNang_1.add(btnSave_Acc = new JButton("Lưu",
-				new ImageIcon(getClass().getResource("../ima/if_receipt_3583272.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_receipt_3583272.png"))));
 		btnSave_Acc.setMaximumSize(getMaximumSize());
 
 		acc_bqlbn2_ChucNang_1.add(btnCancel_Acc = new JButton("Hủy",
-				new ImageIcon(getClass().getResource("../ima/if_Delete_1493279.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_Delete_1493279.png"))));
 		btnCancel_Acc.setMaximumSize(getMaximumSize());
 
 		acc_bqlbn2_ChucNang.add(acc_bqlbn2_ChucNang_1);
@@ -341,24 +342,24 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bNV_TK1.add(txtTimNhanVien = new JTextField(1));
 		bNV_TK1.add(Box.createHorizontalStrut(10));
 		bNV_TK1.add(btnTimNV = new JButton("Tìm",
-				new ImageIcon(getClass().getResource("../ima/if_search_magnifying_glass_find_103857.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_search_magnifying_glass_find_103857.png"))));
 		bNV_TK.add(Box.createVerticalStrut(185));
 
 		// ***********************
 		bNhanVien.add(bNV2 = Box.createVerticalBox());
 		bNV2.add(bNV_CN = Box.createHorizontalBox());
 		bNV2.setBorder(BorderFactory.createTitledBorder("Chức năng"));
-		bNV_CN.add(btnThemNV = new JButton("Thêm", new ImageIcon(getClass().getResource("../ima/if_7_330410.png"))));
+		bNV_CN.add(btnThemNV = new JButton("Thêm", new ImageIcon(getClass().getResource("../../resources/ima/if_7_330410.png"))));
 		bNV_CN.add(Box.createHorizontalStrut(10));
 		bNV_CN.add(btnSuaNV = new JButton("Sửa",
-				new ImageIcon(getClass().getResource("../ima/if_brush-pencil_1055103.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_brush-pencil_1055103.png"))));
 		bNV_CN.add(Box.createHorizontalStrut(10));
-		bNV_CN.add(btnLuuNV = new JButton("Lưu", new ImageIcon(getClass().getResource("../ima/if_Save_1493294.png"))));
+		bNV_CN.add(btnLuuNV = new JButton("Lưu", new ImageIcon(getClass().getResource("../../resources/ima/if_Save_1493294.png"))));
 		bNV_CN.add(Box.createHorizontalStrut(10));
 
 		bNV_CN.add(Box.createHorizontalStrut(10));
 		bNV_CN.add(btnXoaNV = new JButton("Xóa",
-				new ImageIcon(getClass().getResource("../ima/if_user-trash_118932.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_user-trash_118932.png"))));
 
 		// ***********************
 		bNhanVien.add(bNV3 = Box.createVerticalBox());
@@ -433,19 +434,19 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bStock_ChucNang.setBorder(BorderFactory.createTitledBorder("Chức năng"));
 
 		bStock_CN.add(
-				stock_btnAdd = new JButton("Thêm", new ImageIcon(getClass().getResource("../ima/if_7_330410.png"))));
+				stock_btnAdd = new JButton("Thêm", new ImageIcon(getClass().getResource("../../resources/ima/if_7_330410.png"))));
 		bStock_CN.add(Box.createHorizontalStrut(10));
 		bStock_CN.add(stock_btnModify = new JButton("Sửa",
-				new ImageIcon(getClass().getResource("../ima/if_brush-pencil_1055103.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_brush-pencil_1055103.png"))));
 		bStock_CN.add(Box.createHorizontalStrut(10));
 		bStock_CN.add(stock_btnSave = new JButton("Lưu",
-				new ImageIcon(getClass().getResource("../ima/if_Save_1493294.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_Save_1493294.png"))));
 		bStock_CN.add(Box.createHorizontalStrut(10));
 		bStock_CN.add(stock_btnCancel = new JButton("Hủy",
-				new ImageIcon(getClass().getResource("../ima/if_Delete_1493279.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_Delete_1493279.png"))));
 		bStock_CN.add(Box.createHorizontalStrut(10));
 		bStock_CN.add(stock_btnRemove = new JButton("Xóa",
-				new ImageIcon(getClass().getResource("../ima/if_user-trash_118932.png"))));
+				new ImageIcon(getClass().getResource("../../resources/ima/if_user-trash_118932.png"))));
 
 		// ***********************
 		bStock.add(bStock_DanhSach = Box.createVerticalBox());
@@ -462,12 +463,12 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		// Box bNV_TT, bNV_TT1, bNV_TT2, bNV_TT3, bNV_TT4, bNV_TT5, bNV_TT6;
 		// Box bNV_TK, bNV_TK1, bStock_CN;
 
-		tabManager.addTab("Quản lý tài khoản", new ImageIcon(getClass().getResource("../ima/if_Account_1891016.png")),
+		tabManager.addTab("Quản lý tài khoản", new ImageIcon(getClass().getResource("../../resources/ima/if_Account_1891016.png")),
 				acc_bt);
 
-		tabManager.addTab("Quản lý nhân viên", new ImageIcon(getClass().getResource("../ima/if_group_318580.png")),
+		tabManager.addTab("Quản lý nhân viên", new ImageIcon(getClass().getResource("../../resources/ima/if_group_318580.png")),
 				bNhanVien);
-		tabManager.addTab("Quản lý kho", new ImageIcon(getClass().getResource("../ima/if_group_318580.png")), bStock);
+		tabManager.addTab("Quản lý kho", new ImageIcon(getClass().getResource("../../resources/ima/if_group_318580.png")), bStock);
 
 		/* load data */
 
@@ -591,6 +592,8 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 						JOptionPane.showMessageDialog(frame, "Xin chọn giới tính!!!");
 					} else {
 						saveAction();
+						deleteTableEmp();
+						LoadAllEmployee();
 					}
 
 				} catch (RemoteException | NotBoundException e1) {
@@ -608,6 +611,8 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					try {
 						removeEmpActions();
+						deleteTableEmp();
+						LoadAllEmployee();
 					} catch (RemoteException | NotBoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -1275,14 +1280,14 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		if (btnThemNV.getText().equalsIgnoreCase("Thêm")) {
 			setText(true);
 			btnThemNV.setText("Hủy");
-			btnThemNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_Delete_1493279.png")));
+			btnThemNV.setIcon(new ImageIcon(getClass().getResource("../../resources/ima/if_Delete_1493279.png")));
 			btnSuaNV.setEnabled(false);
 			btnXoaNV.setEnabled(false);
 			btnLuuNV.setEnabled(true);
 		} else if (btnThemNV.getText().equalsIgnoreCase("Hủy")) {
 			setText(false);
 			btnThemNV.setText("Thêm");
-			btnThemNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_7_330410.png")));
+			btnThemNV.setIcon(new ImageIcon(getClass().getResource("../../resources/ima/if_7_330410.png")));
 			btnSuaNV.setEnabled(true);
 			btnXoaNV.setEnabled(true);
 			btnLuuNV.setEnabled(false);
@@ -1294,14 +1299,14 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		if (btnSuaNV.getText().equalsIgnoreCase("Sửa")) {
 			setText(true);
 			btnSuaNV.setText("Hủy");
-			btnSuaNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_Delete_1493279.png")));
+			btnSuaNV.setIcon(new ImageIcon(getClass().getResource("../../resources/ima/if_Delete_1493279.png")));
 			btnThemNV.setEnabled(false);
 			btnXoaNV.setEnabled(false);
 			btnLuuNV.setEnabled(true);
 		} else if (btnSuaNV.getText().equalsIgnoreCase("Hủy")) {
 			setText(false);
 			btnSuaNV.setText("Sửa");
-			btnSuaNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_7_330410.png")));
+			btnSuaNV.setIcon(new ImageIcon(getClass().getResource("../../resources/ima/if_7_330410.png")));
 			btnThemNV.setEnabled(true);
 			btnXoaNV.setEnabled(true);
 			btnLuuNV.setEnabled(false);
@@ -1314,7 +1319,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 			AddEmpActions();
 			setText(false);
 			btnThemNV.setText("Thêm");
-			btnThemNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_7_330410.png")));
+			btnThemNV.setIcon(new ImageIcon(getClass().getResource("../../resources/ima/if_7_330410.png")));
 			btnSuaNV.setEnabled(true);
 			btnXoaNV.setEnabled(true);
 			btnLuuNV.setEnabled(false);
@@ -1322,7 +1327,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 			updateEmpAction();
 			setText(false);
 			btnSuaNV.setText("Sửa");
-			btnSuaNV.setIcon(new ImageIcon(getClass().getResource("../ima/if_7_330410.png")));
+			btnSuaNV.setIcon(new ImageIcon(getClass().getResource("../../resources/ima/if_7_330410.png")));
 			btnThemNV.setEnabled(true);
 			btnXoaNV.setEnabled(true);
 			btnLuuNV.setEnabled(false);
