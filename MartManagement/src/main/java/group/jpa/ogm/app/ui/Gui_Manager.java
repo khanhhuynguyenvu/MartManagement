@@ -1,13 +1,10 @@
 package group.jpa.ogm.app.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.rmi.AccessException;
@@ -19,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -30,7 +26,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -40,10 +35,8 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 import com.toedter.calendar.JDateChooser;
 
 import group.jpa.ogm.app.controller.client.ClientController;
@@ -52,11 +45,8 @@ import group.jpa.ogm.app.entities.Category;
 import group.jpa.ogm.app.entities.Employee;
 import group.jpa.ogm.app.entities.Good;
 import group.jpa.ogm.app.repository.account.AccountDAO;
-import group.jpa.ogm.app.repository.account.AccountDAOImpl;
 import group.jpa.ogm.app.repository.category.CategoryDAO;
-import group.jpa.ogm.app.repository.employee.EmployeeDAO;
 import group.jpa.ogm.app.repository.goods.GoodDAO;
-import group.jpa.ogm.app.entities.Account;
 
 public class Gui_Manager extends JFrame implements ActionListener, MouseListener, TreeSelectionListener {
 
@@ -90,7 +80,8 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	private JComboBox<String> cbbTimNhanVien;
 	private JTable tableNhanVien;
 	private DefaultTableModel modelNhanVien;
-
+	private JLabel lblIDTaiKhoan;
+	private JTextField txtIDTaiKhoan;
 	/* Quan ly kho */
 	JTextField stock_txtGoodId, stock_txtGoodName, stock_txtQuantity, stock_txtPrice;
 	JLabel stock_lblGoodId, stock_lblGoodName, stock_lblEnterDate, stock_lblQuantity, stock_lblPrice,
@@ -115,6 +106,22 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 	private Account ac;
 	private List<Employee> listEm;
+
+	private JLabel lblAcUser;
+
+	private JTextField txtAcUser;
+
+	private JLabel lblAcPass;
+
+	private JTextField txtAcPass;
+
+	private JLabel lblAcType;
+
+	private JTextField txtAcType;
+
+	private JButton btnAddAccount;
+
+	private JButton stock_btnLoad;
 
 	public Gui_Manager(Account ac) throws AccessException, RemoteException, NotBoundException {
 		this.ac = ac;
@@ -259,7 +266,8 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		acc_bqlbn2_ChucNang_1.add(btnCancel_Acc = new JButton("Hủy",
 				new ImageIcon(getClass().getResource("../../resources/ima/if_Delete_1493279.png"))));
 		btnCancel_Acc.setMaximumSize(getMaximumSize());
-
+		acc_bqlbn2_ChucNang_1.add(Box.createHorizontalStrut(10));
+		acc_bqlbn2_ChucNang_1.add(stock_btnLoad = new JButton("Refresh"));
 		acc_bqlbn2_ChucNang.add(acc_bqlbn2_ChucNang_1);
 
 		Box acc_bqlbn3_Danhsach = Box.createVerticalBox(); // acc_bqlbn3_Danhsach_Acc lÃ  quáº£n lÃ½ cÃ¡i báº£ng danh
@@ -297,6 +305,12 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bNV_TT1.add(lblNhanVienID = new JLabel("Mã số nhân viên"));
 		bNV_TT1.add(Box.createHorizontalStrut(10));
 		bNV_TT1.add(txtNhanVienID = new JTextField());
+		
+//		bNV_TT.add(bNV_TT3=Box.createHorizontalBox());
+//		bNV_TT.add(Box.createVerticalStrut(10));
+//		bNV_TT3.add(lblIDTaiKhoan = new JLabel("Mã Tài Khoản"));
+//		bNV_TT3.add(Box.createHorizontalStrut(10));
+//		bNV_TT3.add(txtIDTaiKhoan =new JTextField());
 
 		bNV_TT.add(bNV_TT2 = Box.createHorizontalBox());
 		bNV_TT.add(Box.createVerticalStrut(10));
@@ -333,6 +347,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		lblNSNhanVien.setPreferredSize(lblNhanVienID.getPreferredSize());
 
 		// ***********************
+		Box bNV_Ac;
 		bNV1.add(bNV_TK = Box.createVerticalBox());
 		bNV_TK.setMinimumSize(getMinimumSize());
 		bNV_TK.setBorder(BorderFactory.createTitledBorder("Tìm kiếm nhân viên"));
@@ -345,7 +360,24 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bNV_TK1.add(btnTimNV = new JButton("Tìm",
 				new ImageIcon(getClass().getResource("../../resources/ima/if_search_magnifying_glass_find_103857.png"))));
 		bNV_TK.add(Box.createVerticalStrut(185));
-
+		bNV1.add(bNV_Ac = Box.createVerticalBox());
+		bNV_Ac.add(lblAcUser = new JLabel("UserName"));
+		bNV_Ac.add(Box.createHorizontalStrut(10));
+		bNV_Ac.add(txtAcUser = new JTextField());
+		
+		bNV_Ac.add(lblAcPass = new JLabel("Password"));
+		bNV_Ac.add(Box.createHorizontalStrut(10));
+		bNV_Ac.add(txtAcPass = new JTextField());
+		
+		bNV_Ac.add(lblAcType = new JLabel("Type"));
+		bNV_Ac.add(Box.createHorizontalStrut(10));
+		bNV_Ac.add(txtAcType = new JTextField());
+		
+		bNV_Ac.add(btnAddAccount = new JButton("Add"));
+		
+		
+		
+		
 		// ***********************
 		bNhanVien.add(bNV2 = Box.createVerticalBox());
 		bNV2.add(bNV_CN = Box.createHorizontalBox());
@@ -503,6 +535,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		// Trạng thái bắt đầu
 		txtNhanVienID.setEnabled(false);
 		txtFullNameNV.setEnabled(false);
+//		txtIDTaiKhoan.setEnabled(false);
 		JdNgaySinhNV.setEnabled(false);
 		txtDiaChiNhanVien.setEnabled(false);
 		btnLuuNV.setEnabled(false);
@@ -639,6 +672,31 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 				}
 			}
 		});
+		btnAddAccount.addActionListener(new ActionListener() {
+			private Component frame;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					addAccountToEm();
+					JOptionPane.showMessageDialog(frame, "Thêm tài khoản vào nhân viên thành công");
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		stock_btnLoad.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					LoadAccountsToTable();
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 	}
 
 	public void targetColum() {
@@ -719,6 +777,13 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 				LockTextFieldAccount(true);
 				JOptionPane.showMessageDialog(this, "Sửa tài khoản thành công");
+				tblModelAccount.setRowCount(0);
+				try {
+					LoadAccountsToTable();
+				} catch (RemoteException | NotBoundException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 
 				try {
 					LoadAccountsToTable();
@@ -943,7 +1008,15 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 			for (Account account : listAccounts) {
 				String id = account.getId();
 				String userName = account.getUsername();
-				// int type = account.getType();
+				int type = account.getType();
+				String typeAc = null;
+				if(type == 1) {
+					typeAc ="Nhân viên";
+				}else if(type==2) {
+					typeAc = "Quản lí";
+				}
+				
+				
 				String passWord = account.getPassword();
 				Date startingDate = account.getStartingDate();
 
@@ -952,7 +1025,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 				String status = account.getStatus();
 
-				String rowData[] = { id, userName, "Nhân viên", passWord, sdf.format(startingDate), status };
+				String rowData[] = { id, userName, typeAc , passWord, sdf.format(startingDate), status };
 				tblModelAccount.addRow(rowData);
 			}
 		}
@@ -964,7 +1037,12 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		String getUserName = txtAccUserName.getText();
 		String getPassWord = txtAccPass.getText();
 		Date getStartingDate = txtAccStartingDate.getDate();
-
+		
+		int row = tableAccount.getSelectedRow();
+		String strType = tableAccount.getValueAt(row, 2).toString();
+		int type = 2;
+		if(strType.equalsIgnoreCase("Nhân viên"))
+			type = 1;
 		String getStatus = null;
 		if (radAccActive.isSelected()) {
 			getStatus = radAccActive.getText();
@@ -979,7 +1057,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		ac.setPassword(getPassWord);
 		ac.setStartingDate(getStartingDate);
 		ac.setStatus(getStatus);
-
+		ac.setType(type);
 		accountService.update(ac);
 	}
 
@@ -1183,15 +1261,51 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 				System.out.println("date: " + ngaysinh);
 				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
-				String rowData[] = { id, Name, sdt, diachi, sdf.format(ngaysinh) };
+				String rowData[] = { id,Name, sdt, diachi, sdf.format(ngaysinh) };
 				modelNhanVien.addRow(rowData);
 			}
 		}
 	}
-
+	public void addAccountToEm() throws AccessException, RemoteException, NotBoundException {
+		String getID = txtNhanVienID.getText();
+		String id = txtNhanVienID.getText();
+		String getName = txtFullNameNV.getText();
+		String getgt = null;
+		
+		String getAcUser = txtAcUser.getText();
+		String getPass = txtAcPass.getText();
+		int type = Integer.parseInt(txtAcType.getText());
+		
+		if (radNam.isSelected()) {
+			getgt = radNam.getText();
+		} else {
+			getgt = radNu.getText();
+		}
+		String diachi = txtDiaChiNhanVien.getText();
+		Date getBD = JdNgaySinhNV.getDate();
+		
+		Account acc =new Account();
+		acc.setUsername(getAcUser);
+		acc.setPassword(getPass);
+		acc.setType(type);
+		acc.setStartingDate(new Date());
+		
+		Employee ac = new Employee();
+		ac.setAccount(acc);
+		ac.setId(id);
+		ac.setFullName(getName);
+		ac.setGender(getgt);
+		ac.setAddress(diachi);
+		ac.setBirthdate(getBD);
+		
+		callService.getEmployeeDAO().update(ac);
+		System.out.println("DONE");
+		
+	}
 	public void AddEmpActions() throws AccessException, RemoteException, NotBoundException {
 
 		String getName = txtFullNameNV.getText();
+//		String getAc = txtIDTaiKhoan.getText();
 		String getgt = null;
 		if (radNam.isSelected()) {
 			getgt = radNam.getText();
@@ -1202,8 +1316,11 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		Date getBD = JdNgaySinhNV.getDate();
 
 		Employee ac = new Employee();
+		
+//		Account acc =callService.getAccountDAO().findByEmployee(getAc);
 
 		ac.setFullName(getName);
+//		ac.setAccount(acc);
 		ac.setGender(getgt);
 		ac.setAddress(diachi);
 		ac.setBirthdate(getBD);
