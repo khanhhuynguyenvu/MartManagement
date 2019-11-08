@@ -39,7 +39,7 @@ public class TreeGoods extends JPanel {
 
 		rootNode = new DefaultMutableTreeNode("Kho");
 		model = new DefaultTreeModel(rootNode);
-		callService = new ClientController("192.168.88.25", 9999);
+		callService = new ClientController("192.168.31.109", 9999);
 		goodService = callService.getGoodDAO();
 		categoryService = callService.getCategoryDAO();
 

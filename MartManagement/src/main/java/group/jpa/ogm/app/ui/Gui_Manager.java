@@ -54,6 +54,7 @@ import group.jpa.ogm.app.entities.Good;
 import group.jpa.ogm.app.repository.account.AccountDAO;
 import group.jpa.ogm.app.repository.account.AccountDAOImpl;
 import group.jpa.ogm.app.repository.category.CategoryDAO;
+import group.jpa.ogm.app.repository.employee.EmployeeDAO;
 import group.jpa.ogm.app.repository.goods.GoodDAO;
 import group.jpa.ogm.app.entities.Account;
 
@@ -113,6 +114,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 	private CategoryDAO categoryService;
 
 	private Account ac;
+	private List<Employee> listEm;
 
 	public Gui_Manager(Account ac) throws AccessException, RemoteException, NotBoundException {
 		this.ac = ac;
@@ -130,7 +132,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		tabManager = new JTabbedPane();
 		tabManager.setTabPlacement(JTabbedPane.LEFT);
 
-		callService = new ClientController("192.168.88.25", 9999);
+		callService = new ClientController("192.168.31.109", 9999);
 		accountService = callService.getAccountDAO();
 		goodService = callService.getGoodDAO();
 		categoryService = callService.getCategoryDAO();
@@ -333,7 +335,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		bNV_TK.setMinimumSize(getMinimumSize());
 		bNV_TK.setBorder(BorderFactory.createTitledBorder("Tìm kiếm nhân viên"));
 		bNV_TK.add(bNV_TK1 = Box.createHorizontalBox());
-		String[] timKiemNV = { "Tìm theo ID", "Tìm theo tên", "Tìm theo số điện thoại" };
+		String[] timKiemNV = {"Tìm theo tên"};
 		bNV_TK1.add(cbbTimNhanVien = new JComboBox<String>(timKiemNV));
 		bNV_TK1.add(Box.createHorizontalStrut(10));
 		bNV_TK1.add(txtTimNhanVien = new JTextField(1));
@@ -471,8 +473,8 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 		LoadAccountsToTable();
 		LoadAllCategoiesToComboBox();
-		// LoadAllEmployee();
-		// LoadProductsToTable();
+		LoadAllEmployee();
+//		 LoadProductsToTable();
 		LoadGoodsToTable();
 		// LoadGoodsToTree();
 
@@ -618,6 +620,17 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 			public void actionPerformed(ActionEvent e) {
 				new FrmMain();
 				dispose();
+			}
+		});
+		btnTimNV.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					searchEmp();
+				} catch (RemoteException | NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 	}
@@ -1221,6 +1234,33 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 		Employee em = new Employee();
 		em.setId(id);
 		callService.getEmployeeDAO().remove(em);
+	}
+	private void deleteTableEmp() {
+		int a = modelNhanVien.getRowCount();
+		for (int i = a - 1; i >= 0; i--) {
+			modelNhanVien.removeRow(i);
+		}
+	}
+
+	public void searchEmp() throws AccessException, RemoteException, NotBoundException {
+		if(cbbTimNhanVien.getSelectedIndex()==0 && !txtTimNhanVien.getText().isEmpty()) {
+			deleteTableEmp();
+			listEm = new ArrayList<>();
+			listEm = callService.getEmployeeDAO().findName(txtTimNhanVien.getText());
+			if(!listEm.isEmpty()) {
+				for(int i = 0;i<listEm.size();i++) {
+					String s[]= {listEm.get(i).getId(),listEm.get(i).getFullName()
+							,listEm.get(i).getGender(),listEm.get(i).getAddress(),
+							listEm.get(i).getBirthdate().toString()};
+					modelNhanVien.addRow(s);
+				}
+				txtTimNhanVien.setText("");
+			}else {
+				JOptionPane.showMessageDialog(new JFrame(), "Không tìm thấy");
+				deleteTableEmp();
+				LoadAllEmployee();
+			}
+		}
 	}
 
 	// ActionButton QLNV

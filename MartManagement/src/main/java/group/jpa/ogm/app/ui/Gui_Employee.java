@@ -124,7 +124,7 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 				.getResource("../ima/if_H_sign_hospital_hospital_sign_hospital__medical__road_sign_1887039.png"))
 						.getImage());
 
-		callService = new ClientController("192.168.88.25", 9999);
+		callService = new ClientController("192.168.31.109", 9999);
 		goodService = callService.getGoodDAO();
 		invoideDetailsService = callService.getInvoiceDetailsDAO();
 
