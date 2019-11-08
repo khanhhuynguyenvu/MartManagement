@@ -132,7 +132,9 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 						.getImage());
 
 
+
 		callService = new ClientController("192.168.31.109", 9999);
+
 
 		goodService = callService.getGoodDAO();
 		invoideDetailsService = callService.getInvoiceDetailsDAO();
@@ -764,11 +766,13 @@ public class Gui_Employee extends JFrame implements ActionListener, MouseListene
 
 	public boolean PrintInvoiceActions() throws AccessException, RemoteException, NotBoundException {
 
+
 		if (listGoodsBought.size() > 0) {
 			/*
 			 * Employee em = new Employee(); Account ac = new Account();
 			 * ac.setUsername("Luan"); em.setAccount(ac);
 			 */
+
 
 			Employee getEm = employeeService.getEmp(account.getId());
 

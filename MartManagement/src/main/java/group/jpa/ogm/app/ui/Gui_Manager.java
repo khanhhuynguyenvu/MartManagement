@@ -134,6 +134,7 @@ public class Gui_Manager extends JFrame implements ActionListener, MouseListener
 
 		callService = new ClientController("192.168.31.109", 9999);
 
+
 		accountService = callService.getAccountDAO();
 		goodService = callService.getGoodDAO();
 		categoryService = callService.getCategoryDAO();
